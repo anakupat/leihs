@@ -64,7 +64,6 @@ steps_for :inspection do
   step 'I press on the Userplus icon of a group I am inspecting' do
     within '#filter_target' do
       within '.panel-success .panel-body' do
-        step 'I am responsible for one group'
         within '.row .h4', text: @group.name do
           find('.fa-user-plus').click
         end
@@ -89,7 +88,6 @@ steps_for :inspection do
   end
 
   step 'templates for my group exist' do
-    step 'I am responsible for one group'
     3.times do
       FactoryGirl.create :procurement_template_category,
                          :with_templates,

@@ -24,8 +24,8 @@ module PersonasSteps
     persona = create_persona('Barbara')
     FactoryGirl.create(:procurement_group_inspector, user: persona)
     FactoryGirl.create(:procurement_access, :requester, user: persona)
-
     login_as persona
+    step 'I am responsible for one group'
   end
 
   # leihs admin

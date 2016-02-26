@@ -65,10 +65,21 @@ Feature: Periods and states
 
   @periods_and_states
   Scenario: State "New" - Request Date before Inspection Date
-    Given I am Roger
-    And the current budget period exist
+
+#!!# need this
+    Given the basic dataset is ready
+
+    And I am Roger
+
+#!!# no need anymore
+#    And the current budget period exist
+
     And the current date is before the inspection date
-    When I create a new request
+
+#!!# reusing step
+#    When I create a new request
+    When I want to create a new request
+
     And I fill in the following fields
       | Article                      |
       | Article nr. / Producer nr.   |
@@ -83,7 +94,11 @@ Feature: Periods and states
 
   @periods_and_states
   Scenario: State "Inspection" - Current Date between Inspection Date and Budget Period End Date
-    Given I am Roger
+
+#!!# need this
+    Given the basic dataset is ready
+
+    And I am Roger
     And a request created by myself exists
     And the current date is between the inspection date and the budget period end date
     When I navigate to the requests overview page
@@ -105,7 +120,11 @@ Feature: Periods and states
 
   @periods_and_states
   Scenario Outline: State "In inspection", "Approved", "Denied" "Partially approved" for requester when budget period has ended
-    Given I am Roger
+
+#!!# need this
+    Given the basic dataset is ready
+
+    And I am Roger
     And a request exists
     When the approved quantity is <quantity>
     And the current date is after the budget period end date
@@ -119,7 +138,11 @@ Feature: Periods and states
 
   @periods_and_states
   Scenario Outline: State "New", "Approved", "Denied" "Partially approved" for inspector
-    Given I am Barbara
+
+#!!# need this
+    Given the basic dataset is ready
+
+    And I am Barbara
     And a request exists
     When the approved quantity is <quantity>
     Then I see the state "<state>"
@@ -132,7 +155,11 @@ Feature: Periods and states
 
   @periods_and_states
   Scenario Outline: No Modification or Deletion after Budget End Period date
-    Given I am <username>
+
+#!!# need this
+    Given the basic dataset is ready
+
+    And I am <username>
     Given a request exists
     When the budget period has ended
     Then I can not create any request for the budget period which has ended

@@ -1,9 +1,6 @@
 steps_for :templates do
 
   step 'a template category exists' do
-    unless @group
-      step 'I am responsible for one group'
-    end
     @category = FactoryGirl.create :procurement_template_category,
                                    group: @group
   end
@@ -57,9 +54,6 @@ steps_for :templates do
   end
 
   step 'several template categories exist' do
-    unless @group
-      step 'I am responsible for one group'
-    end
     3.times do
       FactoryGirl.create :procurement_template_category,
                          group: @group

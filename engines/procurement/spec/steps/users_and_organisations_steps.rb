@@ -3,6 +3,10 @@
 steps_for :users_and_organisations do
   # include PersonasSteps
 
+  step 'I am already an admin' do
+    expect(Procurement::Access.admin?(@current_user)).to be true
+  end
+
   step 'there does not exist any requester yet' do
     expect(Procurement::Access.requesters.count).to eq 0
   end
@@ -106,7 +110,7 @@ steps_for :users_and_organisations do
 
   step 'I can add an admin' do
     admin_ids = Procurement::Access.admins.pluck(:user_id)
-    @user = User.not_as_delegations.where.not(id: admin_ids).order('RAND()').first \
+    @user = User.not_as_delegations.where.not(id: admin_ids).first \
             || FactoryGirl.create(:user)
     find('.token-input-list .token-input-input-token input#token-input-')
       .set @user.name
@@ -131,13 +135,13 @@ steps_for :users_and_organisations do
     expect(texts.count).to be Procurement::Access.admins.count
   end
 
-  step 'a admin user exists' do
-    # FactoryGirl.create(:procurement_access, :admin)
-
-    @admin = Procurement::Access.admins \
-      # .where.not(user_id: @current_user)
-      .order('RAND()').first.user
-  end
+  # step 'a admin user exists' do
+  #   # FactoryGirl.create(:procurement_access, :admin)
+  #
+  #   @admin = Procurement::Access.admins \
+  #     # .where.not(user_id: @current_user)
+  #     .order('RAND()').first.user
+  # end
 
   step 'I can delete the admin' do
     find('.token-input-list .token-input-token', text: @admin.name)
