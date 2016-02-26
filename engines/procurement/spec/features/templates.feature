@@ -6,7 +6,10 @@ Feature: Templates
   @templates
   Scenario: Create a Template Category
     Given I am Barbara
-    And I am responsible for one group
+
+#!!# already defined internally for Barbara
+#    And I am responsible for one group
+
     When I navigate to the templates page
     Then there is an empty category line for creating a new category
     When I enter the category name

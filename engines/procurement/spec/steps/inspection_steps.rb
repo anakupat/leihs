@@ -18,7 +18,6 @@ steps_for :inspection do
              end
       group = case value['group']
                 when 'inspected'
-                  step 'I am responsible for one group'
                   @group
                 else
                   nil
@@ -59,6 +58,30 @@ steps_for :inspection do
         find('a', text: @future_budget_period.to_s).click
       end
     end
+
+    @changes = {
+      budget_period_id: @future_budget_period.id
+    }
+  end
+
+  step 'I move a request to the other group where I am not inspector' do
+    within '.request', match: :first do
+      @request = Procurement::Request.find current_scope['data-request_id']
+      @other_group = Procurement::Group.where.not(id: @request.group_id) \
+        .detect do |group|
+          not group.inspectable_by?(@current_user)
+      end
+      el = find('.btn-group .fa-gear')
+      btn = el.find(:xpath, ".//parent::button//parent::div")
+      btn.click unless btn['class'] =~ /open/
+      within btn do
+        find('a', text: @other_group.to_s).click
+      end
+    end
+
+    @changes = {
+        group_id: @other_group.id
+    }
   end
 
   step 'I press on the Userplus icon of a group I am inspecting' do
@@ -96,7 +119,10 @@ steps_for :inspection do
   end
 
   step 'the changes are saved successfully to the database' do
-    expect(@request.reload.budget_period_id).to eq @future_budget_period.id
+    @request.reload
+    @changes.each_pair do |k,v|
+      expect(@request.send(k)).to eq v
+    end
   end
 
   step 'the current budget period is in inspection phase' do
@@ -104,6 +130,21 @@ steps_for :inspection do
     travel_to_date(current_budget_period.inspection_start_date + 1.day)
     expect(Time.zone.today).to be > current_budget_period.inspection_start_date
     expect(Time.zone.today).to be < current_budget_period.end_date
+  end
+
+  step 'the following information is deleted from the request' do |table|
+    table.raw.flatten.each do |value|
+      case value
+        when 'Approved quantity'
+          expect(@request.approved_quantity).to be_nil
+        when 'Order quantity'
+          expect(@request.order_quantity).to be_nil
+        when 'Inspection comment'
+          expect(@request.inspection_comment).to be_nil
+        else
+          raise
+      end
+    end
   end
 
   step 'the list of requests is adjusted immediately' do

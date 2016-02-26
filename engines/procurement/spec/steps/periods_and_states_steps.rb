@@ -89,7 +89,7 @@ steps_for :periods_and_states do
   end
 
   step 'I can not delete any requests for the budget period which has ended' do
-    step 'I can not delete the request'
+    expect(has_no_selector? '.btn-group .fa-gear').to be true
 
     @request.destroy
     expect(@request.destroyed?).to be false
@@ -123,19 +123,18 @@ steps_for :periods_and_states do
     expect(@request.editable?(@current_user)).to be false
   end
 
-  step 'I can not move a request to a budget period which has ended' do
-    visit_request(@request)
-    budget_period = Procurement::BudgetPeriod.all.detect(&:past?)
-    el = find('.btn-group .fa-gear')
-    btn = el.find(:xpath, ".//parent::button//parent::div")
-    btn.click unless btn['class'] =~ /open/
-    within btn do
-      expect(has_no_selector?('a', text: budget_period.to_s)).to be true
-    end
+  step 'I can not move a request of a budget period which has ended to another budget period' do
+    request = Procurement::BudgetPeriod.all
+                  .detect{|bp| bp.past? and bp.requests.exists? }
+                  .requests.first
+    visit_request(request)
+    budget_period = Procurement::BudgetPeriod.last
 
-    @request.update_attributes budget_period: budget_period
-    expect(@request).to_not be_valid
-    expect(@request.reload.budget_period).to_not be budget_period
+    expect(has_no_selector? '.btn-group .fa-gear').to be true
+
+    request.update_attributes budget_period: budget_period
+    expect(request).to_not be_valid
+    expect(request.reload.budget_period).to_not be budget_period
   end
 
   step 'I can not move a request of a budget period which has ended to another procurement group' do
@@ -145,12 +144,7 @@ steps_for :periods_and_states do
     visit_request(request)
     group = Procurement::Group.where.not(id: request.group).first
 
-    el = find('.btn-group .fa-gear')
-    btn = el.find(:xpath, ".//parent::button//parent::div")
-    btn.click unless btn['class'] =~ /open/
-    within btn do
-      expect(has_no_selector?('a', text: group.to_s)).to be true
-    end
+    expect(has_no_selector? '.btn-group .fa-gear').to be true
 
     request.update_attributes group: group
     expect(request).to_not be_valid

@@ -10,22 +10,16 @@ module PersonasSteps
   step 'I am Roger' do
     persona = create_persona('Roger')
     FactoryGirl.create(:procurement_access, :requester, user: persona)
-
-    #old#
-    # 3.times do
-    #   FactoryGirl.create :procurement_request, user: persona
-    # end
-
     login_as persona
   end
 
   # inspector and requester
   step 'I am Barbara' do
     persona = create_persona('Barbara')
-    FactoryGirl.create(:procurement_group_inspector, user: persona)
+    @group = FactoryGirl.create(:procurement_group_inspector, user: persona).group
     FactoryGirl.create(:procurement_access, :requester, user: persona)
     login_as persona
-    step 'I am responsible for one group'
+    step 'I am inspector of this group'
   end
 
   # leihs admin
@@ -33,6 +27,10 @@ module PersonasSteps
     persona = create_persona('Gino')
     FactoryGirl.create(:access_right, role: :admin)
     login_as persona
+  end
+
+  step 'I am inspector of this group' do
+    expect(@group.inspectable_by?(@current_user)).to be true
   end
 
   step 'a procurement admin exists' do
@@ -54,11 +52,6 @@ module PersonasSteps
     count.to_i.times do
       FactoryGirl.create(:procurement_access, :requester)
     end
-  end
-
-  step 'I am responsible for one group' do
-    @group = Procurement::Group.all.detect {|g| g.inspectable_by?(@current_user) }
-    expect(@group).not_to be_nil
   end
 
   def create_user(firstname)

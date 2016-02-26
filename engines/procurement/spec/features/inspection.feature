@@ -200,10 +200,13 @@ Feature: Inspection (state-behaviour described in seperate feature-file)
 #    When I am navigated to the requests page
     When I navigate to the requests form of Roger
 
-    And I move the request to the other group where I am not inspector
+#!!# no reference yet
+#    And I move the request to the other group where I am not inspector
+    And I move a request to the other group where I am not inspector
+
     Then I see a success message
     And the changes are saved successfully to the database
     And the following information is deleted from the request
-    | Approved quantity  |
-    | Order quantity     |
-    | Inspection comment |
+      | Approved quantity  |
+      | Order quantity     |
+      | Inspection comment |
