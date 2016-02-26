@@ -1,5 +1,10 @@
 steps_for :managing_requests do
 
+  step 'an email for a group exists' do
+    @group = FactoryGirl.create :procurement_group,
+                                email: Faker::Internet.email
+  end
+
   step 'I can change the budget period of my request' do
     request = get_current_request @current_user
     visit_request(request)
@@ -87,6 +92,12 @@ steps_for :managing_requests do
         page.driver.browser.switch_to.alert.dismiss
       else
         raise
+    end
+  end
+
+  step 'I click on the email icon' do
+    within '.panel-success .panel-heading' do
+      find('.fa-envelope').click
     end
   end
 

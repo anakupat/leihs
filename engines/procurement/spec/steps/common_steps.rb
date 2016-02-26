@@ -1,7 +1,9 @@
 module CommonSteps
 
   step 'a request created by myself exists' do
-    @request = FactoryGirl.create(:procurement_request, user: @current_user)
+    @request = FactoryGirl.create :procurement_request,
+                                  user: @current_user,
+                                  budget_period: Procurement::BudgetPeriod.current
   end
 
   step 'I click on save' do
@@ -11,7 +13,7 @@ module CommonSteps
   # step 'I enter the section :section' do |section|
   #   case section
   #     when 'My requests'
-  #       step 'I navigate to the requests page'
+  #       step 'I navigate to the requests overview page'
   #     else
   #       raise
   #   end
@@ -53,7 +55,7 @@ module CommonSteps
 
   step 'I want to create a new request' do
     step 'there exists a procurement group'
-    step 'I navigate to the requests page'
+    step 'I navigate to the requests overview page'
 
     # within '.panel-success .panel-heading',
     #        text: Procurement::BudgetPeriod.current.name do
@@ -91,6 +93,15 @@ module CommonSteps
 
   step 'the current budget period exist' do
     FactoryGirl.create(:procurement_budget_period)
+  end
+
+  step 'the current date is after the budget period end date' do
+    travel_to_date @request.budget_period.end_date + 1.day
+    expect(Time.zone.today).to be > @request.budget_period.end_date
+  end
+  #alias
+  step 'the budget period has ended' do
+    step 'the current date is after the budget period end date'
   end
 
   step 'the field :field is marked red' do |field|

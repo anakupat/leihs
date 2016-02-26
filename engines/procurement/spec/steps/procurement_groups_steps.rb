@@ -3,14 +3,6 @@
 steps_for :procurement_groups do
   # include PersonasSteps
 
-  step 'I navigate to the groups page' do
-    within '.navbar' do
-      click_on _('Admin')
-      click_on _('Groups')
-    end
-    expect(page).to have_selector('h1', text: _('Groups'))
-  end
-
   step 'I click on the add button' do
     click_on _('Add')
   end

@@ -164,7 +164,7 @@ Feature: Inspection (state-behaviour described in seperate feature-file)
 
 #!!# need to be more precise
 #    When I am navigated to the requests page
-    When I navigate to the requests page of Roger
+    When I navigate to the requests form of Roger
 
 #!!# no specified request
 #    Then I can not move the request to the old budget period
@@ -195,7 +195,7 @@ Feature: Inspection (state-behaviour described in seperate feature-file)
 
 #!!# need to be more precise
 #    When I am navigated to the requests page
-    When I navigate to the requests page of Roger
+    When I navigate to the requests form of Roger
 
     And I move the request to the other group where I am not inspector
     Then I see a success message

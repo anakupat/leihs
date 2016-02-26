@@ -235,7 +235,7 @@ steps_for :periods_and_states do
   end
 
   step 'I see the state :state' do |state|
-    step 'I navigate to the requests page'
+    step 'I navigate to the requests overview page'
     step 'I select all budget periods'
     step 'I select all groups'
     step 'page has been loaded'
@@ -344,10 +344,6 @@ steps_for :periods_and_states do
                                inspection_comment: new_comment
   end
 
-  step 'the budget period has ended' do
-    step 'the current date is after the budget period end date'
-  end
-
   step 'the current date is before the inspection date' do
     travel_to_date Procurement::BudgetPeriod.current.inspection_start_date - 1.day
     expect(Time.zone.today).to be < \
@@ -359,11 +355,6 @@ steps_for :periods_and_states do
     travel_to_date(@request.budget_period.end_date - 1.day)
     expect(Time.zone.today).to be > @request.budget_period.inspection_start_date
     expect(Time.zone.today).to be < @request.budget_period.end_date
-  end
-
-  step 'the current date is after the budget period end date' do
-    travel_to_date @request.budget_period.end_date + 1.day
-    expect(Time.zone.today).to be > @request.budget_period.end_date
   end
 
   step 'the status of the request saved to the database is "New"' do

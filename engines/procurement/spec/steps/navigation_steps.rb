@@ -26,8 +26,8 @@ module NavigationSteps
     end
   end
 
-  step 'I navigate to the requests page' do
-    # visit procurement.overview_requests_path
+  step 'I navigate to the requests overview page' do
+    visit procurement.root_path if has_no_selector? '.navbar'
     within '.navbar' do
       click_on _('Requests')
     end
@@ -35,14 +35,10 @@ module NavigationSteps
   end
   # alias
   step 'I navigate back to the request overview page' do
-    step 'I navigate to the requests page'
-  end
-  # alias
-  step 'I navigate to the requests overview page' do
-    step 'I navigate to the requests page'
+    step 'I navigate to the requests overview page'
   end
 
-  step 'I navigate to the requests page of :name' do |name|
+  step 'I navigate to the requests form of :name' do |name|
     user = case name
              when 'myself' then @current_user
              else
@@ -57,6 +53,7 @@ module NavigationSteps
   end
 
   step 'I navigate to the budget periods' do
+    visit procurement.root_path if has_no_selector? '.navbar'
     within '.navbar' do
       click_on _('Admin')
       click_on _('Budget periods')
@@ -64,23 +61,34 @@ module NavigationSteps
     expect(page).to have_selector('h1', text: _('Budget periods'))
   end
 
-  # step 'I navigate to the users list' do
-  #   visit procurement.users_path
-  # end
-  step 'I navigate to the users page' do
+  step 'I navigate to the groups page' do
+    visit procurement.root_path if has_no_selector? '.navbar'
     within '.navbar' do
       click_on _('Admin')
-      click_on _('Users')
+      click_on _('Groups')
     end
-    expect(page).to have_selector('h1', text: _('Users'))
+    expect(page).to have_selector('h1', text: _('Groups'))
   end
 
   step 'I navigate to the organisation tree page' do
+    visit procurement.root_path if has_no_selector? '.navbar'
     within '.navbar' do
       click_on _('Admin')
       click_on _('Organisations')
     end
     expect(page).to have_selector('h1', text: _('Organisations of the requesters'))
+  end
+
+  # step 'I navigate to the users list' do
+  #   visit procurement.users_path
+  # end
+  step 'I navigate to the users page' do
+    visit procurement.root_path if has_no_selector? '.navbar'
+    within '.navbar' do
+      click_on _('Admin')
+      click_on _('Users')
+    end
+    expect(page).to have_selector('h1', text: _('Users'))
   end
 
   step 'I navigate to the templates page of my group' do

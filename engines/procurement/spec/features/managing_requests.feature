@@ -118,7 +118,11 @@ Feature: section Managing Requests
     When I press on a catory
     Then I see all template articles of this category
     When I choose a template article
-    Then I am navigated to the new requests page of the specific group
+
+#!!# differentiating form page <-> overview page
+#    Then I am navigated to the new requests page of the specific group
+    Then I am navigated to the new requests form of the specific group
+
     When I fill in all mandatory information
     And I click on save
     Then I see a success message
@@ -136,7 +140,11 @@ Feature: section Managing Requests
     Then I am navigated to the templates overview
     And I see all groups listed
     When I choose a group
-    Then I am navigated to the new requests page of the specific group
+
+#!!# differentiating form page <-> overview page
+#    Then I am navigated to the new requests page of the specific group
+    Then I am navigated to the new requests form of the specific group
+
     When I fill in all mandatory information
     And I click on save
     Then I see a success message
@@ -252,9 +260,13 @@ Feature: section Managing Requests
   @managing_requests
   Scenario Outline: Delete a Request
     Given I am <username>
-    And several requests created by myself exist
     And the current date has not yet reached the inspection start date
-    When I navigate to the requests page
+
+#!!# refer to a specific request
+#    And several requests created by myself exist
+    And a request created by myself exists
+
+    When I navigate to the requests overview page
     And I select all budget periods
     And I select all groups
     And I open the request
@@ -299,7 +311,7 @@ Feature: section Managing Requests
     And several budget periods exist
     And several requests created by myself exist
     And the current date has not yet reached the inspection start date
-    When I navigate to the requests page
+    When I navigate to the requests overview page
     And I move the request to the other budget period
     And I see a success message
     And the changes are saved successfully to the database
@@ -310,7 +322,7 @@ Feature: section Managing Requests
     And several groups exist
     And several requests created by myself exist
     And the current date has not yet reached the inspection start date
-    When I navigate to the requests page
+    When I navigate to the requests overview page
     And I move the request to the other group
     Then I see a success message
     And the changes are saved successfully to the database
@@ -347,7 +359,7 @@ Feature: section Managing Requests
     Given I am <username>
     And a request created by myself exists
     And the request includes an attachment
-    When I am navigated to the request page
+    When I navigate to the requests overview page
     And I delete the attachment
     And I click on save
     Then I see a success message
@@ -363,7 +375,7 @@ Feature: section Managing Requests
     Given I am <username>
     And several request created by myself exist
     And the request includes an attachment
-    When I am navigated to the request page
+    When I navigate to the requests overview page
     And I download the attachment
     Then The file is downloaded
     Then I see a success message
@@ -378,7 +390,7 @@ Feature: section Managing Requests
     Given I am <username>
     And several request created by myself exist
     And the request includes an attachment with the attribute .jpg
-    When I am navigated to the request page
+    When I navigate to the requests overview page
     And I click on the attachment
     Then The content of the file is shown in a viewer
     Examples:
@@ -391,7 +403,7 @@ Feature: section Managing Requests
     Given I am <username>
     And several request created by myself exist
     And the request includes an attachment with the attribute .pdf
-    When I am navigated to the request page
+    When I navigate to the requests overview page
     And I click on the attachment
     Then The content of the file is shown in a viewer
     Examples:
@@ -403,7 +415,7 @@ Feature: section Managing Requests
   Scenario Outline: Send an email to a group
     Given I am <username>
     And an email for a group exists
-    When I am navigated to the request page
+    When I navigate to the requests overview page
     And I click on the email icon
     Then the email program is opened
     And the receiver of the email is the email of the group

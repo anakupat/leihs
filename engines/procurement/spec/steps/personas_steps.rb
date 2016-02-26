@@ -4,7 +4,6 @@ module PersonasSteps
     persona = create_persona('Hans Ueli')
     FactoryGirl.create(:procurement_access, :admin, user: persona)
     login_as persona
-    visit procurement.root_path # TODO separate step
   end
 
   # requester
@@ -18,7 +17,6 @@ module PersonasSteps
     # end
 
     login_as persona
-    #old# visit procurement.root_path # TODO separate step
   end
 
   # inspector and requester
@@ -28,7 +26,6 @@ module PersonasSteps
     FactoryGirl.create(:procurement_access, :requester, user: persona)
 
     login_as persona
-    visit procurement.root_path # TODO separate step
   end
 
   # leihs admin
@@ -36,7 +33,6 @@ module PersonasSteps
     persona = create_persona('Gino')
     FactoryGirl.create(:access_right, role: :admin)
     login_as persona
-    visit procurement.root_path # TODO separate step
   end
 
   step 'a procurement admin exists' do

@@ -53,9 +53,11 @@ module FilterSteps
     selected_organization = Procurement::Organization.where(parent_id: nil).first
     within '#filter_panel .form-group', text: _('Organisations') do
       within '.btn-group' do
-        find('button.multiselect').click
-        choose selected_organization.name
-        find('button.multiselect').click
+        find('button.multiselect').click # NOTE open the dropdown
+        within '.dropdown-menu' do
+          choose selected_organization.name
+        end
+        find('button.multiselect').click # NOTE close the dropdown
       end
     end
   end
@@ -79,13 +81,17 @@ module FilterSteps
           all(:checkbox).each { |x| x.set true }
         else
           within '.btn-group' do
-            find('button.multiselect').click
-            case string_with_spaces
-              when 'organisations'
-                choose _('All')
-              else
-                check _('Select all')
+            # find('button.multiselect').click unless current_scope['class'] =~ /open/
+            find('button.multiselect').click # NOTE open the dropdown
+            within '.dropdown-menu' do
+              case string_with_spaces
+                when 'organisations'
+                  choose _('All')
+                else
+                  check _('Select all')
+              end
             end
+            find('button.multiselect').click # NOTE close the dropdown
           end
       end
     end
@@ -108,9 +114,11 @@ module FilterSteps
            end
     within '#filter_panel .form-group', text: text do
       within '.btn-group' do
-        find('button.multiselect').click
-        all(:checkbox).sample(2).each { |x| x.set true }
-        find('button.multiselect').click
+        find('button.multiselect').click # NOTE open the dropdown
+        within '.dropdown-menu' do
+          all(:checkbox).sample(2).each { |x| x.set true }
+        end
+        find('button.multiselect').click # NOTE close the dropdown
       end
     end
   end
@@ -126,9 +134,11 @@ module FilterSteps
     budget_period = Procurement::BudgetPeriod.current
     within '#filter_panel .form-group', text: _('Budget periods') do
       within '.btn-group' do
-        find('button.multiselect').click
-        check budget_period.name
-        find('button.multiselect').click
+        find('button.multiselect').click # NOTE open the dropdown
+        within '.dropdown-menu' do
+          check budget_period.name
+        end
+        find('button.multiselect').click # NOTE close the dropdown
       end
     end
   end
