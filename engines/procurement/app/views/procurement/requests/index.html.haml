@@ -95,10 +95,12 @@
     scroll_to(el)
 
   @show_request = (request_id)->
-    #$('.panel-footer .fa-plus-circle').trigger('click') if request_id == 'new_request'
-    $('.sidebar-wrapper .fa-plus-circle').trigger('click') if request_id == 'new_request'
-    el = $(".row[data-request_id='" + request_id + "']")
-    scroll_to(el)
+    if request_id == 'new_request'
+      #$('.panel-footer .fa-plus-circle').trigger('click')
+      $('.sidebar-wrapper .fa-plus-circle').trigger('click')
+    else
+      el = $(".row[data-request_id='" + request_id + "']")
+      scroll_to(el)
 
   $(document).ready ->
     do zebra_rows

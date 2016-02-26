@@ -23,13 +23,26 @@ module CommonSteps
     table.raw.flatten.each do |value|
       case value
         when 'Price'
-          find("input[name*='[price]']").set 123
+          @price = Faker::Number.number(4).to_i
+          find("input[name*='[price]']").set @price
         when 'Requested quantity', 'Approved quantity'
-          fill_in _(value), with: 2
+          @quantity = Faker::Number.number(2).to_i
+          fill_in _(value), with: @quantity
         when 'Replacement / New'
           find("input[name*='[replacement]'][value='1']").click
         else
           fill_in _(value), with: Faker::Lorem.sentence
+      end
+    end
+  end
+
+  step 'I press on the plus icon of a group' do
+    @group ||= Procurement::Group.first.name
+    within '#filter_target' do
+      within '.panel-success .panel-body' do
+        within '.row .h4', text: @group.name do
+          find('i.fa-plus-circle').click
+        end
       end
     end
   end
@@ -54,24 +67,8 @@ module CommonSteps
   end
 
   step 'I want to create a new request' do
-    step 'there exists a procurement group'
     step 'I navigate to the requests overview page'
-
-    # within '.panel-success .panel-heading',
-    #        text: Procurement::BudgetPeriod.current.name do
-    #   find('i.fa-plus-circle').click
-    # end
-    # within '.panel-body .col-sm-6', text: _('Create request for specific group') do
-    #   find('a', text: Procurement::Group.first.name).click
-    # end
-    # within '.sidebar-wrapper' do
-    #   find('i.fa-plus-circle').click
-    # end
-    within '.panel-success .panel-body' do
-      within  '.row .h4', text: Procurement::Group.first.name do
-        find('i.fa-plus-circle').click
-      end
-    end
+    step 'I press on the plus icon of a group'
   end
 
   step ':count groups exist' do |count|
@@ -99,7 +96,7 @@ module CommonSteps
     travel_to_date @request.budget_period.end_date + 1.day
     expect(Time.zone.today).to be > @request.budget_period.end_date
   end
-  #alias
+  # alias
   step 'the budget period has ended' do
     step 'the current date is after the budget period end date'
   end

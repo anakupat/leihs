@@ -19,5 +19,5 @@
           = _('Create request for specific group')
         .list-group
           - @groups.each do |group|
-            %a.list-group-item{href: group_budget_period_user_requests_path(group, @budget_period, @user)}
+            %a.list-group-item{href: group_budget_period_user_requests_path(group, @budget_period, @user, request_id: 'new_request')}
               = group

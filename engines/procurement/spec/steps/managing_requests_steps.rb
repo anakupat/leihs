@@ -1,5 +1,9 @@
 steps_for :managing_requests do
 
+  step 'a new request line is added' do
+    find '.request[data-request_id="new_request"]', visible: true
+  end
+
   step 'an email for a group exists' do
     @group = FactoryGirl.create :procurement_group,
                                 email: Faker::Internet.email
@@ -84,6 +88,13 @@ steps_for :managing_requests do
     expect(request.reload.motivation).to eq text
   end
 
+  step 'I choose a group' do
+    @group ||= Procurement::Group.first.name
+    within '.panel-success .panel-body' do
+      click_on @group.name
+    end
+  end
+
   step 'I click on :choice' do |choice|
     case choice
       when 'yes'
@@ -147,8 +158,23 @@ steps_for :managing_requests do
     find(".list-group-item[data-request_id='#{@request.id}']").click
   end
 
+  step 'I press on the plus icon of the budget period' do
+    within '#filter_target' do
+      within '.panel-success .panel-heading' do
+        find('i.fa-plus-circle').click
+      end
+    end
+  end
+
+  step 'I press on the plus icon on the left sidebar' do
+    within '.sidebar-wrapper' do
+      find('i.fa-plus-circle').click
+    end
+  end
+
   step 'I receive a message asking me if I am sure I want to delete the data' do
     # page.driver.browser.switch_to.alert.accept
+    page.driver.browser.switch_to.alert
   end
 
   step 'I see all groups' do
@@ -157,6 +183,10 @@ steps_for :managing_requests do
         find'.row', text: group.name
       end
     end
+  end
+  # not alias, but same implementation
+  step 'I see all groups listed' do
+    step 'I see all groups'
   end
 
   step 'I see the budget limits of all groups' do
@@ -176,6 +206,10 @@ steps_for :managing_requests do
   step 'I see the current budget period' do
     find '.panel-success .panel-heading .h4',
          text: Procurement::BudgetPeriod.current.name
+  end
+  # alias
+  step 'I see the budget period' do
+    step 'I see the current budget period'
   end
 
   step 'I see the following request information' do |table|
@@ -309,6 +343,12 @@ steps_for :managing_requests do
   step 'no requests exist' do
     Procurement::Request.destroy_all
     expect(Procurement::Request.count).to be_zero
+  end
+
+  step 'several points of delivery exist' do
+    3.times do
+      FactoryGirl.create :location
+    end
   end
 
   step 'several requests created by myself exist' do

@@ -66,7 +66,10 @@ Feature: section Managing Requests
   @managing_requests
   Scenario: Creating a request as requester only
     Given I am Roger
-    And several receivers exist
+
+#!!# doesn't make sense. receiver is a free string
+#    And several receivers exist
+
     And several points of delivery exist
     When I want to create a new request
     And I fill in the following fields
@@ -92,7 +95,7 @@ Feature: section Managing Requests
     Given I am <username>
     When I navigate to the requests overview page
     And I press on the plus icon of a group
-    Then I am navigated to the new request page
+    Then I am navigated to the new request form
     When I enter an article
     And I enter an amount
     And I enter a reason
@@ -112,16 +115,19 @@ Feature: section Managing Requests
     And I press on the plus icon of the budget period
     Then I am navigated to the templates overview
     And I see the budget period
+
+#!!# not possible. do you mean start date of the inspection phase?
     And I see the start date of the requesting phase
+
     And I see the end date of the inspection phase
     And I see all categories of all groups listed
-    When I press on a catory
+    When I press on a category
     Then I see all template articles of this category
     When I choose a template article
 
-#!!# differentiating form page <-> overview page
+#!!# differentiating "form page" vs "overview page"
 #    Then I am navigated to the new requests page of the specific group
-    Then I am navigated to the new requests form of the specific group
+    Then I am navigated to the new request form of the specific group
 
     When I fill in all mandatory information
     And I click on save
@@ -141,9 +147,9 @@ Feature: section Managing Requests
     And I see all groups listed
     When I choose a group
 
-#!!# differentiating form page <-> overview page
+#!!# differentiating "form page" vs "overview page"
 #    Then I am navigated to the new requests page of the specific group
-    Then I am navigated to the new requests form of the specific group
+    Then I am navigated to the new request form of the specific group
 
     When I fill in all mandatory information
     And I click on save
@@ -157,8 +163,15 @@ Feature: section Managing Requests
   @managing_requests
   Scenario Outline: Creating a freetext request inside the new request page
     Given I am <username>
-    When I am navigated to the new requests page
-    And I press on the plus icon
+
+#!!# let's start directly on the form
+#    When I am navigated to the new request form
+    And I am on the new request form of a group
+
+#!!# more specific
+#    And I press on the plus icon
+    And I press on the plus icon on the left sidebar
+
     Then a new request line is added
     When I fill in all mandatory information
     And I click on save
@@ -176,7 +189,7 @@ Feature: section Managing Requests
     And the template articles contain an articlenr/suppliernr
     And the template articles contain a supplier
     And the template articles contain a price
-    When I am navigated to the new requests page
+    When I am navigated to the new request form
     And I click on a category
     And I click on a template article
     Then a new request line is added
@@ -195,32 +208,40 @@ Feature: section Managing Requests
       | Roger    |
 
   @managing_requests
-  Scenario Outline: Inserting an already inserted tempalte article
+  Scenario Outline: Inserting an already inserted template article
     Given I am <username>
     And a request containing a template article exists
-    When I am navigated to the new requests page
+    When I am navigated to the new request form
     And I click on the template article which has already been added to the request
     Then I am navigated to the request containing this template article
+    Examples:
+      | username |
+      | Barbara  |
+      | Roger    |
 
   @managing_requests
   Scenario Outline: Changing an inserted template article
     Given I am <username>
     And a request containing a template article exists
     And the template article contains an articlenr./suppliernr.
-    When I am navigated to the new requests page
+    When I am navigated to the new request form
     And I modify the name of the already inserted template article
     And I modify or delete the articlenr./suppliernr. of the already inserted template article
     When I click on save
     Then I see a success message
     And the request with all given information was created successfully in the database
     And the template id is nullified in the database
+    Examples:
+      | username |
+      | Barbara  |
+      | Roger    |
 
   @managing_requests
   Scenario Outline: Request deleted because no information entered
     Given I am <username>
     When I navigate the requests overview page
     And I press on the plus icon of a group
-    Then I am navigated to the new request page
+    Then I am navigated to the new request form
     When I type the first character in a field of the request form
     Then the field "article" is marked red
     And the field "requested quantity" is marked red
@@ -295,7 +316,7 @@ Feature: section Managing Requests
   @managing_requests
   Scenario Outline: Choosing an existing or non existing Model
     Given I am <username>
-    When I am navigated to the new request page
+    When I am navigated to the new request form
     Then I can search a model by typing the article name
     And according to the search result I can choose the article from a list
     When no search result is found

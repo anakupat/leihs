@@ -83,7 +83,10 @@ Feature: Inspection (state-behaviour described in seperate feature-file)
   @inspection
   Scenario: Creating a request as inspector
     Given I am Barbara
-    And a receiver exists
+
+#!!# doesn't make sense. receiver is a free string
+#    And a receiver exists
+
     And a point of delivery exists
     When I want to create a new request
     And I fill in the following fields
@@ -114,7 +117,7 @@ Feature: Inspection (state-behaviour described in seperate feature-file)
     And I press on the Userplus icon of a group I am inspecting
     Then I am navigated to the requester list
     When I pick a requester
-    Then I am navigated to the new request page for this username
+    Then I am navigated to the new request form for the requester
     When I fill in all mandatory information
     And I click on save
     Then I see a success message

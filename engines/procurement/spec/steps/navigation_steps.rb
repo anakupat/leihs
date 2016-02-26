@@ -1,6 +1,15 @@
 module NavigationSteps
 
-  step 'I am navigated to the new request page for this username' do
+  step 'I am navigated to the new request form' do
+    @user = @current_user
+    step 'I am navigated to the new request form for the requester'
+  end
+  # alias
+  step 'I am navigated to the new request form of the specific group' do
+    step 'I am navigated to the new request form'
+  end
+
+  step 'I am navigated to the new request form for the requester' do
     # NOTE this doesn't match the query params
     # expect(current_path).to eq
 
@@ -24,6 +33,26 @@ module NavigationSteps
         find('a', text: requester.user.to_s)
       end
     end
+  end
+
+  step 'I am navigated to the templates overview' do
+    expect(page).to have_current_path \
+      procurement.new_user_budget_period_request_path(
+          @current_user,
+          Procurement::BudgetPeriod.current)
+
+    within '.panel-success .panel-body' do
+      find('h4', text: _('Custom articles'))
+      find('h4', text: _('Create request for specific group'))
+    end
+  end
+
+  step 'I am on the new request form of a group' do
+    @group ||= Procurement::Group.first.name
+    visit procurement.group_budget_period_user_requests_path(
+        @group,
+        Procurement::BudgetPeriod.current,
+        @current_user)
   end
 
   step 'I navigate to the requests overview page' do
