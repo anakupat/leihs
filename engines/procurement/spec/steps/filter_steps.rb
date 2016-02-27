@@ -130,6 +130,12 @@ module FilterSteps
     end
   end
 
+  step 'I select "Only show my own requests" if present' do
+    if has_selector? '#filter_panel .form-group', text: _('Requests')
+      step 'I select "Only show my own requests"'
+    end
+  end
+
   step 'I select the current budget period' do
     budget_period = Procurement::BudgetPeriod.current
     within '#filter_panel .form-group', text: _('Budget periods') do

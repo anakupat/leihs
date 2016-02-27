@@ -112,7 +112,11 @@ Feature: section Managing Requests
   Scenario Outline: Creating a request through a budget period selecting a template article
     Given I am <username>
     When I navigate to the requests overview page
+
+#!!# this is needed for the inspectors, to see the plus icon
+    And I select "Only show my own requests" if present
     And I press on the plus icon of the budget period
+
     Then I am navigated to the templates overview
     And I see the budget period
 
@@ -142,7 +146,11 @@ Feature: section Managing Requests
   Scenario Outline: Creating a request through a budget period selecting a group
     Given I am <username>
     When I navigate to the requests overview page
+
+#!!# this is needed for the inspectors, to see the plus icon
+    And I select "Only show my own requests" if present
     And I press on the plus icon of the budget period
+
     Then I am navigated to the templates overview
     And I see all groups listed
     When I choose a group
@@ -293,7 +301,7 @@ Feature: section Managing Requests
     And I open the request
     And I delete the request
     Then I receive a message asking me if I am sure I want to delete the data
-    When I click on "<choice>"
+    When I click on choice <choice>
     Then the request is "<result>" in the database
     Examples:
       | username | choice | result               |

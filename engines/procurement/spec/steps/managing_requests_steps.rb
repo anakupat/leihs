@@ -95,7 +95,7 @@ steps_for :managing_requests do
     end
   end
 
-  step 'I click on :choice' do |choice|
+  step 'I click on choice :choice' do |choice|
     case choice
       when 'yes'
         page.driver.browser.switch_to.alert.accept

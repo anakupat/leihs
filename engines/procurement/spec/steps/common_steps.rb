@@ -19,6 +19,23 @@ module CommonSteps
   #   end
   # end
 
+  step 'I fill in all mandatory information' do
+    # TODO also for template
+    @data = {}
+    within ".request[data-request_id='new_request']" do
+      all('[data-to_be_required]').each do |el|
+        case el['name']
+          when /requested_quantity/
+            el.set @data[el['name']] = Faker::Number.number(2).to_i
+          when /replacement/
+            find("input[name*='[replacement]'][value='#{@data[el['name']] = 1}']").click
+          else
+            el.set @data[el['name']] = Faker::Lorem.sentence
+        end
+      end
+    end
+  end
+
   step 'I fill in the following fields' do |table|
     table.raw.flatten.each do |value|
       case value
@@ -117,6 +134,17 @@ module CommonSteps
                     end
       expect(input_field['required']).to eq 'true' # ;-)
     end
+  end
+
+  step 'the request with all given information ' \
+       'was created successfully in the database' do
+    mapped_data = {}
+    @data.each_pair do |k,v|
+      kk = k.match(/.*\[(.*)\]\[(.*)\]/)[2]
+      mapped_data[kk] = v
+    end
+    user = @user || @current_user
+    expect(@group.requests.where(user_id: user).find_by(mapped_data)).to be
   end
 
   step 'there exists a procurement group' do
