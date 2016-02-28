@@ -24,31 +24,34 @@ module CommonSteps
     @data = {}
     within ".request[data-request_id='new_request']" do
       all('[data-to_be_required]').each do |el|
-        case el['name']
-          when /requested_quantity/
-            el.set @data[el['name']] = Faker::Number.number(2).to_i
-          when /replacement/
-            find("input[name*='[replacement]'][value='#{@data[el['name']] = 1}']").click
+        key = el['name'].match(/.*\[(.*)\]\[(.*)\]/)[2]
+
+        case key
+          when 'requested_quantity'
+            el.set @data[el[key]] = Faker::Number.number(2).to_i
+          when 'replacement'
+            find("input[name*='[replacement]'][value='#{@data[el[key]] = 1}']").click
           else
-            el.set @data[el['name']] = Faker::Lorem.sentence
+            el.set @data[el[key]] = Faker::Lorem.sentence
         end
       end
     end
   end
 
   step 'I fill in the following fields' do |table|
+    @data = {}
     table.raw.flatten.each do |value|
       case value
         when 'Price'
           @price = Faker::Number.number(4).to_i
-          find("input[name*='[price]']").set @price
+          find("input[name*='[price]']").set @data[value] = @price
         when 'Requested quantity', 'Approved quantity'
           @quantity = Faker::Number.number(2).to_i
-          fill_in _(value), with: @quantity
+          fill_in _(value), with: @data[value] = @quantity
         when 'Replacement / New'
-          find("input[name*='[replacement]'][value='1']").click
+          find("input[name*='[replacement]'][value='#{@data[value] = 1}']").click
         else
-          fill_in _(value), with: Faker::Lorem.sentence
+          fill_in _(value), with: @data[value] = Faker::Lorem.sentence
       end
     end
   end
@@ -138,11 +141,6 @@ module CommonSteps
 
   step 'the request with all given information ' \
        'was created successfully in the database' do
-    mapped_data = {}
-    @data.each_pair do |k,v|
-      kk = k.match(/.*\[(.*)\]\[(.*)\]/)[2]
-      mapped_data[kk] = v
-    end
     user = @user || @current_user
     expect(@group.requests.where(user_id: user).find_by(mapped_data)).to be
   end
@@ -177,6 +175,22 @@ module CommonSteps
         amount,
         unit: Setting.local_currency_string,
         precision: 0)
+  end
+
+  def mapped_data
+    h = {}
+    h[:article_name] = @data['Article'] if @data['Article']
+    if @data['Article nr. / Producer nr.']
+      h[:article_number] = @data['Article nr. / Producer nr.']
+    end
+    h[:price_cents] = @data['Price'] * 100 if @data['Price']
+    h[:supplier_name] = @data['Supplier'] if @data['Supplier']
+    if @data['Requested quantity']
+      h[:requested_quantity] = @data['Requested quantity']
+    end
+    h[:motivation] = @data['Motivation'] if @data['Motivation']
+    h[:replacement] = @data['Replacement'] if @data['Replacement']
+    h
   end
 
 end

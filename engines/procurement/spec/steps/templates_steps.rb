@@ -187,17 +187,4 @@ steps_for :templates do
     end
   end
 
-  private
-
-  def mapped_data
-    h = {}
-    h[:article_name] = @data['Article'] if @data['Article']
-    if @data['Article nr. / Producer nr.']
-      h[:article_number] = @data['Article nr. / Producer nr.']
-    end
-    h[:price_cents] = @data['Price'] * 100 if @data['Price']
-    h[:supplier_name] = @data['Supplier'] if @data['Supplier']
-    h
-  end
-
 end

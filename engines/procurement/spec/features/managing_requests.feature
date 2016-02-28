@@ -96,10 +96,18 @@ Feature: section Managing Requests
     When I navigate to the requests overview page
     And I press on the plus icon of a group
     Then I am navigated to the new request form
-    When I enter an article
-    And I enter an amount
-    And I enter a reason
-    And I choose the option "replacement/new"
+
+#!!# reusing step
+#    When I enter an article
+#    And I enter an amount
+#    And I enter a reason
+#    And I choose the option "replacement/new"
+    And I fill in the following fields
+      | Article                      |
+      | Requested quantity           |
+      | Motivation                   |
+      | Replacement / New            |
+
     And I click on save
     Then I see a success message
     And the request with all given information was created successfully in the database
