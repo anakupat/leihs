@@ -388,7 +388,7 @@ Feature: section Managing Requests
     Given I am <username>
     And a request created by myself exists
     And the request includes an attachment
-    When I navigate to the requests overview page
+    When I navigate to the requests form of myself
     And I delete the attachment
     And I click on save
     Then I see a success message
@@ -402,13 +402,20 @@ Feature: section Managing Requests
   @managing_requests
   Scenario Outline: Download an attachment
     Given I am <username>
-    And several request created by myself exist
+
+#!!# reference to a specific request
+#    And several request created by myself exist
+    And a request created by myself exists
+
     And the request includes an attachment
-    When I navigate to the requests overview page
+    When I navigate to the requests form of myself
     And I download the attachment
     Then The file is downloaded
     Then I see a success message
+
+#??# really?
     And the attachment is deleted successfully from the database
+
     Examples:
       | username |
       | Barbara  |
@@ -417,9 +424,13 @@ Feature: section Managing Requests
   @managing_requests
   Scenario Outline: View an attachment .jpg
     Given I am <username>
-    And several request created by myself exist
+
+#!!# reference to a specific request
+#    And several request created by myself exist
+    And a request created by myself exists
+
     And the request includes an attachment with the attribute .jpg
-    When I navigate to the requests overview page
+    When I navigate to the requests form of myself
     And I click on the attachment
     Then The content of the file is shown in a viewer
     Examples:
@@ -430,9 +441,9 @@ Feature: section Managing Requests
   @managing_requests
   Scenario Outline: View an attachment .pdf
     Given I am <username>
-    And several request created by myself exist
+    And several requests created by myself exist
     And the request includes an attachment with the attribute .pdf
-    When I navigate to the requests overview page
+    When I navigate to the requests form of myself
     And I click on the attachment
     Then The content of the file is shown in a viewer
     Examples:
@@ -444,7 +455,7 @@ Feature: section Managing Requests
   Scenario Outline: Send an email to a group
     Given I am <username>
     And an email for a group exists
-    When I navigate to the requests overview page
+    When I navigate to the requests form of myself
     And I click on the email icon
     Then the email program is opened
     And the receiver of the email is the email of the group
@@ -459,7 +470,7 @@ Feature: section Managing Requests
   Scenario: Additional Fields shown to requester only after budget period has ended
     Given I am Roger
     And the budget period has ended
-    And several request created by myself exist
+    And several requests created by myself exist
     And the inspector has approved the request
     And the inspector has entered an inspection comment
     When I navigate to the requests overview page

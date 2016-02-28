@@ -112,6 +112,12 @@ steps_for :managing_requests do
     end
   end
 
+  step 'I delete the attachment' do
+    within '.form-group', text: _('Attachments') do
+      find('.fa-trash', match: :first).click
+    end
+  end
+
   step 'I delete the request' do
     within ".request[data-request_id='#{@request.id}']" do
       el = find('.btn-group .fa-gear')
@@ -369,6 +375,10 @@ steps_for :managing_requests do
     end
   end
 
+  step 'the attachment is deleted successfully from the database' do
+    expect(@request.reload.attachments).to be_empty
+  end
+
   step 'the current date has not yet reached the inspection start date' do
     travel_to_date Procurement::BudgetPeriod.current.inspection_start_date - 1.day
     expect(Time.zone.today).to be < \
@@ -391,6 +401,11 @@ steps_for :managing_requests do
         end
       end
     end
+  end
+
+  step 'the request includes an attachment' do
+    @request.update_attributes(attachments_attributes:
+        [{file: File.open('features/data/images/image1.jpg')}] )
   end
 
   step 'the request is :result in the database' do |result|
