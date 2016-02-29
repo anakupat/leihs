@@ -10,14 +10,8 @@ Feature: section Managing Requests
     When I navigate to the requests overview page
     Then the current budget period is selected
     And all groups in the filter groups are selected
-
-#!!# this doesn't make sense.
-#    the organisations filter is not visible for a normal requester
-#    since he is only connected to one organisation unit
-    And all organisations are selected
-
     And both priorities are selected
-    And all states are selected
+    And all states are selected including the state "in Prüfung"
     And the search field is empty
     And I do not see the filter "Only show my own requests"
     And I see the headers of the columns of the overview
@@ -47,12 +41,6 @@ Feature: section Managing Requests
     Then I do not see the filter "Only show my own requests"
     When I select one or more budget periods
     And I select one or more groups
-
-#!!# this doesn't make sense.
-#    the organisations filter is not visible for a normal requester
-#    since he is only connected to one organisation unit
-    And I select a specific organisation
-
     And I select one ore both priorities
     And I select one or more states
     And I enter a search string
@@ -65,7 +53,6 @@ Feature: section Managing Requests
 #NW:receiver can be chosen by list of leihs-users
 #!!# doesn't make sense. receiver is a free string
 #    And several receivers exist
-
     And several points of delivery exist
     When I want to create a new request
     And I fill in the following fields
@@ -92,7 +79,6 @@ Feature: section Managing Requests
     When I navigate to the requests overview page
     And I press on the plus icon of a group
     Then I am navigated to the new request form
-
 #!!# reusing step
 #    When I enter an article
 #    And I enter an amount
@@ -116,27 +102,20 @@ Feature: section Managing Requests
   Scenario Outline: Creating a request through a budget period selecting a template article
     Given I am <username>
     When I navigate to the requests overview page
-
+##NW: we might need to discuss this in the next development phase. This needs explanation for the inspectors and its usually easyer, if they have the same possibilities as requesters, withuot having to change the settings.
 #!!# this is needed for the inspectors, to see the plus icon
     And I select "Only show my own requests" if present
     And I press on the plus icon of the budget period
 
     Then I am navigated to the templates overview
     And I see the budget period
-
-#!!# not possible. do you mean start date of the inspection phase?
-    And I see the start date of the requesting phase
-
+    And I see the end date of the request phase
     And I see the end date of the inspection phase
     And I see all categories of all groups listed
     When I press on a category
     Then I see all template articles of this category
     When I choose a template article
-
-#!!# differentiating "form page" vs "overview page"
-#    Then I am navigated to the new requests page of the specific group
     Then I am navigated to the new request form of the specific group
-
     When I fill in all mandatory information
     And I click on save
     Then I see a success message
@@ -150,19 +129,12 @@ Feature: section Managing Requests
   Scenario Outline: Creating a request through a budget period selecting a group
     Given I am <username>
     When I navigate to the requests overview page
-
-#!!# this is needed for the inspectors, to see the plus icon
     And I select "Only show my own requests" if present
     And I press on the plus icon of the budget period
-
     Then I am navigated to the templates overview
     And I see all groups listed
     When I choose a group
-
-#!!# differentiating "form page" vs "overview page"
-#    Then I am navigated to the new requests page of the specific group
     Then I am navigated to the new request form of the specific group
-
     When I fill in all mandatory information
     And I click on save
     Then I see a success message
@@ -175,15 +147,8 @@ Feature: section Managing Requests
   @managing_requests
   Scenario Outline: Creating a freetext request inside the new request page
     Given I am <username>
-
-#!!# let's start directly on the form
-#    When I am navigated to the new request form
     And I am on the new request form of a group
-
-#!!# more specific
-#    And I press on the plus icon
     And I press on the plus icon on the left sidebar
-
     Then a new request line is added
     When I fill in all mandatory information
     And I click on save
@@ -209,7 +174,7 @@ Feature: section Managing Requests
     And the field articlenr/suppliernr is prefilled with the articlenr/suppliernr of the template article chosen
     And the field supplier is prefilled with the supplier of the template article chosen
     And the field price is prefilled with the price of the template article chosen
-    ##NW: the next step does not yet work correctly
+    ##NW: the next step is not yet implemented
     And no option is chosen yet for the field Replacement / New
     When I enter the motivation
     And I choose the option "new"
@@ -296,11 +261,7 @@ Feature: section Managing Requests
   Scenario Outline: Delete a Request
     Given I am <username>
     And the current date has not yet reached the inspection start date
-
-#!!# refer to a specific request
-#    And several requests created by myself exist
     And a request created by myself exists
-
     When I navigate to the requests overview page
     And I select all budget periods
     And I select all groups
