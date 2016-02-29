@@ -22,10 +22,7 @@ Feature: Templates
     Given I am Barbara
     And a template category exists
     When I navigate to the templates page
-
-#!!# this is needed:
     And I edit the category
-
 #!!# merged to a table
 #    And I enter an article name
 #    And I enter the article/suppliernr.
@@ -57,17 +54,13 @@ Feature: Templates
   Scenario: Deleting an Article
     Given I am Barbara
     And a template category exists
-
 #!!# this could also be with many articles, reusing existing step
-#    And the template category contains an article
     And the template category contains articles
-
     When I navigate to the templates page
 
 #!!# referring to 'the'
 #    And I edit a category
     And I edit the category
-
     And I delete an article from the category
     Then the article of the category is marked red
     When I click on save
@@ -80,11 +73,9 @@ Feature: Templates
     And a template category exists
     And the template category has one article
     When I navigate to the templates page
-    And I modify the category name
-
-#!!# this is needed to open
+    #!!# this is needed to open
     And I edit the category
-
+    And I modify the category name
 #!!# merged to a table
 #    And I modify the article name
 #    And I modify the article/suppliernr.
@@ -95,7 +86,6 @@ Feature: Templates
       | Article nr. / Producer nr. |
       | Price                      |
       | Supplier                   |
-
     And I click on save
     Then I see a success message
     And the data modified is saved to the database
@@ -105,11 +95,8 @@ Feature: Templates
     Given I am Barbara
     And a template category exists
     And the template category has one article
-
-#!!# this are needed:
     When I navigate to the templates page
     And I edit the category
-
 #!!# merged to a table
 #    And the article name is filled
 #    And the article/suppliernr. is filled
@@ -120,7 +107,6 @@ Feature: Templates
       | Article nr. / Producer nr. |
       | Price                      |
       | Supplier                   |
-
 #!!# merged to a table
 #    When I delete the article/suppliernr.
 #    And I delete the price
@@ -129,7 +115,6 @@ Feature: Templates
       | Article nr. / Producer nr. |
       | Price                      |
       | Supplier                   |
-
     And I click on save
     Then I see a success message
     And the deleted data is deleted from the database
@@ -152,26 +137,18 @@ Feature: Templates
 #    And several articles in categories exist
     And a template category exists
     And the template category has one article
-
-#!!# that template needs to be already used
-    And the article is already used in many requests
-
+    And the template is already used in many requests
     When I navigate to the templates page
-
-#!!# this is needed to open
     And I edit the category
-
 #!!# merged to a table
 #    And I change the name of an article
 #    And I change or delete the article nr./supplier nr. of the same article
     And the following fields are modified
       | Article                    |
       | Article nr. / Producer nr. |
-
     And I click on save
     Then I see a success message
     And the data modified is saved to the database
-
 #!!# already checked in previous step
 #    And this template id saved in requests is nullified
     And the requests are nullified

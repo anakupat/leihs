@@ -65,21 +65,10 @@ Feature: Periods and states
 
   @periods_and_states
   Scenario: State "New" - Request Date before Inspection Date
-
-#!!# need this
     Given the basic dataset is ready
-
     And I am Roger
-
-#!!# no need anymore
-#    And the current budget period exist
-
     And the current date is before the inspection date
-
-#!!# reusing step
-#    When I create a new request
     When I want to create a new request
-
     And I fill in the following fields
       | Article                      |
       | Article nr. / Producer nr.   |
@@ -94,10 +83,7 @@ Feature: Periods and states
 
   @periods_and_states
   Scenario: State "Inspection" - Current Date between Inspection Date and Budget Period End Date
-
-#!!# need this
     Given the basic dataset is ready
-
     And I am Roger
     And a request created by myself exists
     And the current date is between the inspection date and the budget period end date
@@ -120,10 +106,7 @@ Feature: Periods and states
 
   @periods_and_states
   Scenario Outline: State "In inspection", "Approved", "Denied" "Partially approved" for requester when budget period has ended
-
-#!!# need this
     Given the basic dataset is ready
-
     And I am Roger
     And a request exists
     When the approved quantity is <quantity>
@@ -138,10 +121,7 @@ Feature: Periods and states
 
   @periods_and_states
   Scenario Outline: State "New", "Approved", "Denied" "Partially approved" for inspector
-
-#!!# need this
     Given the basic dataset is ready
-
     And I am Barbara
     And a request exists
     When the approved quantity is <quantity>
@@ -155,21 +135,14 @@ Feature: Periods and states
 
   @periods_and_states
   Scenario Outline: No Modification or Deletion after Budget End Period date
-
-#!!# need this
     Given the basic dataset is ready
-
     And I am <username>
     Given a request exists
     When the budget period has ended
     Then I can not create any request for the budget period which has ended
     And I can not modify any request for the budget period which has ended
     And I can not delete any requests for the budget period which has ended
-
-#!!# more precise
-#    And I can not move a request to a budget period which has ended
     And I can not move a request of a budget period which has ended to another budget period
-
     And I can not move a request of a budget period which has ended to another procurement group
     Examples:
       | username  |

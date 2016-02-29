@@ -16,10 +16,7 @@ Feature: Inspection (state-behaviour described in seperate feature-file)
     And the search field is empty
     And the checkbox "Only show my own request" is not marked
     And I see the headers of the columns of the overview
-
-#??# why 1?
-    And I see the amount of requests which are listed is 1
-
+    And I see the amount of requests listed
     And I see the current budget period
     And I see the requested amount per budget period
     And I see the requested amount per group of each budget period
@@ -47,7 +44,6 @@ Feature: Inspection (state-behaviour described in seperate feature-file)
   Scenario: Using the filters as inspector
     Given I am Barbara
     And templates for my group exist
-
 #!!# defining in a single step
 #    And several requests exist for the current budget period
 #    And two requests have been created by myself
@@ -64,18 +60,10 @@ Feature: Inspection (state-behaviour described in seperate feature-file)
     And I select all organisations
     And I select both priorities
     And I select all states
-
-#!!# typo
-#    And I enter leave the search string empty
     And I leave the search string empty
-
     Then the list of requests is adjusted immediately
     And I see both my requests
-
-#!!# reuse already defined step
-#    And the amount of requests found is shown as 2
     And I see the amount of requests which are listed is 2
-
     When I navigate to the templates page of my group
     And I navigate back to the request overview page
     Then the filter settings have not changed
@@ -126,13 +114,9 @@ Feature: Inspection (state-behaviour described in seperate feature-file)
   @inspection
   Scenario: Give Reason when Partially Excepting or Denying
     Given I am Barbara
-#!!# need to be more specific
-#    And several requests exists
-#    And the requested amount is 2
     And requests exist with following data
       | requested amount |
       | 2                |
-
     When I am navigated to the requests page
     And I set the approved quantity to 0
     Then the field "inspection comment" is marked red
@@ -158,30 +142,16 @@ Feature: Inspection (state-behaviour described in seperate feature-file)
     And the current budget period is in inspection phase
     And there is a future budget period
     And there is a budget period which has already ended
-
 #!!# reusing step
 #    And several requests for my inspection group and the current budget period exist
     And following requests exist for the current budget period
       | quantity | user  | group     |
       | 3        | Roger | inspected |
-
-#!!# need to be more precise
-#    When I am navigated to the requests page
     When I navigate to the requests form of Roger
-
-#!!# no specified request
-#    Then I can not move the request to the old budget period
     Then I can not move any request to the old budget period
-
-#!!# no specified request
-#    When I move the request to the future budget period
     When I move a request to the future budget period
-
     Then I see a success message
     And the changes are saved successfully to the database
-
-#!!# more precise
-#    And I can not save the data
     And I can not submit the data
 
   @inspection
@@ -189,21 +159,15 @@ Feature: Inspection (state-behaviour described in seperate feature-file)
     Given I am Barbara
     And several groups exist
     And the current budget period is in inspection phase
-
 #!!# reusing step
 #    And several requests for my inspection group and the current budget period exist
     And following requests exist for the current budget period
       | quantity | user  | group     |
       | 3        | Roger | inspected |
-
-#!!# need to be more precise
-#    When I am navigated to the requests page
     When I navigate to the requests form of Roger
-
 #!!# no reference yet
 #    And I move the request to the other group where I am not inspector
     And I move a request to the other group where I am not inspector
-
     Then I see a success message
     And the changes are saved successfully to the database
     And the following information is deleted from the request

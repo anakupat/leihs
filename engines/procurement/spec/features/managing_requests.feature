@@ -6,11 +6,7 @@ Feature: section Managing Requests
   @managing_requests
   Scenario: What to see in section "Requests" as requester only
     Given I am Roger
-
-#!!# more precise and reusing existing step
-#    And several request exist
     And several requests created by myself exist
-
     When I navigate to the requests overview page
     Then the current budget period is selected
     And all groups in the filter groups are selected
@@ -66,7 +62,7 @@ Feature: section Managing Requests
   @managing_requests
   Scenario: Creating a request as requester only
     Given I am Roger
-
+#NW:receiver can be chosen by list of leihs-users
 #!!# doesn't make sense. receiver is a free string
 #    And several receivers exist
 
@@ -102,7 +98,7 @@ Feature: section Managing Requests
 #    And I enter an amount
 #    And I enter a reason
 #    And I choose the option "replacement/new"
-    And I fill in the following fields
+    When I fill in the following fields
       | Article                      |
       | Requested quantity           |
       | Motivation                   |
@@ -213,6 +209,8 @@ Feature: section Managing Requests
     And the field articlenr/suppliernr is prefilled with the articlenr/suppliernr of the template article chosen
     And the field supplier is prefilled with the supplier of the template article chosen
     And the field price is prefilled with the price of the template article chosen
+    ##NW: the next step does not yet work correctly
+    And no option is chosen yet for the field Replacement / New
     When I enter the motivation
     And I choose the option "new"
     And I click on save
@@ -372,20 +370,6 @@ Feature: section Managing Requests
     And I can choose the following priority values
       | High   |
       | Normal |
-    Examples:
-      | username |
-      | Barbara  |
-      | Roger    |
-
-  @managing_requests
-  @requests
-  Scenario Outline: Prefill field "Replacement / New"
-    Given I am <username>
-    When I want to create a new request
-    Then the replacement value "Replacement" is set by default
-    And I can choose the following replacement values
-      | Replacement |
-      | New         |
     Examples:
       | username |
       | Barbara  |
