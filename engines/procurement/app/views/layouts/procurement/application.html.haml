@@ -34,7 +34,10 @@
 
     %article.wrapper
       .sidebar-wrapper
-        = yield :sidebar
+        - if content_for? :sidebar
+          = yield :sidebar
+        - else
+          = render partial: 'procurement/application/alerts'
 
       .page-content-wrapper.container-fluid
         = render partial: 'layouts/procurement/flash', :locals => {:flash => flash}

@@ -9,10 +9,6 @@ module Procurement
 
     def index
       @budget_periods = BudgetPeriod.order(end_date: :asc)
-
-      unless BudgetPeriod.current
-        flash.now[:error] = _('Current budget period not defined yet')
-      end
     end
 
     def create

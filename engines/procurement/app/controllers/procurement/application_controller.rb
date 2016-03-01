@@ -13,7 +13,7 @@ module Procurement
     # another controller
     before_action :authorize_if_admins_exist, except: :root
 
-    rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
+    rescue_from Pundit::NotAuthorizedError, with: :system_not_ready
 
     def root
       authorize 'procurement/application'.to_sym, :current_budget_period_defined?
@@ -27,28 +27,19 @@ module Procurement
       authorize 'procurement/application'.to_sym, :admins_defined?
     end
 
-    def user_not_authorized(exception)
+    def system_not_ready(exception)
       case exception.query
+        when :authenticated?
+          flash[:error] = _('You are not logged in')
 
-      when :authenticated?
-        flash[:error] = _('You are not logged in')
-        redirect_to root_path
+        when :admins_defined?
+          flash[:error] = _('No admins defined yet')
 
-      when :admins_defined?
-        flash[:error] = _('No admins defined yet')
-        if procurement_or_leihs_admin?
-          redirect_to users_path
-        end
-
-      when :current_budget_period_defined?
-        flash.now[:error] = _('Current budget period not defined yet')
-        if procurement_or_leihs_admin?
-          redirect_to budget_periods_path
-        end
-
-      else
-        redirect_to root_path
+        when :current_budget_period_defined?
+          flash[:error] = _('Current budget period not defined yet')
       end
+
+      render action: :root
     end
 
     def procurement_or_leihs_admin?

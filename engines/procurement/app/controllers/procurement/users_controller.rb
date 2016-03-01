@@ -4,7 +4,9 @@ module Procurement
   class UsersController < ApplicationController
 
     skip_before_action :authorize_if_admins_exist
-    # TODO: ?? before_action :require_admin_role if admins empty ??
+    before_action only: [:index, :create] do
+      authorize 'procurement/application'.to_sym, :procurement_or_leihs_admin?
+    end
 
     def index
       respond_to do |format|
