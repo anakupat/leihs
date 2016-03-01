@@ -11,11 +11,20 @@ Feature: section Managing Requests
     Then the current budget period is selected
     And all groups in the filter groups are selected
     And both priorities are selected
-    And all states are selected including the state "in Prüfung"
+
+#FS# separate steps
+#    And all states are selected including the state "in Prüfung"
+    And the state "In inspection" is present
+    And all states are selected
+
     And the search field is empty
     And I do not see the filter "Only show my own requests"
     And I see the headers of the columns of the overview
-    And I see the amount of requests which are listed is 1
+
+#FS# why just 1?
+#    And I see the amount of requests which are listed is 1
+    And I see the amount of requests listed
+
     And I see the current budget period
     And I see the requested amount per budget period
     And I see the requested amount per group of each budget period
@@ -79,17 +88,11 @@ Feature: section Managing Requests
     When I navigate to the requests overview page
     And I press on the plus icon of a group
     Then I am navigated to the new request form
-#!!# reusing step
-#    When I enter an article
-#    And I enter an amount
-#    And I enter a reason
-#    And I choose the option "replacement/new"
     When I fill in the following fields
       | Article                      |
       | Requested quantity           |
       | Motivation                   |
       | Replacement / New            |
-
     And I click on save
     Then I see a success message
     And the request with all given information was created successfully in the database
@@ -174,7 +177,7 @@ Feature: section Managing Requests
     And the field articlenr/suppliernr is prefilled with the articlenr/suppliernr of the template article chosen
     And the field supplier is prefilled with the supplier of the template article chosen
     And the field price is prefilled with the price of the template article chosen
-    ##NW: the next step is not yet implemented
+##NW: the next step is not yet implemented
     And no option is chosen yet for the field Replacement / New
     When I enter the motivation
     And I choose the option "new"
@@ -351,15 +354,11 @@ Feature: section Managing Requests
       | Barbara  |
       | Roger    |
 
-  #This scenario does not work yet! Save button is not enabled after uploading a file
+#NW# This scenario does not work yet! Save button is not enabled after uploading a file
   @managing_requests
   Scenario Outline: Download an attachment
     Given I am <username>
-
-#!!# reference to a specific request
-#    And several request created by myself exist
     And a request created by myself exists
-
     And the request includes an attachment
     When I navigate to the requests form of myself
     And I download the attachment
@@ -377,11 +376,7 @@ Feature: section Managing Requests
   @managing_requests
   Scenario Outline: View an attachment .jpg
     Given I am <username>
-
-#!!# reference to a specific request
-#    And several request created by myself exist
     And a request created by myself exists
-
     And the request includes an attachment with the attribute .jpg
     When I navigate to the requests form of myself
     And I click on the attachment

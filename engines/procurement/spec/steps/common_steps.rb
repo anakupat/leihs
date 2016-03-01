@@ -76,14 +76,127 @@ module CommonSteps
     find '.flash .alert-danger', match: :first
   end
 
+  step 'I see all groups' do
+    within '.panel-success .panel-body' do
+      Procurement::Group.all.each do |group|
+        find'.row', text: group.name
+      end
+    end
+  end
+  # not alias, but same implementation
+  step 'I see all groups listed' do
+    step 'I see all groups'
+  end
+
+  step 'I see the amount of requests listed' do
+    within '#filter_target' do
+      find 'h4', text: /^\d #{_('Requests')}$/
+    end
+  end
+
   step 'I see the amount of requests which are listed is :n' do |n|
     within '#filter_target' do
       find 'h4', text: /^#{n} #{_('Requests')}$/
     end
   end
 
+  step 'I see the current budget period' do
+    find '.panel-success .panel-heading .h4',
+         text: Procurement::BudgetPeriod.current.name
+  end
+  # alias
+  step 'I see the budget period' do
+    step 'I see the current budget period'
+  end
+
   step 'I see the headers of the columns of the overview' do
     find '#column-titles'
+  end
+
+  step 'I see the following request information' do |table|
+    elements = all('[data-request_id]')
+    expect(elements).not_to be_empty
+    elements.each do |element|
+      request = Procurement::Request.find element['data-request_id']
+      within element do
+        table.raw.flatten.each do |value|
+          case value
+            when 'article name'
+              find '.col-sm-2', text: request.article_name
+            when 'name of the requester'
+              find '.col-sm-2', text: request.user.to_s
+            when 'department'
+              find '.col-sm-2', text: request.organization.parent.to_s
+            when 'organisation'
+              find '.col-sm-2', text: request.organization.to_s
+            when 'price'
+              find '.col-sm-1 .total_price', text: request.price.to_i
+            when 'requested amount'
+              within all('.col-sm-2.quantities div', exact: 3)[0] do
+                expect(page).to have_content request.requested_quantity
+              end
+            when 'approved amount'
+              within all('.col-sm-2.quantities div', exact: 3)[1] do
+                expect(page).to have_content request.approved_quantity
+              end
+            when 'order amount'
+              within all('.col-sm-2.quantities div', exact: 3)[2] do
+                expect(page).to have_content request.order_quantity
+              end
+            when 'total amount'
+              find '.col-sm-1 .total_price',
+                   text: request.total_price(@current_user).to_i
+            when 'priority'
+              find '.col-sm-1', text: _(request.priority.capitalize)
+            when 'state'
+              state = request.state(@current_user)
+              find '.col-sm-1', text: _(state.to_s.humanize)
+            else
+              raise
+          end
+        end
+      end
+    end
+  end
+
+  step 'I see the requested amount per budget period' do
+    requests = Procurement::BudgetPeriod.current.requests
+                .where(group_id: displayed_groups)
+    requests = requests.where(user_id: @current_user) if filtered_own_requests?
+    total = requests.map { |r| r.total_price(@current_user) }.sum
+    find '.panel-success .panel-heading .label-primary.big_total_price',
+         text: number_with_delimiter(total.to_i)
+  end
+
+  step 'I see the requested amount per group of each budget period' do
+    displayed_groups.each do |group|
+      requests = Procurement::BudgetPeriod.current.requests
+                     .where(group_id: group)
+      requests = requests.where(user_id: @current_user) if filtered_own_requests?
+      total = requests.map { |r| r.total_price(@current_user) }.sum
+      within '.panel-success .panel-body' do
+        within '.row', text: group.name do
+          find '.label-primary.big_total_price',
+            text: number_with_delimiter(total.to_i)
+        end
+      end
+    end
+  end
+
+  step 'I see when the requesting phase of this budget period ends' do
+    within '.panel-success .panel-heading' do
+      find '.row',
+           text: _('requesting phase until %s') \
+                  % I18n.l(Procurement::BudgetPeriod.current.inspection_start_date)
+    end
+  end
+
+  step 'I see when the inspection phase of this budget period ends' do
+    within '.panel-success .panel-heading' do
+      find '.row',
+           text: _('inspection phase until %s') \
+                  % I18n.l(Procurement::BudgetPeriod.current.end_date)
+    end
   end
 
   step 'I want to create a new request' do
@@ -191,6 +304,22 @@ module CommonSteps
     h[:motivation] = @data['Motivation'] if @data['Motivation']
     h[:replacement] = @data['Replacement'] if @data['Replacement']
     h
+  end
+
+  def number_with_delimiter(n)
+    ActionController::Base.helpers.number_with_delimiter(n)
+  end
+
+  private
+
+  def displayed_groups
+    Procurement::Group.where(name: all('div.row .h4').map(&:text))
+  end
+
+  def filtered_own_requests?
+    Procurement::Access.requesters.where(user_id: @current_user).exists? and \
+      (has_no_selector?('#filter_panel input[name="user_id"]') or \
+        find('#filter_panel input[name="user_id"]').checked?)
   end
 
 end

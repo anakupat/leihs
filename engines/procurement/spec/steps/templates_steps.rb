@@ -67,7 +67,7 @@ steps_for :templates do
     end
   end
 
-  step 'the article is already used in many requests' do
+  step 'the template is already used in many requests' do
     3.times do
       FactoryGirl.create :procurement_request,
                          template: @template

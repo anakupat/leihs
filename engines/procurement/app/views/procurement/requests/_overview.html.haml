@@ -51,7 +51,7 @@
               = money_without_cents_and_with_symbol total_price, false
           .col-sm-2
             - if @user.nil? and group.inspectable_or_readable_by? current_user
-              = render partial: 'procurement/requests/progress_radial', locals: {used: total_price.to_i, max: budget_limit_amount.to_i}
+              = render partial: 'procurement/requests/progress_radial', locals: {used: total_price, max: budget_limit_amount}
 
         - requests.each do |request|
           %a.list-group-item.row{href: group_budget_period_user_requests_path(request.group, request.budget_period, request.user, request_id: request.id), data: {request_id: request.id}}

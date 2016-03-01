@@ -21,8 +21,8 @@ module FilterSteps
 
   step 'all states are selected' do
     within '#filter_panel .form-group', text: _('State of Request') do
-      Procurement::Request::STATES.each do |state|
-        expect(find "input[value='#{state}']").to be_selected
+      all('input[name="filter[states][]"]').each do |cb|
+        expect(cb).to be_selected
       end
     end
   end
@@ -198,6 +198,22 @@ module FilterSteps
     within '#filter_panel .form-group', text: _('Search') do
       expect(find('input[name="filter[search]"]').value).to be_empty
     end
+  end
+
+  step 'the state :state :boolean present' do |state, boolean|
+    expect(Procurement::Request::STATES.map{|state| _(state.to_s.humanize)}).to \
+      include _(state)
+
+    within '#filter_panel .form-group', text: _('State of Request') do
+      expect(
+        if boolean
+          has_selector? "ul li label .label", text: _(state)
+        else
+          has_no_selector? "ul li label .label", text: _(state)
+        end
+      ).to be true
+    end
+
   end
 end
 

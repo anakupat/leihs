@@ -6,13 +6,22 @@ Feature: Inspection (state-behaviour described in seperate feature-file)
   @inspection
   Scenario: What to see in section "Requests" as inspector
     Given I am Barbara
-    And several requests exist
+
+#FS# ensure my groups have requests
+#    And several requests exist
+    And several requests exist for my groups
+
     When I navigate to the requests overview page
     Then the current budget period is selected
     And only my groups are selected
     And all organisations are selected
     And both priorities are selected
+
+#FS# separate steps
+#    And all states are selected
+    And the state "In inspection" is not present
     And all states are selected
+
     And the search field is empty
     And the checkbox "Only show my own request" is not marked
     And I see the headers of the columns of the overview
@@ -21,12 +30,16 @@ Feature: Inspection (state-behaviour described in seperate feature-file)
     And I see the requested amount per budget period
     And I see the requested amount per group of each budget period
     And I see the budget limits of all groups
-    And I see the total of all ordered amounts of each groups
+    And I see the total of all ordered amounts of each group
     And I see the total of all ordered amounts of a budget period
     And I see the percentage of budget used compared to the budget limit of my group
     And I see when the requesting phase of this budget period ends
     And I see when the inspection phase of this budget period ends
-    And I see all groups
+
+#FS# not possible to see all groups because previous step 'only my groups are selected'
+#    And I see all groups
+    And only my groups are shown
+
     And I see the following request information
       | article name          |
       | name of the requester |
@@ -35,7 +48,11 @@ Feature: Inspection (state-behaviour described in seperate feature-file)
       | price                 |
       | requested amount      |
       | approved amount       |
-      | ordered amount        |
+
+#FS# typo
+#      | ordered amount        |
+      | order amount          |
+
       | total amount          |
       | priority              |
       | state                 |
@@ -44,15 +61,10 @@ Feature: Inspection (state-behaviour described in seperate feature-file)
   Scenario: Using the filters as inspector
     Given I am Barbara
     And templates for my group exist
-#!!# defining in a single step
-#    And several requests exist for the current budget period
-#    And two requests have been created by myself
-#    And one request has been created by Roger
     And following requests exist for the current budget period
       | quantity | user   |
       | 2        | myself |
       | 1        | Roger  |
-
     When I navigate to the requests overview page
     And I select "Only show my own requests"
     And I select the current budget period
@@ -142,8 +154,6 @@ Feature: Inspection (state-behaviour described in seperate feature-file)
     And the current budget period is in inspection phase
     And there is a future budget period
     And there is a budget period which has already ended
-#!!# reusing step
-#    And several requests for my inspection group and the current budget period exist
     And following requests exist for the current budget period
       | quantity | user  | group     |
       | 3        | Roger | inspected |
@@ -159,14 +169,10 @@ Feature: Inspection (state-behaviour described in seperate feature-file)
     Given I am Barbara
     And several groups exist
     And the current budget period is in inspection phase
-#!!# reusing step
-#    And several requests for my inspection group and the current budget period exist
     And following requests exist for the current budget period
       | quantity | user  | group     |
       | 3        | Roger | inspected |
     When I navigate to the requests form of Roger
-#!!# no reference yet
-#    And I move the request to the other group where I am not inspector
     And I move a request to the other group where I am not inspector
     Then I see a success message
     And the changes are saved successfully to the database

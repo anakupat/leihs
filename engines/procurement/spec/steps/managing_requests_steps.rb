@@ -131,7 +131,7 @@ steps_for :managing_requests do
 
   step 'I do not see the budget limits' do
     within '.panel-success .panel-body' do
-      Procurement::Group.all.each do |group|
+      displayed_groups.each do |group|
         within '.row', text: group.name do
           expect(has_no_selector? '.budget_limit').to be true
         end
@@ -141,7 +141,7 @@ steps_for :managing_requests do
 
   step 'I do not see the percentage signs' do
     within '.panel-success .panel-body' do
-      Procurement::Group.all.each do |group|
+      displayed_groups.each do |group|
         within '.row', text: group.name do
           expect(has_no_selector? '.progress-radial').to be true
         end
@@ -181,160 +181,6 @@ steps_for :managing_requests do
   step 'I receive a message asking me if I am sure I want to delete the data' do
     # page.driver.browser.switch_to.alert.accept
     page.driver.browser.switch_to.alert
-  end
-
-  step 'I see all groups' do
-    within '.panel-success .panel-body' do
-      Procurement::Group.all.each do |group|
-        find'.row', text: group.name
-      end
-    end
-  end
-  # not alias, but same implementation
-  step 'I see all groups listed' do
-    step 'I see all groups'
-  end
-
-  step 'I see the budget limits of all groups' do
-    within '.panel-success .panel-body' do
-      Procurement::Group.all.each do |group|
-        within '.row', text: group.name do
-          amount = group.budget_limits
-                    .find_by(budget_period_id: Procurement::BudgetPeriod.current)
-                    .try(:amount) || 0
-          find '.budget_limit',
-               text: amount
-        end
-      end
-    end
-  end
-
-  step 'I see the current budget period' do
-    find '.panel-success .panel-heading .h4',
-         text: Procurement::BudgetPeriod.current.name
-  end
-  # alias
-  step 'I see the budget period' do
-    step 'I see the current budget period'
-  end
-
-  step 'I see the following request information' do |table|
-    elements = all('[data-request_id]')
-    expect(elements).not_to be_empty
-    elements.each do |element|
-      request = Procurement::Request.find element['data-request_id']
-      within element do
-        table.raw.flatten.each do |value|
-          case value
-            when 'article name'
-              find '.col-sm-2', text: request.article_name
-            when 'name of the requester'
-              find '.col-sm-2', text: request.user.to_s
-            when 'department'
-              find '.col-sm-2', text: request.organization.parent.to_s
-            when 'organisation'
-              find '.col-sm-2', text: request.organization.to_s
-            when 'price'
-              find '.col-sm-1 .total_price', text: request.price.to_i
-            when 'requested amount'
-              find '.col-sm-2.quantities', text: request.requested_quantity
-            when 'total amount'
-              find '.col-sm-1 .total_price',
-                   text: request.total_price(@current_user).to_i
-            when 'priority'
-              find '.col-sm-1', text: _(request.priority.capitalize)
-            when 'state'
-              state = request.state(@current_user)
-              find '.col-sm-1', text: _(state.to_s.humanize)
-            else
-              raise
-          end
-        end
-      end
-    end
-  end
-
-  step 'I see the percentage of budget used ' \
-       'compared to the budget limit of my group' do
-    within '.panel-success .panel-body' do
-      Procurement::Group.all.each do |group|
-        within '.row', text: group.name do
-          amount = group.budget_limits
-                    .find_by(budget_period_id: Procurement::BudgetPeriod.current)
-                    .try(:amount) || 0
-          used = Procurement::BudgetPeriod.current.requests
-                      .where(group_id: group)
-                      .map {|r| r.total_price(@current_user) }.sum
-          percentage = if amount > 0
-                         used * 100 / amount
-                       elsif used > 0
-                         100
-                       else
-                         0
-                       end
-          find '.progress-radial',
-               text: '%d%' % percentage
-        end
-      end
-    end
-  end
-
-  step 'I see the requested amount per budget period' do
-    total = Procurement::BudgetPeriod.current.requests
-                .where(user_id: @current_user)
-                .map { |r| r.total_price(@current_user) }.sum
-    find '.panel-success .panel-heading .label-primary.big_total_price',
-         text: total.to_i
-  end
-
-  step 'I see the requested amount per group of each budget period' do
-    within '.panel-success .panel-body' do
-      Procurement::Group.all.each do |group|
-        total = Procurement::BudgetPeriod.current.requests
-                      .where(user_id: @current_user)
-                      .where(group_id: group)
-                      .map { |r| r.total_price(@current_user) }.sum
-        within '.row', text: group.name do
-          find '.label-primary.big_total_price',
-               text: total.to_i
-        end
-      end
-    end
-  end
-
-  step 'I see the total of all ordered amounts of a budget period' do
-    find '.panel-success .panel-heading .label-primary.big_total_price',
-         text: Procurement::BudgetPeriod.current.requests
-                .map {|r| r.total_price(@current_user) }.sum
-  end
-
-  step 'I see the total of all ordered amounts of each groups' do
-    within '.panel-success .panel-body' do
-      Procurement::Group.all.each do |group|
-        within '.row', text: group.name do
-          find '.label-primary.big_total_price',
-               text: Procurement::BudgetPeriod.current.requests
-                      .where(group_id: group)
-                      .map {|r| r.total_price(@current_user) }.sum
-        end
-      end
-    end
-  end
-
-  step 'I see when the requesting phase of this budget period ends' do
-    within '.panel-success .panel-heading' do
-      find '.row',
-           text: _('requesting phase until %s') \
-                  % I18n.l(Procurement::BudgetPeriod.current.inspection_start_date)
-    end
-  end
-
-  step 'I see when the inspection phase of this budget period ends' do
-    within '.panel-success .panel-heading' do
-      find '.row',
-           text: _('inspection phase until %s') \
-                  % I18n.l(Procurement::BudgetPeriod.current.end_date)
-    end
   end
 
   step 'only my requests are shown' do
