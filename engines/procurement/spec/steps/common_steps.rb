@@ -218,7 +218,7 @@ module CommonSteps
   end
 
   step 'page has been loaded' do
-    expect(has_no_selector?(".spinner")).to be true
+    expect(page).to have_no_selector '.spinner'
   end
 
   step 'the current budget period exist' do

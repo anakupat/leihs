@@ -37,9 +37,8 @@ module FilterSteps
 
   step 'I do not see the filter "Only show my own requests"' do
     within '#filter_panel' do
-      expect(has_no_selector? 'input[name="user_id"]').to be true
-      expect(has_no_selector? 'div',
-                              text: _('Only show my own requests')).to be true
+      expect(page).to have_no_selector 'input[name="user_id"]'
+      expect(page).to have_no_selector('div', text: _('Only show my own requests'))
     end
   end
 
@@ -205,15 +204,12 @@ module FilterSteps
       include _(state)
 
     within '#filter_panel .form-group', text: _('State of Request') do
-      expect(
-        if boolean
-          has_selector? "ul li label .label", text: _(state)
-        else
-          has_no_selector? "ul li label .label", text: _(state)
-        end
-      ).to be true
+      if boolean
+        expect(page).to have_selector "ul li label .label", text: _(state)
+      else
+        expect(page).to have_no_selector "ul li label .label", text: _(state)
+      end
     end
-
   end
 end
 

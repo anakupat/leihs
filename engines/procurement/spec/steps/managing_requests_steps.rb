@@ -133,7 +133,7 @@ steps_for :managing_requests do
     within '.panel-success .panel-body' do
       displayed_groups.each do |group|
         within '.row', text: group.name do
-          expect(has_no_selector? '.budget_limit').to be true
+          expect(page).to have_no_selector '.budget_limit'
         end
       end
     end
@@ -143,7 +143,7 @@ steps_for :managing_requests do
     within '.panel-success .panel-body' do
       displayed_groups.each do |group|
         within '.row', text: group.name do
-          expect(has_no_selector? '.progress-radial').to be true
+          expect(page).to have_no_selector '.progress-radial'
         end
       end
     end

@@ -89,7 +89,7 @@ steps_for :periods_and_states do
   end
 
   step 'I can not delete any requests for the budget period which has ended' do
-    expect(has_no_selector? '.btn-group .fa-gear').to be true
+    expect(page).to have_no_selector '.btn-group .fa-gear'
 
     @request.destroy
     expect(@request.destroyed?).to be false
@@ -105,7 +105,7 @@ steps_for :periods_and_states do
     btn = el.find(:xpath, ".//parent::button//parent::div")
     btn.click unless btn['class'] =~ /open/
     within btn do
-      expect(has_no_selector?('a', text: _('Delete'))).to be true
+      expect(page).to have_no_selector('a', text: _('Delete'))
     end
   end
 
@@ -119,7 +119,7 @@ steps_for :periods_and_states do
     else
       visit_request(@request)
     end
-    expect(has_no_selector?("form [type='submit']")).to be true
+    expect(page).to have_no_selector "form [type='submit']"
     expect(@request.editable?(@current_user)).to be false
   end
 
@@ -130,7 +130,7 @@ steps_for :periods_and_states do
     visit_request(request)
     budget_period = Procurement::BudgetPeriod.last
 
-    expect(has_no_selector? '.btn-group .fa-gear').to be true
+    expect(page).to have_no_selector '.btn-group .fa-gear'
 
     request.update_attributes budget_period: budget_period
     expect(request).to_not be_valid
@@ -144,7 +144,7 @@ steps_for :periods_and_states do
     visit_request(request)
     group = Procurement::Group.where.not(id: request.group).first
 
-    expect(has_no_selector? '.btn-group .fa-gear').to be true
+    expect(page).to have_no_selector '.btn-group .fa-gear'
 
     request.update_attributes group: group
     expect(request).to_not be_valid
@@ -352,7 +352,7 @@ steps_for :periods_and_states do
   end
 
   step 'the status of the request saved to the database is "New"' do
-    expect(has_no_selector? ".request[data-request_id='new_request']").to be true
+    expect(page).to have_no_selector ".request[data-request_id='new_request']"
     all('.request').map {|el| el['data-request_id'] }.each do |id|
       request =  Procurement::Request.find id
       expect(request.state(@current_user)).to be :new
