@@ -21,7 +21,7 @@ module FilterSteps
 
   step 'all states are selected' do
     within '#filter_panel .form-group', text: _('State of Request') do
-      all('input[name="filter[states][]"]').each do |cb|
+      all('input[name="filter[states][]"]', minimum: 4).each do |cb|
         expect(cb).to be_selected
       end
     end
@@ -77,7 +77,7 @@ module FilterSteps
     within '#filter_panel .form-group', text: text do
       case string_with_spaces
         when 'states'
-          all(:checkbox).each { |x| x.set true }
+          all(:checkbox, minimum: 4).each { |x| x.set true }
         else
           within '.btn-group' do
             # find('button.multiselect').click unless current_scope['class'] =~ /open/
@@ -98,7 +98,7 @@ module FilterSteps
 
   step 'I select both priorities' do
     within '#filter_panel .form-group', text: _('Priority') do
-      all(:checkbox).each { |x| x.set true }
+      all(:checkbox, exact: 2).each { |x| x.set true }
     end
   end
 
@@ -115,7 +115,7 @@ module FilterSteps
       within '.btn-group' do
         find('button.multiselect').click # NOTE open the dropdown
         within '.dropdown-menu' do
-          all(:checkbox).sample(2).each { |x| x.set true }
+          all(:checkbox, minimum: 1).sample(2).each { |x| x.set true }
         end
         find('button.multiselect').click # NOTE close the dropdown
       end

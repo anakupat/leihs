@@ -13,7 +13,7 @@ steps_for :users_and_organisations do
 
   step 'there is an empty requester line for creating a new one' do
     line = find('table tbody tr')
-    line.all('input').each { |i| expect(i.value).to be_blank }
+    line.all('input', minimum: 1).each { |i| expect(i.value).to be_blank }
   end
 
   step 'there exists a user to become a requester' do
@@ -123,14 +123,14 @@ steps_for :users_and_organisations do
 
   step 'the requesters are sorted 0-10 and a-z' do
     within '.panel', text: _('Requesters') do
-      texts = all('input[name="requesters[][name]"]').map &:value
+      texts = all('input[name="requesters[][name]"]', minimum: 1).map &:value
       expect(texts).to eq texts.sort
       expect(texts.count).to be Procurement::Access.requesters.count
     end
   end
 
   step 'the admins are sorted alphabetically from a-z' do
-    texts = all('.token-input-list .token-input-token').map &:text
+    texts = all('.token-input-list .token-input-token', minimum: 1).map &:text
     expect(texts).to eq texts.sort
     expect(texts.count).to be Procurement::Access.admins.count
   end
@@ -177,14 +177,14 @@ steps_for :users_and_organisations do
   end
 
   step 'the departments are sorted from 0-10 and a-z' do
-    @roots = all('article .container-fluid > ul > li')
+    @roots = all('article .container-fluid > ul > li', minimum: 1)
     texts = @roots.map {|x| x.find(:xpath, './b').text }
     expect(texts).to eq texts.sort
   end
 
   step 'inside the departments the organisations are sorted from 0-10 and a-z' do
     @roots.each do |root|
-      texts = root.all(:xpath, './ul/li/b').map &:text
+      texts = root.all(:xpath, './ul/li/b', minimum: 1).map &:text
       expect(texts).to eq texts.sort
     end
   end

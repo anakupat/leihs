@@ -59,7 +59,7 @@ steps_for :procurement_groups do
   end
 
   step 'the procurement groups are sorted 0-10 and a-z' do
-    names = all('table tbody tr td:first-child').map(&:text)
+    names = all('table tbody tr td:first-child', minimum: 1).map(&:text)
 
     # sorted_numbers_strings = @groups.map(&:name)
     #           .partition { |x| not x.is_a? String }

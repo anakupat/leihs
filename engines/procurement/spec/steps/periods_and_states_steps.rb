@@ -65,12 +65,12 @@ steps_for :periods_and_states do
   end
 
   step 'I can delete the line' do
-    elements = all('form table tbody tr')
+    elements = all('form table tbody tr', minimum: 1)
     n = elements.count
     within elements.last do
       find('.fa-minus-circle').click
     end
-    expect(all('form table tbody tr').count).to be < n
+    expect(all('form table tbody tr', minimum: 0).count).to be < n
   end
 
   step 'I can not create any request for the budget period which has ended' do
@@ -209,16 +209,16 @@ steps_for :periods_and_states do
   end
 
   step 'I have not filled the mandatory fields' do
-    within all('form table tbody tr').last do
-      all('input[required]').each do |el|
+    within all('form table tbody tr', minimum: 1).last do
+      all('input[required]', minimum: 1).each do |el|
         expect(el.value).to be_empty
       end
     end
   end
 
   step 'I have filled the mandatory fields' do
-    within all('form table tbody tr').last do
-      all('input[required]').each do |el|
+    within all('form table tbody tr', minimum: 1).last do
+      all('input[required]', minimum: 1).each do |el|
         el.set Faker::Lorem.sentence
       end
     end
@@ -293,7 +293,8 @@ steps_for :periods_and_states do
   end
 
   step 'the budget periods are sorted from 0-10 and a-z' do
-    names = all('form table tbody tr td:first-child input').map(&:value)
+    names = all('form table tbody tr td:first-child input', minimum: 1) \
+              .map(&:value)
     expect(names).to eq @budget_periods.map(&:name).sort
   end
 
@@ -353,7 +354,7 @@ steps_for :periods_and_states do
 
   step 'the status of the request saved to the database is "New"' do
     expect(page).to have_no_selector ".request[data-request_id='new_request']"
-    all('.request').map {|el| el['data-request_id'] }.each do |id|
+    all('.request', minimum: 1).map {|el| el['data-request_id'] }.each do |id|
       request =  Procurement::Request.find id
       expect(request.state(@current_user)).to be :new
     end
@@ -365,7 +366,7 @@ steps_for :periods_and_states do
 
   step 'there is an empty budget period line for creating a new one' do
     within 'table tbody tr' do
-      all('input').each { |i| expect(i.value).to be_blank }
+      all('input', minimum: 1).each { |i| expect(i.value).to be_blank }
     end
   end
 

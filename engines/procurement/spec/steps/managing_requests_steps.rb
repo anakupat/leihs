@@ -184,7 +184,7 @@ steps_for :managing_requests do
   end
 
   step 'only my requests are shown' do
-    elements = all('[data-request_id]')
+    elements = all('[data-request_id]', minimum: 1)
     expect(elements).not_to be_empty
     elements.each do |element|
       request = Procurement::Request.find element['data-request_id']

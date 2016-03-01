@@ -82,11 +82,12 @@ steps_for :templates do
   end
 
   step 'the articles inside a category are sorted 0-10 and a-z' do
-    all('.panel-default').each do |panel|
+    all('.panel-default', minimum: 1).each do |panel|
       within panel do
         find('.panel-heading').click
         within '.panel-collapse.in' do
-          texts = all("tbody tr input[name*='[article_name]']").map &:value
+          texts = all("tbody tr input[name*='[article_name]']", minimum: 1) \
+                    .map &:value
           texts.delete("")
           expect(texts).to eq texts.sort
         end
@@ -95,7 +96,7 @@ steps_for :templates do
   end
 
   step 'the categories are sorted 0-10 and a-z' do
-    texts = all('.panel-heading input').map &:value
+    texts = all('.panel-heading input', minimum: 1).map &:value
     texts.delete("")
     expect(texts).to eq texts.sort
   end
@@ -140,7 +141,7 @@ steps_for :templates do
       el = if @template
              find :xpath, "//input[@value='#{@template.article_name}']/ancestor::tr"
            else
-             all('tbody tr').last
+             all('tbody tr', minimum: 1).last
            end
       within el do
         @data = {}
@@ -181,7 +182,7 @@ steps_for :templates do
   end
 
   step 'there is an empty category line for creating a new category' do
-    @el = all('.panel-default').last
+    @el = all('.panel-default', minimum: 1).last
     within @el do
       expect(find("input[name*='[name]']").value).to be_empty
     end

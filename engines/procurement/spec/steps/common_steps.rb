@@ -23,7 +23,7 @@ module CommonSteps
     # TODO also for template
     @data = {}
     within ".request[data-request_id='new_request']" do
-      all('[data-to_be_required]').each do |el|
+      all('[data-to_be_required]', minimum: 1).each do |el|
         key = el['name'].match(/.*\[(.*)\]\[(.*)\]/)[2]
 
         case key
@@ -114,7 +114,7 @@ module CommonSteps
   end
 
   step 'I see the following request information' do |table|
-    elements = all('[data-request_id]')
+    elements = all('[data-request_id]', minimum: 1)
     expect(elements).not_to be_empty
     elements.each do |element|
       request = Procurement::Request.find element['data-request_id']
@@ -235,7 +235,7 @@ module CommonSteps
   end
 
   step 'the field :field is marked red' do |field|
-    within all('form table tbody tr').last do
+    within all('form table tbody tr', minimum: 1).last do
       input_field = case field
                       when 'requester name', 'name'
                         find("input[name*='[name]']")
@@ -313,7 +313,7 @@ module CommonSteps
   private
 
   def displayed_groups
-    Procurement::Group.where(name: all('div.row .h4').map(&:text))
+    Procurement::Group.where(name: all('div.row .h4', minimum: 0).map(&:text))
   end
 
   def filtered_own_requests?

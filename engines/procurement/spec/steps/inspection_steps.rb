@@ -39,7 +39,7 @@ steps_for :inspection do
       btn = el.find(:xpath, ".//parent::button//parent::div")
       btn.click unless btn['class'] =~ /open/
       within btn do
-        expect(has_no_selector?('a', text: @past_budget_period.to_s)).to be true
+        expect(page).to have_no_selector('a', text: @past_budget_period.to_s)
       end
     end
   end
@@ -222,7 +222,7 @@ steps_for :inspection do
 
   step 'the list of requests is adjusted immediately' do
     within '#filter_target' do
-      expect(has_no_selector? '.spinner').to be true
+      step 'page has been loaded'
     end
   end
 
