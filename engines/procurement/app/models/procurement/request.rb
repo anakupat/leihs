@@ -42,7 +42,7 @@ module Procurement
       end
     end
 
-    validates_presence_of :user, :organization, :article_name, :motivation
+    validates_presence_of :user, :group, :organization, :article_name, :motivation
     validates_presence_of :inspection_comment,
                           if: proc { |r| r.approved_quantity \
                                   and r.approved_quantity < r.requested_quantity }

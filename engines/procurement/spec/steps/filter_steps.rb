@@ -125,7 +125,6 @@ module FilterSteps
   step 'I select "Only show my own requests"' do
     within '#filter_panel .form-group', text: _('Requests') do
       check _('Only show my own requests')
-      expect(find('input[name="user_id"]')).to be_checked
     end
   end
 
@@ -182,15 +181,20 @@ module FilterSteps
     end
   end
 
+  step 'the filter "Only show my own requests" is selected' do
+    within '#filter_panel .form-group', text: _('Requests') do
+      expect(find('input[name="user_id"]')).to be_checked
+    end
+  end
+
   step 'the filter settings have not changed' do
-    # And I select "Only show my own requests"
-    # And I select the current budget period
-    # And I select all groups
-    # And I select all organisations
-    # And I select both priorities
-    # And I select all states
-    # And I leave the search string empty
-    pending
+    step 'the filter "Only show my own requests" is selected'
+    step 'the current budget period is selected'
+    step 'all groups in the filter groups are selected'
+    step 'all organisations are selected'
+    step 'both priorities are selected'
+    step 'all states are selected'
+    step 'the search field is empty'
   end
 
   step 'the search field is empty' do

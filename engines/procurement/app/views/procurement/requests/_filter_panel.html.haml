@@ -9,7 +9,7 @@
         = _('Requests')
       %ul
         %label
-          %input{type: :checkbox, name: "user_id", value: current_user.id, checked: @user == current_user}
+          %input{type: :checkbox, name: "user_id", value: current_user.id, checked: @filter['user_id'] == current_user.id}
           .label.label-default= _('Only show my own requests')
 
   .form-group

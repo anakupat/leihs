@@ -190,6 +190,7 @@ module Procurement
         r.delete('search') # NOTE reset on each request
         r
       end
+      @filter['user_id'] ||= @user.id if @user
       @filter['budget_period_ids'] ||= [Procurement::BudgetPeriod.current.id]
       @filter['group_ids'] ||= begin
         r = Procurement::GroupInspector.where(user_id: current_user) \
@@ -206,6 +207,8 @@ module Procurement
 
     def fallback_filters
       @filter = params[:filter]
+
+      @filter['user_id'] = @user.id if @user
 
       @filter['budget_period_ids'] ||= []
       @filter['budget_period_ids'].delete('multiselect-all')

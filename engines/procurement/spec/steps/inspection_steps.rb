@@ -16,18 +16,16 @@ steps_for :inspection do
                    new_user
                  end
              end
-      group = case value['group']
-                when 'inspected'
-                  @group
-                else
-                  nil
-              end
+      h = {
+          user: user,
+          budget_period: current_budget_period
+      }
+      if value['group'] == 'inspected' or not @group.nil?
+        h[:group] = @group
+      end
 
       n.times do
-        FactoryGirl.create :procurement_request,
-                           user: user,
-                           group: group,
-                           budget_period: current_budget_period
+        FactoryGirl.create :procurement_request, h
       end
       expect(current_budget_period.requests.where(user_id: user).count).to eq n
     end
