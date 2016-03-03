@@ -49,7 +49,7 @@
           %input{type: :radio, name: "requests[new_#{i}][replacement]", value: 1, data: {to_be_required: true}}
           .label.label-default= _('Replacement')
         %label
-          %input{type: :radio, name: "requests[new_#{i}][replacement]", value: 0}
+          %input{type: :radio, name: "requests[new_#{i}][replacement]", value: 0, data: {to_be_required: true}}
           .label.label-default= _('New')
   .col-xs-6
     .form-group
