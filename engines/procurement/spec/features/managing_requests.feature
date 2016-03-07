@@ -66,19 +66,11 @@ Feature: section Managing Requests
     When I upload a file
     And I choose the name of a receiver
     And I choose the point of delivery
-
-#FS# reusing step
-#    And I choose the option "High" of the field "Priority"
-#    And I choose the option "New" of the field "Replacement/New"
     And I choose the following priority value
       | High   |
     And I choose the following replacement value
       | New   |
-
-#FS# reusing step
-#    And I see the status "New"
     And the status is set to "New"
-
     And I click on save
     Then I see a success message
     And the request with all given information was created successfully in the database

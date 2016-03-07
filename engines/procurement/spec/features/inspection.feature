@@ -80,9 +80,6 @@ Feature: Inspection (state-behaviour described in seperate feature-file)
       | Price                      |       |
       | Requested quantity         |       |
       | Approved quantity          |       |
-
-#FS# is the approved quantity to be copied over
-#    Then the "requested quantity" is copied to the field "Order quantity"
     Then the "Approved quantity" is copied to the field "Order quantity"
 
 #FS# reusing step
@@ -95,19 +92,11 @@ Feature: Inspection (state-behaviour described in seperate feature-file)
     When I upload a file
     And I choose the name of a receiver
     And I choose the point of delivery
-
-#FS# reusing step
-#    And I choose the option "High" of the field "Priority"
-#    And I choose the option "New" of the field "Replacement/New"
     And I choose the following priority value
       | High   |
     And I choose the following replacement value
       | New   |
-
-#FS# reusing step
-#    And I see the status "New"
     And the status is set to "New"
-
     And I click on save
     Then I see a success message
     And the request with all given information was created successfully in the database
@@ -133,17 +122,10 @@ Feature: Inspection (state-behaviour described in seperate feature-file)
       | budget period    | current |
       | user             | Roger   |
       | requested amount | 2       |
-
-#FS# reusing step
-#    When I am navigated to the requests page
     When I navigate to the requests form of Roger
-
-#FS# reusing step
-#    And I set the approved quantity to 0
     And I fill in the following fields
       | key               | value |
       | Approved quantity | 0     |
-
     Then the field "inspection comment" is marked red
     And I can not save the request
 
@@ -156,22 +138,12 @@ Feature: Inspection (state-behaviour described in seperate feature-file)
     And I click on save
     Then I see a success message
     And the status is set to "Denied"
-
-#FS# reusing step
-#    And the request with all given information was saved successfully in the database
     And the changes are saved successfully to the database
-
-#FS# reusing step
-#    When I delete the inspection comment
     When I delete the following fields
       | Inspection comment |
-
-#FS# reusing step
-#    And I change the approved quantity to 1
     And I fill in the following fields
       | key               | value |
       | Approved quantity | 1     |
-
     Then the field "inspection comment" is marked red
     And I can not save the request
 
@@ -183,13 +155,7 @@ Feature: Inspection (state-behaviour described in seperate feature-file)
 
     And I click on save
     Then I see a success message
-
-#FS# correct string
-#    And the status is set to "Partially Approved"
     And the status is set to "Partially approved"
-
-#FS# reusing step
-#    And the request with all given information was saved successfully in the database
     And the changes are saved successfully to the database
 
   @inspection
