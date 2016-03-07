@@ -102,7 +102,7 @@ module CommonSteps
             el.set v = Faker::Lorem.sentence
         end
 
-        @changes[el[key].to_sym] = v
+        @changes[key.to_sym] = v
       end
     end
   end

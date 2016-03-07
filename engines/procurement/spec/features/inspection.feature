@@ -6,8 +6,7 @@ Feature: Inspection (state-behaviour described in seperate feature-file)
   @inspection
   Scenario: What to see in section "Requests" as inspector
     Given I am Barbara
-    And ensure my groups have requests
-    And several requests exist
+    And several requests exist for my groups
     When I navigate to the requests overview page
     Then the current budget period is selected
     And only my groups are selected
