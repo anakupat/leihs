@@ -272,15 +272,15 @@ tasks:
   scripts:
     test:
       body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/users_and_organisations.feature:77
-- name: engines/procurement/spec/features/users_and_organisations.feature:87
+- name: engines/procurement/spec/features/users_and_organisations.feature:90
   scripts:
     test:
-      body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/users_and_organisations.feature:87
-- name: engines/procurement/spec/features/users_and_organisations.feature:94
+      body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/users_and_organisations.feature:90
+- name: engines/procurement/spec/features/users_and_organisations.feature:97
   scripts:
     test:
-      body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/users_and_organisations.feature:94
-- name: engines/procurement/spec/features/users_and_organisations.feature:104
+      body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/users_and_organisations.feature:97
+- name: engines/procurement/spec/features/users_and_organisations.feature:107
   scripts:
     test:
-      body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/users_and_organisations.feature:104
+      body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/users_and_organisations.feature:107

@@ -56,7 +56,9 @@ module NavigationSteps
   end
 
   step 'I navigate to the requests overview page' do
-    visit procurement.root_path if has_no_selector? '.navbar'
+    if has_no_selector? '.navbar .navbar-right', text: _('Procurement')
+      visit procurement.root_path
+    end
     within '.navbar' do
       click_on _('Requests')
     end
@@ -83,7 +85,9 @@ module NavigationSteps
   end
 
   step 'I navigate to the budget periods' do
-    visit procurement.root_path if has_no_selector? '.navbar'
+    if has_no_selector? '.navbar .navbar-right', text: _('Procurement')
+      visit procurement.root_path
+    end
     within '.navbar' do
       click_on _('Admin')
       click_on _('Budget periods')
@@ -92,7 +96,9 @@ module NavigationSteps
   end
 
   step 'I navigate to the groups page' do
-    visit procurement.root_path if has_no_selector? '.navbar'
+    if has_no_selector? '.navbar .navbar-right', text: _('Procurement')
+      visit procurement.root_path
+    end
     within '.navbar' do
       click_on _('Admin')
       click_on _('Groups')
@@ -101,7 +107,9 @@ module NavigationSteps
   end
 
   step 'I navigate to the organisation tree page' do
-    visit procurement.root_path if has_no_selector? '.navbar'
+    if has_no_selector? '.navbar .navbar-right', text: _('Procurement')
+      visit procurement.root_path
+    end
     within '.navbar' do
       click_on _('Admin')
       click_on _('Organisations')
@@ -113,7 +121,9 @@ module NavigationSteps
   #   visit procurement.users_path
   # end
   step 'I navigate to the users page' do
-    visit procurement.root_path if has_no_selector? '.navbar'
+    if has_no_selector? '.navbar .navbar-right', text: _('Procurement')
+      visit procurement.root_path
+    end
     within '.navbar' do
       click_on _('Admin')
       click_on _('Users')

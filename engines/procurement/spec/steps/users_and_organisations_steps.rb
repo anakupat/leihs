@@ -117,7 +117,12 @@ steps_for :users_and_organisations do
     find('.token-input-dropdown li', text: @user.name).click
   end
 
-  step 'the new admin was created in the database' do
+  step 'I can add the first admin' do
+    expect(Procurement::Access.admins).to be_empty
+    step 'I can add an admin'
+  end
+
+  step 'the new admin was saved to the database' do
     expect(Procurement::Access.admins.exists?(@user.id)).to be true
   end
 

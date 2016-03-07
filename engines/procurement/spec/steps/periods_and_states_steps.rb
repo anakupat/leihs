@@ -78,7 +78,8 @@ steps_for :periods_and_states do
       procurement.new_user_budget_period_request_path(@current_user,
                                                       @request.budget_period)
     visit path
-    expect(current_path).to_not eq path
+
+    find '.flash .alert-danger', text: _('The budget period is closed')
 
     expect {
       FactoryGirl.create :procurement_request,
@@ -101,11 +102,16 @@ steps_for :periods_and_states do
     else
       visit_request(@request)
     end
-    el = find('.btn-group .fa-gear')
-    btn = el.find(:xpath, ".//parent::button//parent::div")
-    btn.click unless btn['class'] =~ /open/
-    within btn do
-      expect(page).to have_no_selector('a', text: _('Delete'))
+    if has_selector? '.btn-group .fa-gear'
+      el = find('.btn-group .fa-gear')
+      btn = el.find(:xpath, ".//parent::button//parent::div")
+      btn.click unless btn['class'] =~ /open/
+      within btn do
+        expect(page).to have_no_selector('a', text: _('Delete'))
+      end
+    else
+      expect(page).to have_no_selector "form [type='submit']"
+      expect(@request.editable?(@current_user)).to be false
     end
   end
 

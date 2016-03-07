@@ -81,7 +81,10 @@ Feature: Section Users
     Then I can add an admin
     When I click on save
     Then I see a success message
-    And the new admin was created in the database
+
+#FS# reusing step
+#    And the new admin was created in the database
+    And the new admin was saved to the database
 
   @users_and_organisations
   Scenario: Sorting of Admins

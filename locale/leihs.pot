@@ -2917,6 +2917,9 @@ msgstr ""
 msgid "Budget period end date"
 msgstr ""
 
+msgid "The budget period is closed"
+msgstr ""
+
 msgid "requesting phase until %s"
 msgstr ""
 

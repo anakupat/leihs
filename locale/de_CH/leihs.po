@@ -3014,6 +3014,9 @@ msgstr "Budgetperioden"
 msgid "Budget period end date"
 msgstr "Enddatum der Budgetperiode"
 
+msgid "The budget period is closed"
+msgstr "Die Budgetperiode wird geschlossen"
+
 msgid "requesting phase until %s"
 msgstr "Antragsphase bis %s"
 

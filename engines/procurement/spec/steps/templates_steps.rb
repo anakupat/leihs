@@ -97,13 +97,18 @@ steps_for :templates do
   end
 
   step 'the data entered is saved to the database' do
+    if price = @changes.delete(:price)
+      @changes[:price_cents] = price * 100
+    end
     expect(@category.reload.templates.find_by(@changes)).to be
   end
 
   step 'the data modified is saved to the database' do
     @template.reload
     @changes.each_pair do |k,v|
-      expect(@template.send k).to eq v
+      stored_value = @template.send k
+      stored_value = stored_value.to_i if k == :price
+      expect(stored_value).to eq v
     end
   end
 

@@ -25,7 +25,7 @@ module PersonasSteps
   # leihs admin
   step 'I am Gino' do
     persona = create_persona('Gino')
-    FactoryGirl.create(:access_right, role: :admin)
+    FactoryGirl.create(:access_right, role: :admin, user: persona)
     login_as persona
   end
 
@@ -55,7 +55,7 @@ module PersonasSteps
   end
 
   def find_or_create_user(firstname, as_requester = false)
-    user = User.find_by(firstname: firstname) || \
+    user = ::User.find_by(firstname: firstname) || \
             begin
               new_user = FactoryGirl.create(:user, firstname: firstname)
               FactoryGirl.create(:access_right,

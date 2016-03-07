@@ -348,6 +348,9 @@ module CommonSteps
   step 'the request with all given information ' \
        'was created successfully in the database' do
     user = @user || @current_user
+    if price = @changes.delete(:price)
+      @changes[:price_cents] = price * 100
+    end
     expect(@group.requests.where(user_id: user).find_by(@changes)).to be
   end
 
