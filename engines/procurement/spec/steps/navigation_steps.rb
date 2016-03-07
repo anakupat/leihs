@@ -79,6 +79,7 @@ module NavigationSteps
                          user)
     visit path
     expect(page).to have_current_path path
+    find '.panel-heading h4', text: user.name
   end
 
   step 'I navigate to the budget periods' do

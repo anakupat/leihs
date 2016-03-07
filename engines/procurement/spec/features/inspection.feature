@@ -68,29 +68,46 @@ Feature: Inspection (state-behaviour described in seperate feature-file)
   @inspection
   Scenario: Creating a request as inspector
     Given I am Barbara
-
-#!!# doesn't make sense. receiver is a free string
-#    And a receiver exists
-
+    And a receiver exists
     And a point of delivery exists
     When I want to create a new request
     And I fill in the following fields
-      | Article                      |
-      | Article nr. / Producer nr.   |
-      | Supplier                     |
-      | Motivation                   |
-      | Price                        |
-      | Requested quantity           |
-      | Approved quantity            |
-    Then the "requested quantity" is copied to the field "Order quantity"
-    And I change the amount of the "Order quantity"
+      | key                        | value |
+      | Article                    |       |
+      | Article nr. / Producer nr. |       |
+      | Supplier                   |       |
+      | Motivation                 |       |
+      | Price                      |       |
+      | Requested quantity         |       |
+      | Approved quantity          |       |
+
+#FS# is the approved quantity to be copied over
+#    Then the "requested quantity" is copied to the field "Order quantity"
+    Then the "Approved quantity" is copied to the field "Order quantity"
+
+#FS# reusing step
+#    And I change the amount of the "Order quantity"
+    And I fill in the following fields
+      | key            | value |
+      | Order quantity |       |
+
     And the ordered amount and the price are multiplied and the result is shown
     When I upload a file
     And I choose the name of a receiver
     And I choose the point of delivery
-    And I choose the option "High" of the field "Priority"
-    And I choose the option "New" of the field "Replacement/New"
-    And I see the status "New"
+
+#FS# reusing step
+#    And I choose the option "High" of the field "Priority"
+#    And I choose the option "New" of the field "Replacement/New"
+    And I choose the following priority value
+      | High   |
+    And I choose the following replacement value
+      | New   |
+
+#FS# reusing step
+#    And I see the status "New"
+    And the status is set to "New"
+
     And I click on save
     Then I see a success message
     And the request with all given information was created successfully in the database
@@ -111,27 +128,69 @@ Feature: Inspection (state-behaviour described in seperate feature-file)
   @inspection
   Scenario: Give Reason when Partially Excepting or Denying
     Given I am Barbara
-    And requests exist with following data
-      | requested amount |
-      | 2                |
-    When I am navigated to the requests page
-    And I set the approved quantity to 0
+    And a request with following data exist
+      | key              | value   |
+      | budget period    | current |
+      | user             | Roger   |
+      | requested amount | 2       |
+
+#FS# reusing step
+#    When I am navigated to the requests page
+    When I navigate to the requests form of Roger
+
+#FS# reusing step
+#    And I set the approved quantity to 0
+    And I fill in the following fields
+      | key               | value |
+      | Approved quantity | 0     |
+
     Then the field "inspection comment" is marked red
     And I can not save the request
-    When I enter the inspection comment
+
+#FS# reusing step
+#    When I enter the inspection comment
+    When I fill in the following fields
+      | key                | value |
+      | Inspection comment |       |
+
     And I click on save
     Then I see a success message
     And the status is set to "Denied"
-    And the request with all given information was saved successfully in the database
-    When I delete the inspection comment
-    And I change the approved quantity to 1
+
+#FS# reusing step
+#    And the request with all given information was saved successfully in the database
+    And the changes are saved successfully to the database
+
+#FS# reusing step
+#    When I delete the inspection comment
+    When I delete the following fields
+      | Inspection comment |
+
+#FS# reusing step
+#    And I change the approved quantity to 1
+    And I fill in the following fields
+      | key               | value |
+      | Approved quantity | 1     |
+
     Then the field "inspection comment" is marked red
     And I can not save the request
-    When I enter the inspection comment
+
+#FS# reusing step
+#    When I enter the inspection comment
+    When I fill in the following fields
+      | key                | value |
+      | Inspection comment |       |
+
     And I click on save
     Then I see a success message
-    And the status is set to "Partially Approved"
-    And the request with all given information was saved successfully in the database
+
+#FS# correct string
+#    And the status is set to "Partially Approved"
+    And the status is set to "Partially approved"
+
+#FS# reusing step
+#    And the request with all given information was saved successfully in the database
+    And the changes are saved successfully to the database
 
   @inspection
   Scenario: Moving request to another budget period as inspector

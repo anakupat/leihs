@@ -17,7 +17,7 @@ steps_for :users_and_organisations do
   end
 
   step 'there exists a user to become a requester' do
-    @user = create_user(Faker::Name.first_name)
+    @user = find_or_create_user(Faker::Name.first_name)
   end
 
   step 'I fill in the requester name' do
@@ -85,7 +85,7 @@ steps_for :users_and_organisations do
   end
 
   step 'there exists an extra user' do
-    @extra_user = create_user(Faker::Name.first_name)
+    @extra_user = find_or_create_user(Faker::Name.first_name)
   end
 
   step 'I see the successful changes on the page' do

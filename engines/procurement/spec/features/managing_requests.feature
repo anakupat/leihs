@@ -51,25 +51,34 @@ Feature: section Managing Requests
   @managing_requests
   Scenario: Creating a request as requester only
     Given I am Roger
-#NW:receiver can be chosen by list of leihs-users
-#!!# doesn't make sense. receiver is a free string
-#    And several receivers exist
+    And several receivers exist
     And several points of delivery exist
     When I want to create a new request
     And I fill in the following fields
-      | Article                      |
-      | Article nr. / Producer nr.   |
-      | Supplier                     |
-      | Motivation                   |
-      | Price                        |
-      | Requested quantity           |
+      | key                        | value |
+      | Article                    |       |
+      | Article nr. / Producer nr. |       |
+      | Supplier                   |       |
+      | Motivation                 |       |
+      | Price                      |       |
+      | Requested quantity         |       |
     Then the amount and the price are multiplied and the result is shown
     When I upload a file
     And I choose the name of a receiver
     And I choose the point of delivery
-    And I choose the option "High" of the field "Priority"
-    And I choose the option "New" of the field "Replacement/New"
-    And I see the status "New"
+
+#FS# reusing step
+#    And I choose the option "High" of the field "Priority"
+#    And I choose the option "New" of the field "Replacement/New"
+    And I choose the following priority value
+      | High   |
+    And I choose the following replacement value
+      | New   |
+
+#FS# reusing step
+#    And I see the status "New"
+    And the status is set to "New"
+
     And I click on save
     Then I see a success message
     And the request with all given information was created successfully in the database
@@ -81,10 +90,11 @@ Feature: section Managing Requests
     And I press on the plus icon of a group
     Then I am navigated to the new request form
     When I fill in the following fields
-      | Article                      |
-      | Requested quantity           |
-      | Motivation                   |
-      | Replacement / New            |
+      | key                | value |
+      | Article            |       |
+      | Requested quantity |       |
+      | Motivation         |       |
+      | Replacement / New  |       |
     And I click on save
     Then I see a success message
     And the request with all given information was created successfully in the database
