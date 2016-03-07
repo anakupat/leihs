@@ -6,11 +6,11 @@ placeholder :string_with_spaces do
 end
 
 placeholder :boolean do
-  match 'is not' do
+  match /(is not|do not see)/ do
     false
   end
 
-  match 'is' do
+  match /(is|see)/ do
     true
   end
 end

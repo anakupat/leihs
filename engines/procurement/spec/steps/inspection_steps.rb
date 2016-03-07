@@ -1,5 +1,36 @@
 steps_for :inspection do
 
+  step 'a point of delivery exists' do
+    FactoryGirl.create :location
+  end
+
+  step 'a receiver exists' do
+    FactoryGirl.create :user
+  end
+
+  step 'a request with following data exist' do |table|
+    @changes = {
+        group: @group
+    }
+    table.hashes.each do |hash|
+      case hash['key']
+        when 'budget period'
+          @changes[:budget_period] = if hash['value'] == 'current'
+                                       Procurement::BudgetPeriod.current
+                                     else
+                                       Procurement::BudgetPeriod.all.sample
+                                     end
+        when 'user'
+          @changes[:user] = find_or_create_user(hash['value'], true)
+        when 'requested amount'
+          @changes[:requested_quantity] = hash['value'].to_i
+        else
+          raise
+      end
+    end
+    @request = FactoryGirl.create :procurement_request, @changes
+  end
+
   step 'following requests exist for the current budget period' do |table|
     current_budget_period = Procurement::BudgetPeriod.current
     table.hashes.each do |value|
@@ -7,14 +38,7 @@ steps_for :inspection do
       user = case value['user']
                when 'myself' then @current_user
                else
-                 User.find_by(firstname: value['user']) || \
-                 begin
-                   new_user = create_user(value['user'])
-                   FactoryGirl.create :procurement_access,
-                                      :requester,
-                                      user: new_user
-                   new_user
-                 end
+                 find_or_create_user(value['user'], true)
              end
       h = {
           user: user,
@@ -40,6 +64,11 @@ steps_for :inspection do
         expect(page).to have_no_selector('a', text: @past_budget_period.to_s)
       end
     end
+  end
+
+  step 'I can not save the request' do
+    step 'I click on save'
+    step 'I do not see a success message'
   end
 
   step 'I can not submit the data' do
@@ -139,6 +168,12 @@ steps_for :inspection do
     end
   end
 
+  step 'the status is set to :state' do |state|
+    within '.form-group', text: _('State') do
+      find '.label', text: _(state)
+    end
+  end
+
   step 'I see the total of all ordered amounts of a budget period' do
     total = Procurement::BudgetPeriod.current.requests
               .where(group_id: displayed_groups)
@@ -189,6 +224,11 @@ steps_for :inspection do
     end
   end
 
+  step 'the "Approved quantity" is copied to the field "Order quantity"' do
+    expect(find("input[name*='[order_quantity]']").value).to eq \
+      find("input[name*='[approved_quantity]']").value
+  end
+
   step 'the changes are saved successfully to the database' do
     @request.reload
     @changes.each_pair do |k,v|
@@ -222,6 +262,12 @@ steps_for :inspection do
     within '#filter_target' do
       step 'page has been loaded'
     end
+  end
+
+  step 'the ordered amount and the price are multiplied and the result is shown' do
+    total = find("input[name*='[price]']").value.to_i * \
+              find("input[name*='[order_quantity]']").value.to_i
+    expect(find('.label.label-primary.total_price').text).to eq currency(total)
   end
 
   step 'there is a budget period which has already ended' do

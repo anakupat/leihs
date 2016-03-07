@@ -14,21 +14,6 @@ steps_for :templates do
     end
   end
 
-  step 'I delete the following fields' do |table|
-    within '.panel-collapse.in' do
-      within(:xpath, "//input[@value='#{@template.article_name}']/ancestor::tr") do
-        table.raw.flatten.each do |value|
-          case value
-            when 'Price'
-              find("input[name*='[price]']").set ''
-            else
-              fill_in _(value), with: ''
-          end
-        end
-      end
-    end
-  end
-
   step 'I delete the template category' do
     within(:xpath, "//input[@value='#{@category.name}']/ancestor::" \
                    "div[contains(@class, 'panel-heading')]") do
@@ -112,12 +97,12 @@ steps_for :templates do
   end
 
   step 'the data entered is saved to the database' do
-    expect(@category.reload.templates.find_by(mapped_data)).to be
+    expect(@category.reload.templates.find_by(@changes)).to be
   end
 
   step 'the data modified is saved to the database' do
     @template.reload
-    mapped_data.each_pair do |k,v|
+    @changes.each_pair do |k,v|
       expect(@template.send k).to eq v
     end
   end
@@ -144,19 +129,19 @@ steps_for :templates do
              all('tbody tr', minimum: 1).last
            end
       within el do
-        @data = {}
+        @changes = {}
         table.raw.flatten.each do |value|
           case value
             when 'Price'
-              find("input[name*='[price]']").set @data[value] = 123
+              find("input[name*='[price]']").set @changes[mapped_key(value)] = 123
             else
-              fill_in _(value), with: @data[value] = Faker::Lorem.sentence
+              fill_in _(value), with: @changes[mapped_key(value)] = Faker::Lorem.sentence
           end
         end
       end
     end
   end
-
+  # alias
   step 'the following fields are modified' do |table|
     step 'the following fields are filled', table
   end

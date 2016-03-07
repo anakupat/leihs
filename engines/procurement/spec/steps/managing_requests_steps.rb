@@ -46,24 +46,6 @@ steps_for :managing_requests do
     expect(request.reload.group_id).to be other_group.id
   end
 
-  step 'I can choose the following :field values' do |field, table|
-    within '.request[data-request_id="new_request"]' do
-      label = case field
-                when 'priority'
-                  _('Priority')
-                when 'replacement'
-                  "%s / %s" % [_('Replacement'), _('New')]
-                else
-                  raise
-              end
-      within '.form-group', text: label do
-        table.raw.flatten.each do |value|
-          choose _(value)
-        end
-      end
-    end
-  end
-
   step 'I can delete my request' do
     @request = get_current_request @current_user
     visit_request(@request)
@@ -151,12 +133,11 @@ steps_for :managing_requests do
 
   step 'I enter the requested amount' do
     within '.request[data-request_id="new_request"]' do
-      @price = Faker::Number.number(4).to_i
-      @quantity = Faker::Number.number(2).to_i
       within '.form-group', text: _('Item price') do
-        find('input').set @price
+        find('input').set @changes[:price] = Faker::Number.number(4).to_i
       end
-      fill_in _('Requested quantity'), with: @quantity
+      fill_in _('Requested quantity'), with: \
+        @changes[:requested_quantity] = Faker::Number.number(2).to_i
     end
   end
 
@@ -216,7 +197,9 @@ steps_for :managing_requests do
 
   step 'the amount and the price are multiplied and the result is shown' do
     within '.request[data-request_id="new_request"]' do
-      total = @price * @quantity
+      total = @changes[:price] * (@changes[:order_quantity] || \
+                                  @changes[:approved_quantity] || \
+                                  @changes[:requested_quantity])
       expect(find('.label.label-primary.total_price').text).to eq currency(total)
     end
   end

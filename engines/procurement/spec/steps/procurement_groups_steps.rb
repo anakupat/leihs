@@ -10,7 +10,7 @@ steps_for :procurement_groups do
   step 'there exist(s) :count user(s) to become the inspector(s)' do |count|
     @inspectors = []
     count.to_i.times do
-      @inspectors << create_user(Faker::Name.first_name)
+      @inspectors << find_or_create_user(Faker::Name.first_name)
     end
   end
 
@@ -79,7 +79,7 @@ steps_for :procurement_groups do
   step 'the procurement group has :count inspectors' do |count|
     @group.inspectors.delete_all
     count.to_i.times do
-      @group.inspectors << create_user(Faker::Name.first_name)
+      @group.inspectors << find_or_create_user(Faker::Name.first_name)
     end
   end
 
@@ -102,7 +102,7 @@ steps_for :procurement_groups do
   end
 
   step 'I add an inspector' do
-    @new_inspector = create_user(Faker::Name.first_name)
+    @new_inspector = find_or_create_user(Faker::Name.first_name)
     add_to_inspectors_field @new_inspector.name
   end
 

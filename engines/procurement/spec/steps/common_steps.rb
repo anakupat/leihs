@@ -6,6 +6,46 @@ module CommonSteps
                                   budget_period: Procurement::BudgetPeriod.current
   end
 
+  step 'I choose the following :field value' do |field, table|
+    within '.request[data-request_id="new_request"]' do
+      label = case field
+                when 'priority'
+                  _('Priority')
+                when 'replacement'
+                  "%s / %s" % [_('Replacement'), _('New')]
+                else
+                  raise
+              end
+      within '.form-group', text: label do
+        table.raw.flatten.each do |value|
+          choose _(value)
+        end
+      end
+    end
+  end
+  # alias
+  step 'I can choose the following :field values' do |field, table|
+    step "I choose the following #{field} value", table
+  end
+
+  step 'I choose the name of a receiver' do
+    @receiver = User.not_as_delegations.where.not(id: @current_user).sample
+
+    # find('.form-group', text: _('Name of receiver')). \
+    #   find('input').set @receiver.to_s
+    fill_in _('Name of receiver'), with: @receiver.name
+    #not working#
+    # within '.ui-autocomplete' do
+    #   find('.ui-menu-item', text: @receiver.name).click
+    # end
+  end
+
+  step 'I choose the point of delivery' do
+    @location = Location.all.sample
+
+    fill_in _('Point of Delivery'), with: @location.to_s
+  end
+
   step 'I click on save' do
     click_on _('Save'), match: :first
   end
@@ -19,40 +59,76 @@ module CommonSteps
   #   end
   # end
 
+  step 'I delete the following fields' do |table|
+    el1, el2 = if @template
+                 ['.panel-collapse.in',
+                 find(:xpath,
+                      "//input[@value='#{@template.article_name}']/ancestor::tr")]
+               elsif @request
+                 ['.panel-body',
+                  ".request[data-request_id='#{@request.id}']"]
+               else
+                 ['.panel-body',
+                  ".request[data-request_id='new_request']"]
+               end
+
+    within el1 do
+      within el2 do
+        table.raw.flatten.each do |value|
+          case value
+            when 'Price'
+              find("input[name*='[price]']").set ''
+            else
+              fill_in _(value), with: ''
+          end
+        end
+      end
+    end
+  end
+
   step 'I fill in all mandatory information' do
     # TODO also for template
-    @data = {}
+    @changes = {}
     within ".request[data-request_id='new_request']" do
       all('[data-to_be_required]', minimum: 1).each do |el|
         key = el['name'].match(/.*\[(.*)\]\[(.*)\]/)[2]
 
         case key
           when 'requested_quantity'
-            el.set @data[el[key]] = Faker::Number.number(2).to_i
+            el.set v = Faker::Number.number(2).to_i
           when 'replacement'
-            find("input[name*='[replacement]'][value='#{@data[el[key]] = 1}']").click
+            find("input[name*='[replacement]'][value='#{v = 1}']").click
           else
-            el.set @data[el[key]] = Faker::Lorem.sentence
+            el.set v = Faker::Lorem.sentence
         end
+
+        @changes[el[key].to_sym] = v
       end
     end
   end
 
   step 'I fill in the following fields' do |table|
-    @data = {}
-    table.raw.flatten.each do |value|
-      case value
+    @changes ||= {}
+    table.hashes.each do |hash|
+      hash['value'] = nil if hash['value'].blank?
+      case hash['key']
         when 'Price'
-          @price = Faker::Number.number(4).to_i
-          find("input[name*='[price]']").set @data[value] = @price
-        when 'Requested quantity', 'Approved quantity'
-          @quantity = Faker::Number.number(2).to_i
-          fill_in _(value), with: @data[value] = @quantity
+          v = (hash['value'] || Faker::Number.number(4)).to_i
+          find("input[name*='[price]']").set v
+        when /quantity/
+          v = (hash['value'] || Faker::Number.number(2)).to_i
+          fill_in _(hash['key']), with: v
         when 'Replacement / New'
-          find("input[name*='[replacement]'][value='#{@data[value] = 1}']").click
+          v = hash['value'] || 1
+          find("input[name*='[replacement]'][value='#{v}']").click
         else
-          fill_in _(value), with: @data[value] = Faker::Lorem.sentence
+          v = hash['value'] || Faker::Lorem.sentence
+          fill_in _(hash['key']), with: v
       end
+      @changes[mapped_key(hash['key'])] = v
+
+      # NOTE trigger change event
+      find('body').native.send_keys(:tab) #find('body').click
     end
   end
 
@@ -67,9 +143,13 @@ module CommonSteps
     end
   end
 
-  step 'I see a success message' do
-    #expect(page).to have_content _('Saved')
-    find '.flash .alert-success', match: :first
+  step 'I :boolean a success message' do |boolean|
+    if boolean
+      #expect(page).to have_content _('Saved')
+      find '.flash .alert-success', match: :first
+    else
+      expect(page).not_to have_selector '.flash .alert-success'
+    end
   end
 
   step 'I see an error message' do
@@ -199,6 +279,12 @@ module CommonSteps
     end
   end
 
+  step 'I upload a file' do
+    field = find "input[name*='[attachments_attributes][][file]']"
+    attach_file(field[:name], #_('Attachments'),
+                "#{Rails.root}/features/data/images/image1.jpg")
+  end
+
   step 'I want to create a new request' do
     step 'I navigate to the requests overview page'
     step 'I press on the plus icon of a group'
@@ -235,7 +321,12 @@ module CommonSteps
   end
 
   step 'the field :field is marked red' do |field|
-    within all('form table tbody tr', minimum: 1).last do
+    el = if @request
+           ".request[data-request_id='#{@request.id}']"
+         else
+           all('form table tbody tr', minimum: 1).last
+         end
+    within el do
       input_field = case field
                       when 'requester name', 'name'
                         find("input[name*='[name]']")
@@ -247,6 +338,8 @@ module CommonSteps
                         find("input[name*='[inspection_start_date]']")
                       when 'end date'
                         find("input[name*='[end_date]']")
+                      when 'inspection comment'
+                        find("input[name*='[inspection_comment]']")
                     end
       expect(input_field['required']).to eq 'true' # ;-)
     end
@@ -255,7 +348,7 @@ module CommonSteps
   step 'the request with all given information ' \
        'was created successfully in the database' do
     user = @user || @current_user
-    expect(@group.requests.where(user_id: user).find_by(mapped_data)).to be
+    expect(@group.requests.where(user_id: user).find_by(@changes)).to be
   end
 
   step 'there exists a procurement group' do
@@ -290,20 +383,17 @@ module CommonSteps
         precision: 0)
   end
 
-  def mapped_data
-    h = {}
-    h[:article_name] = @data['Article'] if @data['Article']
-    if @data['Article nr. / Producer nr.']
-      h[:article_number] = @data['Article nr. / Producer nr.']
+  def mapped_key(from)
+    case from
+      when 'Article'
+        :article_name
+      when 'Article nr. / Producer nr.'
+        :article_number
+      when 'Supplier'
+        :supplier_name
+      else
+        from.parameterize.underscore.to_sym
     end
-    h[:price_cents] = @data['Price'] * 100 if @data['Price']
-    h[:supplier_name] = @data['Supplier'] if @data['Supplier']
-    if @data['Requested quantity']
-      h[:requested_quantity] = @data['Requested quantity']
-    end
-    h[:motivation] = @data['Motivation'] if @data['Motivation']
-    h[:replacement] = @data['Replacement'] if @data['Replacement']
-    h
   end
 
   def number_with_delimiter(n)

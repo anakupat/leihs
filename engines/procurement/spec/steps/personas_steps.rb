@@ -44,7 +44,7 @@ module PersonasSteps
   end
 
   step 'there exists a requester' do
-    @user = create_user(Faker::Name.first_name)
+    @user = find_or_create_user(Faker::Name.first_name)
     FactoryGirl.create(:procurement_access, :requester, user: @user)
   end
 
@@ -54,11 +54,18 @@ module PersonasSteps
     end
   end
 
-  def create_user(firstname)
-    user = FactoryGirl.create(:user, firstname: firstname)
-    FactoryGirl.create(:access_right,
-                       user: user,
-                       inventory_pool: FactoryGirl.create(:inventory_pool))
+  def find_or_create_user(firstname, as_requester = false)
+    user = User.find_by(firstname: firstname) || \
+            begin
+              new_user = FactoryGirl.create(:user, firstname: firstname)
+              FactoryGirl.create(:access_right,
+                                 user: new_user,
+                                 inventory_pool: FactoryGirl.create(:inventory_pool))
+              new_user
+            end
+    if as_requester
+      FactoryGirl.create :procurement_access, :requester, user: user
+    end
     user
   end
 
@@ -69,7 +76,7 @@ module PersonasSteps
   end
 
   def create_persona(firstname)
-    user = create_user(firstname)
+    user = find_or_create_user(firstname)
     set_locale(user)
     user
   end
