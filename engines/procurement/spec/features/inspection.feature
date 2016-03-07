@@ -81,9 +81,6 @@ Feature: Inspection (state-behaviour described in seperate feature-file)
       | Requested quantity         |       |
       | Approved quantity          |       |
     Then the "Approved quantity" is copied to the field "Order quantity"
-
-#FS# reusing step
-#    And I change the amount of the "Order quantity"
     And I fill in the following fields
       | key            | value |
       | Order quantity |       |
@@ -128,9 +125,6 @@ Feature: Inspection (state-behaviour described in seperate feature-file)
       | Approved quantity | 0     |
     Then the field "inspection comment" is marked red
     And I can not save the request
-
-#FS# reusing step
-#    When I enter the inspection comment
     When I fill in the following fields
       | key                | value |
       | Inspection comment |       |
@@ -146,9 +140,6 @@ Feature: Inspection (state-behaviour described in seperate feature-file)
       | Approved quantity | 1     |
     Then the field "inspection comment" is marked red
     And I can not save the request
-
-#FS# reusing step
-#    When I enter the inspection comment
     When I fill in the following fields
       | key                | value |
       | Inspection comment |       |

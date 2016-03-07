@@ -171,7 +171,6 @@ Feature: section Managing Requests
     And the field articlenr/suppliernr is prefilled with the articlenr/suppliernr of the template article chosen
     And the field supplier is prefilled with the supplier of the template article chosen
     And the field price is prefilled with the price of the template article chosen
-##NW: the next step is not yet implemented
     And no option is chosen yet for the field Replacement / New
     When I enter the motivation
     And I choose the option "new"
@@ -358,10 +357,6 @@ Feature: section Managing Requests
     And I download the attachment
     Then The file is downloaded
     Then I see a success message
-
-#??# really?
-    And the attachment is deleted successfully from the database
-
     Examples:
       | username |
       | Barbara  |
