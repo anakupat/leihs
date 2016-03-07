@@ -59,7 +59,6 @@ Feature: Templates
     And a template category exists
     And the template category has one article
     When I navigate to the templates page
-#!!# this is needed to open
     And I edit the category
     And I modify the category name
     And the following fields are modified

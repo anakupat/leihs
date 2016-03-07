@@ -11,20 +11,12 @@ Feature: section Managing Requests
     Then the current budget period is selected
     And all groups in the filter groups are selected
     And both priorities are selected
-
-#FS# separate steps
-#    And all states are selected including the state "in Prüfung"
     And the state "In inspection" is present
     And all states are selected
-
     And the search field is empty
     And I do not see the filter "Only show my own requests"
     And I see the headers of the columns of the overview
-
-#FS# why just 1?
-#    And I see the amount of requests which are listed is 1
     And I see the amount of requests listed
-
     And I see the current budget period
     And I see the requested amount per budget period
     And I see the requested amount per group of each budget period

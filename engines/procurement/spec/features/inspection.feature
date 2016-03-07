@@ -6,22 +6,15 @@ Feature: Inspection (state-behaviour described in seperate feature-file)
   @inspection
   Scenario: What to see in section "Requests" as inspector
     Given I am Barbara
-
-#FS# ensure my groups have requests
-#    And several requests exist
-    And several requests exist for my groups
-
+    And ensure my groups have requests
+    And several requests exist
     When I navigate to the requests overview page
     Then the current budget period is selected
     And only my groups are selected
     And all organisations are selected
     And both priorities are selected
-
-#FS# separate steps
-#    And all states are selected
     And the state "In inspection" is not present
     And all states are selected
-
     And the search field is empty
     And the checkbox "Only show my own request" is not marked
     And I see the headers of the columns of the overview
@@ -35,11 +28,7 @@ Feature: Inspection (state-behaviour described in seperate feature-file)
     And I see the percentage of budget used compared to the budget limit of my group
     And I see when the requesting phase of this budget period ends
     And I see when the inspection phase of this budget period ends
-
-#FS# not possible to see all groups because previous step 'only my groups are selected'
-#    And I see all groups
     And only my groups are shown
-
     And I see the following request information
       | article name          |
       | name of the requester |
@@ -48,11 +37,7 @@ Feature: Inspection (state-behaviour described in seperate feature-file)
       | price                 |
       | requested amount      |
       | approved amount       |
-
-#FS# typo
-#      | ordered amount        |
       | order amount          |
-
       | total amount          |
       | priority              |
       | state                 |
