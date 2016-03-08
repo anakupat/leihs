@@ -24,7 +24,7 @@ Feature: section Managing Requests
     And I see when the inspection phase of this budget period ends
     And I see all groups
     And only my requests are shown
-    And I see the following request information
+    And for each request I see the following information
       | article name          |
       | name of the requester |
       | department            |
@@ -450,8 +450,21 @@ Feature: section Managing Requests
     And the budget period has ended
 
     When I navigate to the requests overview page
-    Then I see the requested quantity
-    And I see the approved quantity
-    When I edit the request
-    Then I see the approved quantity
-    And I see the inspection comment
+
+#FS# reusing step
+#    Then I see the requested quantity
+#    And I see the approved quantity
+    And for each request I see the following information
+      | requested amount      |
+      | approved amount       |
+
+#FS# reusing step
+#    When I edit the request
+    When I open the request
+
+#FS# reusing step
+#    Then I see the approved quantity
+#    And I see the inspection comment
+    And I see the following request information
+      | approved amount    |
+      | inspection comment |

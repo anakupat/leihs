@@ -145,7 +145,7 @@
         .label.label-primary.total_price{data: {total: request.total_price(current_user)}}
           = money_without_cents_and_with_symbol request.total_price(current_user)
 
-    - if request.group.inspectable_or_readable_by? current_user
+    - if request.group.inspectable_or_readable_by? current_user or request.user_id == current_user.id
       .form-group
         %label.col-xs-4.control-label
           = _('Inspection comment')

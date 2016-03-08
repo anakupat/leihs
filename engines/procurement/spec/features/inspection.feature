@@ -28,7 +28,7 @@ Feature: Inspection (state-behaviour described in seperate feature-file)
     And I see when the requesting phase of this budget period ends
     And I see when the inspection phase of this budget period ends
     And only my groups are shown
-    And I see the following request information
+    And for each request I see the following information
       | article name          |
       | name of the requester |
       | department            |

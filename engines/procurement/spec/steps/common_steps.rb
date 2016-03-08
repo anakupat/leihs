@@ -26,7 +26,7 @@ module CommonSteps
         when 'requested amount'
           @changes[:requested_quantity] = hash['value'].to_i
         when 'approved amount'
-          @changes[:requested_quantity] = hash['value'].to_i
+          @changes[:approved_quantity] = hash['value'].to_i
         when 'inspection comment'
           @changes[:inspection_comment] = case hash['value']
                                             when 'random'
@@ -39,6 +39,52 @@ module CommonSteps
       end
     end
     @request = FactoryGirl.create :procurement_request, @changes
+  end
+
+  step 'for each request I see the following information' do |table|
+    elements = all('[data-request_id]', minimum: 1)
+    expect(elements).not_to be_empty
+    elements.each do |element|
+      request = Procurement::Request.find element['data-request_id']
+      within element do
+        table.raw.flatten.each do |value|
+          case value
+            when 'article name'
+              find '.col-sm-2', text: request.article_name
+            when 'name of the requester'
+              find '.col-sm-2', text: request.user.to_s
+            when 'department'
+              find '.col-sm-2', text: request.organization.parent.to_s
+            when 'organisation'
+              find '.col-sm-2', text: request.organization.to_s
+            when 'price'
+              find '.col-sm-1 .total_price', text: request.price.to_i
+            when 'requested amount'
+              within all('.col-sm-2.quantities div', exact: 3)[0] do
+                expect(page).to have_content request.requested_quantity
+              end
+            when 'approved amount'
+              within all('.col-sm-2.quantities div', exact: 3)[1] do
+                expect(page).to have_content request.approved_quantity
+              end
+            when 'order amount'
+              within all('.col-sm-2.quantities div', exact: 3)[2] do
+                expect(page).to have_content request.order_quantity
+              end
+            when 'total amount'
+              find '.col-sm-1 .total_price',
+                   text: request.total_price(@current_user).to_i
+            when 'priority'
+              find '.col-sm-1', text: _(request.priority.capitalize)
+            when 'state'
+              state = request.state(@current_user)
+              find '.col-sm-1', text: _(state.to_s.humanize)
+            else
+              raise
+          end
+        end
+      end
+    end
   end
 
   step 'I choose the following :field value' do |field, table|
@@ -226,52 +272,6 @@ module CommonSteps
 
   step 'I see the headers of the columns of the overview' do
     find '#column-titles'
-  end
-
-  step 'I see the following request information' do |table|
-    elements = all('[data-request_id]', minimum: 1)
-    expect(elements).not_to be_empty
-    elements.each do |element|
-      request = Procurement::Request.find element['data-request_id']
-      within element do
-        table.raw.flatten.each do |value|
-          case value
-            when 'article name'
-              find '.col-sm-2', text: request.article_name
-            when 'name of the requester'
-              find '.col-sm-2', text: request.user.to_s
-            when 'department'
-              find '.col-sm-2', text: request.organization.parent.to_s
-            when 'organisation'
-              find '.col-sm-2', text: request.organization.to_s
-            when 'price'
-              find '.col-sm-1 .total_price', text: request.price.to_i
-            when 'requested amount'
-              within all('.col-sm-2.quantities div', exact: 3)[0] do
-                expect(page).to have_content request.requested_quantity
-              end
-            when 'approved amount'
-              within all('.col-sm-2.quantities div', exact: 3)[1] do
-                expect(page).to have_content request.approved_quantity
-              end
-            when 'order amount'
-              within all('.col-sm-2.quantities div', exact: 3)[2] do
-                expect(page).to have_content request.order_quantity
-              end
-            when 'total amount'
-              find '.col-sm-1 .total_price',
-                   text: request.total_price(@current_user).to_i
-            when 'priority'
-              find '.col-sm-1', text: _(request.priority.capitalize)
-            when 'state'
-              state = request.state(@current_user)
-              find '.col-sm-1', text: _(state.to_s.humanize)
-            else
-              raise
-          end
-        end
-      end
-    end
   end
 
   step 'I see the requested amount per budget period' do

@@ -164,6 +164,51 @@ steps_for :managing_requests do
     page.driver.browser.switch_to.alert
   end
 
+  step 'I see the following request information' do |table|
+    within ".request[data-request_id='#{@request.id}']" do
+      table.raw.flatten.each do |value|
+        case value
+          # when 'article name'
+          #   find '.col-sm-2', text: request.article_name
+          # when 'name of the requester'
+          #   find '.col-sm-2', text: request.user.to_s
+          # when 'department'
+          #   find '.col-sm-2', text: request.organization.parent.to_s
+          # when 'organisation'
+          #   find '.col-sm-2', text: request.organization.to_s
+          # when 'price'
+          #   find '.col-sm-1 .total_price', text: request.price.to_i
+          # when 'requested amount'
+          #   within all('.col-sm-2.quantities div', exact: 3)[0] do
+          #     expect(page).to have_content request.requested_quantity
+          #   end
+          when 'approved amount'
+            within '.form-group', text: _('Approved quantity') do
+              find '.label', text: @request.approved_quantity
+            end
+          # when 'order amount'
+          #   within all('.col-sm-2.quantities div', exact: 3)[2] do
+          #     expect(page).to have_content request.order_quantity
+          #   end
+          # when 'total amount'
+          #   find '.col-sm-1 .total_price',
+          #        text: request.total_price(@current_user).to_i
+          # when 'priority'
+          #   find '.col-sm-1', text: _(request.priority.capitalize)
+          # when 'state'
+          #   state = request.state(@current_user)
+          #   find '.col-sm-1', text: _(state.to_s.humanize)
+          when 'inspection comment'
+            within '.form-group', text: _('Inspection comment') do
+              find 'div', text: @request.inspection_comment
+            end
+          else
+            raise
+        end
+      end
+    end
+  end
+
   step 'only my requests are shown' do
     elements = all('[data-request_id]', minimum: 1)
     expect(elements).not_to be_empty
