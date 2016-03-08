@@ -42,6 +42,12 @@ module FilterSteps
     end
   end
 
+  step 'I enter a search string' do
+    within '#filter_panel .form-group', text: _('Search') do
+      find('input[name="filter[search]"]').set Faker::Lorem.word
+    end
+  end
+
   step 'I leave the search string empty' do
     within '#filter_panel .form-group', text: _('Search') do
       find('input[name="filter[search]"]').set ''
@@ -102,22 +108,39 @@ module FilterSteps
     end
   end
 
+  step 'I select one ore both priorities' do
+    if [true, false].sample
+      step 'I select both priorities'
+    else
+      within '#filter_panel .form-group', text: _('Priority') do
+        find(:checkbox, match: :first).set true
+      end
+    end
+  end
+
   step 'I select one or more :string_with_spaces' do |string_with_spaces|
     text = case string_with_spaces
              when 'groups'
                _('Groups')
              when 'budget periods'
                _('Budget periods')
+             when 'states'
+               _('State of Request')
              else
                raise
            end
     within '#filter_panel .form-group', text: text do
-      within '.btn-group' do
-        find('button.multiselect').click # NOTE open the dropdown
-        within '.dropdown-menu' do
-          all(:checkbox, minimum: 1).sample(2).each { |x| x.set true }
-        end
-        find('button.multiselect').click # NOTE close the dropdown
+      case string_with_spaces
+        when 'states'
+          all(:checkbox, minimum: 1).each { |x| x.set true }
+        else
+          within '.btn-group' do
+            find('button.multiselect').click # NOTE open the dropdown
+            within '.dropdown-menu' do
+              all(:checkbox, minimum: 1).sample(2).each { |x| x.set true }
+            end
+            find('button.multiselect').click # NOTE close the dropdown
+          end
       end
     end
   end

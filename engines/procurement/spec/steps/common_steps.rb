@@ -1,9 +1,44 @@
 module CommonSteps
 
-  step 'a request created by myself exists' do
-    @request = FactoryGirl.create :procurement_request,
-                                  user: @current_user,
-                                  budget_period: Procurement::BudgetPeriod.current
+  step 'a receiver exists' do
+    FactoryGirl.create :user
+  end
+
+  step 'a request with following data exist' do |table|
+    @changes = {
+        group: @group
+    }
+    table.hashes.each do |hash|
+      case hash['key']
+        when 'budget period'
+          @changes[:budget_period] = if hash['value'] == 'current'
+                                       Procurement::BudgetPeriod.current
+                                     else
+                                       Procurement::BudgetPeriod.all.sample
+                                     end
+        when 'user'
+          @changes[:user] = case hash['value']
+                              when 'myself'
+                                @current_user
+                              else
+                                find_or_create_user(hash['value'], true)
+                            end
+        when 'requested amount'
+          @changes[:requested_quantity] = hash['value'].to_i
+        when 'approved amount'
+          @changes[:requested_quantity] = hash['value'].to_i
+        when 'inspection comment'
+          @changes[:inspection_comment] = case hash['value']
+                                            when 'random'
+                                              Faker::Lorem.sentence
+                                            else
+                                              hash['value']
+                                          end
+        else
+          raise
+      end
+    end
+    @request = FactoryGirl.create :procurement_request, @changes
   end
 
   step 'I choose the following :field value' do |field, table|
@@ -307,6 +342,20 @@ module CommonSteps
     expect(page).to have_no_selector '.spinner'
   end
 
+  step 'several budget periods exist' do
+    current_year = Time.zone.today.year
+    @budget_periods = []
+    (1..3).each do |num|
+      @budget_periods << \
+        FactoryGirl.create(
+          :procurement_budget_period,
+          name: current_year + num,
+          inspection_start_date: Date.new(current_year + num, 1, 1),
+          end_date: Date.new(current_year + num, 1, 2)
+      )
+    end
+  end
+
   step 'the current budget period exist' do
     FactoryGirl.create(:procurement_budget_period)
   end
@@ -352,6 +401,12 @@ module CommonSteps
       @changes[:price_cents] = price * 100
     end
     expect(@group.requests.where(user_id: user).find_by(@changes)).to be
+  end
+
+  step 'the status is set to :state' do |state|
+    within '.form-group', text: _('State') do
+      find '.label', text: _(state)
+    end
   end
 
   step 'there exists a procurement group' do

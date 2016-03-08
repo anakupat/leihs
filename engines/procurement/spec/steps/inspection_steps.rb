@@ -4,33 +4,6 @@ steps_for :inspection do
     FactoryGirl.create :location
   end
 
-  step 'a receiver exists' do
-    FactoryGirl.create :user
-  end
-
-  step 'a request with following data exist' do |table|
-    @changes = {
-        group: @group
-    }
-    table.hashes.each do |hash|
-      case hash['key']
-        when 'budget period'
-          @changes[:budget_period] = if hash['value'] == 'current'
-                                       Procurement::BudgetPeriod.current
-                                     else
-                                       Procurement::BudgetPeriod.all.sample
-                                     end
-        when 'user'
-          @changes[:user] = find_or_create_user(hash['value'], true)
-        when 'requested amount'
-          @changes[:requested_quantity] = hash['value'].to_i
-        else
-          raise
-      end
-    end
-    @request = FactoryGirl.create :procurement_request, @changes
-  end
-
   step 'following requests exist for the current budget period' do |table|
     current_budget_period = Procurement::BudgetPeriod.current
     table.hashes.each do |value|
@@ -165,12 +138,6 @@ steps_for :inspection do
                text: '%d%' % percentage
         end
       end
-    end
-  end
-
-  step 'the status is set to :state' do |state|
-    within '.form-group', text: _('State') do
-      find '.label', text: _(state)
     end
   end
 

@@ -18,20 +18,6 @@ steps_for :periods_and_states do
                end
   end
 
-  step 'budget periods exist' do
-    current_year = Time.zone.today.year
-    @budget_periods = []
-    (1..3).each do |num|
-      @budget_periods << \
-        FactoryGirl.create(
-          :procurement_budget_period,
-          name: current_year + num,
-          inspection_start_date: Date.new(current_year + num, 1, 1),
-          end_date: Date.new(current_year + num, 1, 2)
-      )
-    end
-  end
-
   step 'for every budget period I see the total of all requested amounts ' \
        'with status "New"' do
     Procurement::BudgetPeriod.all.each do |budget_period|

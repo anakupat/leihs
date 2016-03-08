@@ -184,6 +184,12 @@ steps_for :managing_requests do
     end
   end
 
+  step 'several receivers exist' do
+    3.times do
+      step 'a receiver exists'
+    end
+  end
+
   step 'several requests created by myself exist' do
     n = 3
     n.times do

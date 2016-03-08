@@ -67,9 +67,9 @@ Feature: section Managing Requests
     And I choose the name of a receiver
     And I choose the point of delivery
     And I choose the following priority value
-      | High   |
+      | High |
     And I choose the following replacement value
-      | New   |
+      | New |
     And the status is set to "New"
     And I click on save
     Then I see a success message
@@ -257,7 +257,14 @@ Feature: section Managing Requests
   Scenario Outline: Delete a Request
     Given I am <username>
     And the current date has not yet reached the inspection start date
-    And a request created by myself exists
+
+#FS# reusing step
+#    And a request created by myself exists
+    And a request with following data exist
+      | key                | value   |
+      | budget period      | current |
+      | user               | myself  |
+
     When I navigate to the requests overview page
     And I select all budget periods
     And I select all groups
@@ -335,7 +342,14 @@ Feature: section Managing Requests
   @managing_requests
   Scenario Outline: Delete an attachment
     Given I am <username>
-    And a request created by myself exists
+
+#FS# reusing step
+#    And a request created by myself exists
+    And a request with following data exist
+      | key                | value   |
+      | budget period      | current |
+      | user               | myself  |
+
     And the request includes an attachment
     When I navigate to the requests form of myself
     And I delete the attachment
@@ -351,7 +365,14 @@ Feature: section Managing Requests
   @managing_requests
   Scenario Outline: Download an attachment
     Given I am <username>
-    And a request created by myself exists
+
+#FS# reusing step
+#    And a request created by myself exists
+    And a request with following data exist
+      | key                | value   |
+      | budget period      | current |
+      | user               | myself  |
+
     And the request includes an attachment
     When I navigate to the requests form of myself
     And I download the attachment
@@ -365,7 +386,14 @@ Feature: section Managing Requests
   @managing_requests
   Scenario Outline: View an attachment .jpg
     Given I am <username>
-    And a request created by myself exists
+
+#FS# reusing step
+#    And a request created by myself exists
+    And a request with following data exist
+      | key                | value   |
+      | budget period      | current |
+      | user               | myself  |
+
     And the request includes an attachment with the attribute .jpg
     When I navigate to the requests form of myself
     And I click on the attachment
@@ -406,10 +434,21 @@ Feature: section Managing Requests
   @managing_requests
   Scenario: Additional Fields shown to requester only after budget period has ended
     Given I am Roger
+
+#FS# reusing step
+#    And the budget period has ended
+#    And several requests created by myself exist
+#    And the inspector has approved the request
+#    And the inspector has entered an inspection comment
+    And a request with following data exist
+      | key                | value   |
+      | budget period      | current |
+      | user               | myself  |
+      | requested amount   | 2       |
+      | approved amount    | 2       |
+      | inspection comment | random  |
     And the budget period has ended
-    And several requests created by myself exist
-    And the inspector has approved the request
-    And the inspector has entered an inspection comment
+
     When I navigate to the requests overview page
     Then I see the requested quantity
     And I see the approved quantity
