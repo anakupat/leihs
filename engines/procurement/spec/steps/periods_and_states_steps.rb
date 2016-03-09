@@ -170,9 +170,11 @@ steps_for :periods_and_states do
 
   step 'I click on \'delete\' on the line for this budget period' do
     accept_alert do
-      find('form table tbody tr td:first-child input', exact: @budget_period.name)
-          .find(:xpath, '../..')
-          .click_on _('Delete')
+      within 'form table tbody' do
+        within "tr td:first-child input[value='#{@budget_period.name}']" do
+          find(:xpath, '../..').click_on _('Delete')
+        end
+      end
     end
   end
 

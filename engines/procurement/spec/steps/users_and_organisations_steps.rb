@@ -47,14 +47,17 @@ steps_for :users_and_organisations do
   end
 
   step 'I click on the minus button on the requester line' do
-    find('form table tbody tr td:first-child input', exact: @user.name)
-      .find(:xpath, '../..')
-      .find('.fa-minus-circle')
-      .click
+    within 'form table tbody' do
+      within "tr td:first-child input[value='#{@user.name}']" do
+        find(:xpath, '../..').find('.fa-minus-circle').click
+      end
+    end
   end
 
   step 'the requester line is marked for deletion' do
-    find('form table tbody tr.bg-danger td:first-child input', exact: @user.name)
+    within 'form table tbody' do
+      find("tr.bg-danger td:first-child input[value='#{@user.name}']")
+    end
   end
 
   step 'the requester disappears from the list' do
