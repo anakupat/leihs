@@ -20,7 +20,7 @@ Feature: Templates
     When I navigate to the templates page
     And I edit the category
     And the following fields are filled
-      | Article                    |
+      | Article / Project                    |
       | Article nr. / Producer nr. |
       | Price                      |
       | Supplier                   |
@@ -62,7 +62,7 @@ Feature: Templates
     And I edit the category
     And I modify the category name
     And the following fields are modified
-      | Article                    |
+      | Article / Project                    |
       | Article nr. / Producer nr. |
       | Price                      |
       | Supplier                   |
@@ -78,7 +78,7 @@ Feature: Templates
     When I navigate to the templates page
     And I edit the category
     And the following fields are filled
-      | Article                    |
+      | Article / Project                    |
       | Article nr. / Producer nr. |
       | Price                      |
       | Supplier                   |
@@ -112,7 +112,7 @@ Feature: Templates
     When I navigate to the templates page
     And I edit the category
     And the following fields are modified
-      | Article                    |
+      | Article / Project                    |
       | Article nr. / Producer nr. |
     And I click on save
     Then I see a success message

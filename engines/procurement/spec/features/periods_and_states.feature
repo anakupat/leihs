@@ -79,7 +79,7 @@ Feature: Periods and states
     When I want to create a new request
     And I fill in the following fields
       | key                        | value |
-      | Article                    |       |
+      | Article / Project                    |       |
       | Article nr. / Producer nr. |       |
       | Supplier                   |       |
       | Motivation                 |       |

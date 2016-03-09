@@ -51,9 +51,15 @@ module NavigationSteps
           Procurement::BudgetPeriod.current)
 
     within '.panel-success .panel-body' do
-      find('h4', text: _('Custom articles'))
-      find('h4', text: _('Create request for specific group'))
+      find('h4', text: _('Choose an article/project'))
+      find('h4', text: _('Add article for specific group'))
     end
+  end
+
+  step 'I navigate to the templates overview' do
+    visit procurement.new_user_budget_period_request_path(
+            @current_user,
+            Procurement::BudgetPeriod.current)
   end
 
   step 'I am on the new request form of a group' do

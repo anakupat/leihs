@@ -7,7 +7,7 @@ Feature: Exporting the data to a CSV-File
     And the following fields are exported
       | Budget Period                 |
       | Procurement Group             |
-      | Article                       |
+      | Article / Project                       |
       | Article nr. / Producer nr.    |
       | Replacement / New             |
       | New                           |

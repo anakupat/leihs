@@ -72,7 +72,7 @@ Feature: Inspection (state-behaviour described in seperate feature-file)
     When I want to create a new request
     And I fill in the following fields
       | key                        | value |
-      | Article                    |       |
+      | Article / Project          |       |
       | Article nr. / Producer nr. |       |
       | Supplier                   |       |
       | Motivation                 |       |
@@ -89,9 +89,9 @@ Feature: Inspection (state-behaviour described in seperate feature-file)
     And I choose the name of a receiver
     And I choose the point of delivery
     And I choose the following priority value
-      | High   |
+      | High |
     And I choose the following replacement value
-      | New   |
+      | New |
     And the status is set to "New"
     And I click on save
     Then I see a success message

@@ -4,15 +4,51 @@ steps_for :managing_requests do
     find '.request[data-request_id="new_request"]', visible: true
   end
 
+  step 'a request containing a template article exists' do
+    template_category = FactoryGirl.create :procurement_template_category,
+                                           group: @group
+    @template = FactoryGirl.create :procurement_template,
+                                  template_category: template_category
+    @request = FactoryGirl.create :procurement_request,
+                                  user: @current_user,
+                                  group: @group,
+                                  template: @template
+
+  end
+
   step 'an email for a group exists' do
     @group = FactoryGirl.create :procurement_group,
                                 email: Faker::Internet.email
   end
 
+  step 'each template article contains' do |table|
+    table.raw.flatten.each do |value|
+      key = case value
+              when 'Article nr. / Producer nr.'
+                :article_number
+              when 'Price'
+                :price
+              when 'Supplier'
+                :supplier_name
+              else
+                raise
+            end
+      Procurement::Template.all.each do |template|
+        expect(template.send key).to be
+      end
+    end
+  end
+
+  step 'I am navigated to the request containing this template article' do
+    find ".request[data-request_id='#{@request.id}']" \
+         "[data-template_id='#{@request.template_id}']",
+         visible: true
+  end
+
   step 'I can change the budget period of my request' do
     request = get_current_request @current_user
     visit_request(request)
-    next_budget_period = Procurement::BudgetPeriod. \
+    next_budget_period = Procurement::BudgetPeriod.\
         where("end_date > ?", request.budget_period.end_date).first
 
     within ".request[data-request_id='#{request.id}']" do
@@ -53,7 +89,7 @@ steps_for :managing_requests do
     step 'I delete the request'
 
     expect(page).to have_content _('Deleted')
-    expect{@request.reload}.to raise_error ActiveRecord::RecordNotFound
+    expect { @request.reload }.to raise_error ActiveRecord::RecordNotFound
   end
 
   step 'I can modify my request' do
@@ -100,6 +136,14 @@ steps_for :managing_requests do
   step 'I click on the email icon' do
     within '.panel-success > .panel-heading' do
       find('.fa-envelope').click
+    end
+  end
+
+  step 'I click on the template article which has ' \
+       'already been added to the request' do
+    within '.sidebar-wrapper' do
+      find('.panel-heading', text: @request.template.template_category.name).click
+      find('.list-group-item', text: @request.template.article_name).click
     end
   end
 
@@ -278,7 +322,7 @@ steps_for :managing_requests do
                          budget_period: budget_period
     end
     expect(Procurement::Request.where(user_id: @current_user,
-                                  budget_period_id: budget_period).count).to eq n
+                                      budget_period_id: budget_period).count).to eq n
   end
 
   step 'the amount and the price are multiplied and the result is shown' do
@@ -323,6 +367,22 @@ steps_for :managing_requests do
     end
   end
 
+  step 'the following template data are prefilled' do |table|
+    within ".request[data-template_id='#{@template.id}']" do
+      table.raw.flatten.each do |value|
+        pending
+        case value
+          when 'Article / Project'
+          when 'Article nr. / Producer nr.'
+          when 'Price'
+          when 'Supplier'
+          else
+            raise
+        end
+      end
+    end
+  end
+
   step 'the list of requests is adjusted immediately ' \
        'according to the filters chosen' do
     within '#filter_target' do
@@ -334,7 +394,9 @@ steps_for :managing_requests do
       ).select do |r|
         @filter[:states].map(&:to_sym).include? r.state(@current_user)
       end
-      all('[data-request_id]', minimum: 1).map {|el| el['data-request_id'] }.each do |id|
+      all('[data-request_id]', minimum: 1).map do |el|
+        el['data-request_id']
+      end.each do |id|
         expect(@found_requests.map(&:id)).to include id.to_i
       end
     end
@@ -355,6 +417,16 @@ steps_for :managing_requests do
       else
         raise
     end
+  end
+
+  step 'the template article contains an articlenr./suppliernr.' do
+    if @template.article_number.empty?
+      @template.update_attributes(article_number: Faker::Lorem.word)
+    end
+  end
+
+  step 'the template id is nullified in the database' do
+    expect(@request.reload.template).to be_nil
   end
 
   private

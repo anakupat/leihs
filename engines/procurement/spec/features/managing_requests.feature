@@ -60,7 +60,7 @@ Feature: section Managing Requests
     When I want to create a new request
     And I fill in the following fields
       | key                        | value |
-      | Article                    |       |
+      | Article / Project          |       |
       | Article nr. / Producer nr. |       |
       | Supplier                   |       |
       | Motivation                 |       |
@@ -87,7 +87,7 @@ Feature: section Managing Requests
     Then I am navigated to the new request form
     When I fill in the following fields
       | key                | value |
-      | Article            |       |
+      | Article / Project  |       |
       | Requested quantity |       |
       | Motivation         |       |
       | Replacement / New  |       |
@@ -177,11 +177,24 @@ Feature: section Managing Requests
   @managing_requests
   Scenario Outline: Creating a request from a group template inside the new request page
     Given I am <username>
-    And several template articles exist
-    And the template articles contain an articlenr/suppliernr
-    And the template articles contain a supplier
-    And the template articles contain a price
-    When I am navigated to the new request form
+
+#FS# reusing step
+#    And several template articles exist
+    And several template categories exist
+    And several template articles in categories exist
+
+#FS# single step with table
+#    And the template articles contain an articlenr/suppliernr
+#    And the template articles contain a supplier
+#    And the template articles contain a price
+    And each template article contains
+      | Article nr. / Producer nr. |
+      | Supplier                   |
+      | Price                      |
+
+#FS# let's go to the correct page
+#    When I am navigated to the new request form
+    When I navigate to the templates overview
 
 #FS# reusing steps
 #    And I click on a category
@@ -189,11 +202,22 @@ Feature: section Managing Requests
     And I press on a category
     And I choose a template article
 
-    Then a new request line is added
-    And the field article is prefilled with the name of the template article chosen
-    And the field articlenr/suppliernr is prefilled with the articlenr/suppliernr of the template article chosen
-    And the field supplier is prefilled with the supplier of the template article chosen
-    And the field price is prefilled with the price of the template article chosen
+#FS# we focus the template request
+#    Then a new request line is added
+    Then I am navigated to the template request form of the specific group
+
+#FS# single step with table
+#    And the field article is prefilled with the name of the template article chosen
+#    And the field articlenr/suppliernr is prefilled with the articlenr/suppliernr of the template article chosen
+#    And the field supplier is prefilled with the supplier of the template article chosen
+#    And the field price is prefilled with the price of the template article chosen
+    And the following template data are prefilled
+      | Article / Project          |
+      | Article nr. / Producer nr. |
+      | Supplier                   |
+      | Price                      |
+#FS# for Nadja !!! this only works for Barbara, instead Roget doesn't see the input fields, just the plain text
+
     And no option is chosen yet for the field Replacement / New
     When I enter the motivation
     And I choose the option "new"
@@ -209,7 +233,11 @@ Feature: section Managing Requests
   Scenario Outline: Inserting an already inserted template article
     Given I am <username>
     And a request containing a template article exists
-    When I am navigated to the new request form
+
+#FS# correct step
+#    When I am navigated to the new request form
+    When I navigate to the requests form of myself
+
     And I click on the template article which has already been added to the request
     Then I am navigated to the request containing this template article
     Examples:
@@ -222,9 +250,20 @@ Feature: section Managing Requests
     Given I am <username>
     And a request containing a template article exists
     And the template article contains an articlenr./suppliernr.
-    When I am navigated to the new request form
-    And I modify the name of the already inserted template article
-    And I modify or delete the articlenr./suppliernr. of the already inserted template article
+
+#FS# correct step
+#    When I am navigated to the new request form
+    When I navigate to the requests form of myself
+
+#FS# reusing step
+#    And I modify the name of the already inserted template article
+#    And I modify or delete the articlenr./suppliernr. of the already inserted template article
+    And I fill in the following fields
+      | key                        | value |
+      | Article / Project          |       |
+      | Article nr. / Producer nr. |       |
+#FS# for Nadja !!! this only works for Barbara, instead Roget doesn't see the input fields, just the plain text
+
     When I click on save
     Then I see a success message
     And the request with all given information was created successfully in the database
@@ -284,9 +323,9 @@ Feature: section Managing Requests
 #FS# reusing step
 #    And a request created by myself exists
     And a request with following data exist
-      | key                | value   |
-      | budget period      | current |
-      | user               | myself  |
+      | key           | value   |
+      | budget period | current |
+      | user          | myself  |
 
     When I navigate to the requests overview page
     And I select all budget periods
@@ -369,9 +408,9 @@ Feature: section Managing Requests
 #FS# reusing step
 #    And a request created by myself exists
     And a request with following data exist
-      | key                | value   |
-      | budget period      | current |
-      | user               | myself  |
+      | key           | value   |
+      | budget period | current |
+      | user          | myself  |
 
     And the request includes an attachment
     When I navigate to the requests form of myself
@@ -392,9 +431,9 @@ Feature: section Managing Requests
 #FS# reusing step
 #    And a request created by myself exists
     And a request with following data exist
-      | key                | value   |
-      | budget period      | current |
-      | user               | myself  |
+      | key           | value   |
+      | budget period | current |
+      | user          | myself  |
 
     And the request includes an attachment
     When I navigate to the requests form of myself
@@ -413,9 +452,9 @@ Feature: section Managing Requests
 #FS# reusing step
 #    And a request created by myself exists
     And a request with following data exist
-      | key                | value   |
-      | budget period      | current |
-      | user               | myself  |
+      | key           | value   |
+      | budget period | current |
+      | user          | myself  |
 
     And the request includes an attachment with the attribute .jpg
     When I navigate to the requests form of myself
@@ -478,8 +517,8 @@ Feature: section Managing Requests
 #    Then I see the requested quantity
 #    And I see the approved quantity
     And for each request I see the following information
-      | requested amount      |
-      | approved amount       |
+      | requested amount |
+      | approved amount  |
 
 #FS# reusing step
 #    When I edit the request

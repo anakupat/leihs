@@ -461,7 +461,7 @@ module CommonSteps
 
   def mapped_key(from)
     case from
-      when 'Article'
+      when 'Article / Project'
         :article_name
       when 'Article nr. / Producer nr.'
         :article_number
