@@ -38,20 +38,6 @@ steps_for :templates do
     step 'I enter the category name'
   end
 
-  step 'several template categories exist' do
-    3.times do
-      FactoryGirl.create :procurement_template_category,
-                         group: @group
-    end
-  end
-
-  step 'several articles in categories exist' do
-    @group.template_categories.each do |category|
-      @category = category
-      step 'the template category contains articles'
-    end
-  end
-
   step 'the template is already used in many requests' do
     3.times do
       FactoryGirl.create :procurement_request,
@@ -153,12 +139,6 @@ steps_for :templates do
 
   step 'the requests are nullified' do
     expect(@template.requests).to be_empty
-  end
-
-  step 'the template category contains articles' do
-    3.times do
-      @category.templates << FactoryGirl.create(:procurement_template)
-    end
   end
 
   step 'the template category has one article' do

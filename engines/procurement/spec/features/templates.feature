@@ -94,7 +94,11 @@ Feature: Templates
   Scenario: Sorting of categories and articles
     Given I am Barbara
     And several template categories exist
-    And several articles in categories exist
+
+#FS# more precise
+#    And several articles in categories exist
+    And several template articles in categories exist
+
     When I navigate to the templates page
     Then the categories are sorted 0-10 and a-z
     And the articles inside a category are sorted 0-10 and a-z

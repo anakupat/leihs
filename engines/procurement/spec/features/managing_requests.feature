@@ -102,6 +102,11 @@ Feature: section Managing Requests
   @managing_requests
   Scenario Outline: Creating a request through a budget period selecting a template article
     Given I am <username>
+
+#FS# needed
+    And several template categories exist
+    And several template articles in categories exist
+
     When I navigate to the requests overview page
 ##NW: we might need to discuss this in the next development phase. This needs explanation for the inspectors and its usually easyer, if they have the same possibilities as requesters, withuot having to change the settings.
 #!!# this is needed for the inspectors, to see the plus icon
@@ -110,13 +115,22 @@ Feature: section Managing Requests
 
     Then I am navigated to the templates overview
     And I see the budget period
-    And I see the end date of the request phase
-    And I see the end date of the inspection phase
+
+#FS#
+#    And I see the end date of the request phase
+#    And I see the end date of the inspection phase
+    And I see when the requesting phase of this budget period ends
+    And I see when the inspection phase of this budget period ends
+
     And I see all categories of all groups listed
     When I press on a category
     Then I see all template articles of this category
     When I choose a template article
-    Then I am navigated to the new request form of the specific group
+
+#FS# we focus the template request
+#    Then I am navigated to the new request form of the specific group
+    Then I am navigated to the template request form of the specific group
+
     When I fill in all mandatory information
     And I click on save
     Then I see a success message
@@ -168,8 +182,13 @@ Feature: section Managing Requests
     And the template articles contain a supplier
     And the template articles contain a price
     When I am navigated to the new request form
-    And I click on a category
-    And I click on a template article
+
+#FS# reusing steps
+#    And I click on a category
+#    And I click on a template article
+    And I press on a category
+    And I choose a template article
+
     Then a new request line is added
     And the field article is prefilled with the name of the template article chosen
     And the field articlenr/suppliernr is prefilled with the articlenr/suppliernr of the template article chosen

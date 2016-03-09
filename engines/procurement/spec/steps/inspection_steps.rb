@@ -146,7 +146,7 @@ steps_for :inspection do
               .where(group_id: displayed_groups)
               .map {|r| r.total_price(@current_user) }.sum
 
-    find '.panel-success .panel-heading .label-primary.big_total_price',
+    find '.panel-success > .panel-heading .label-primary.big_total_price',
          text: number_with_delimiter(total.to_i)
   end
 

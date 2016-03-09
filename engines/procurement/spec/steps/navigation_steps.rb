@@ -35,6 +35,15 @@ module NavigationSteps
     end
   end
 
+  step 'I am navigated to the template request form of the specific group' do
+    expect(page).to have_current_path \
+      procurement.group_budget_period_user_requests_path(
+        @template.template_category.group,
+        Procurement::BudgetPeriod.current,
+        @current_user,
+        template_id: @template.id)
+  end
+
   step 'I am navigated to the templates overview' do
     expect(page).to have_current_path \
       procurement.new_user_budget_period_request_path(

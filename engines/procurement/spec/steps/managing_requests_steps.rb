@@ -77,6 +77,15 @@ steps_for :managing_requests do
     end
   end
 
+  step 'I choose a template article' do
+    @template = @category.templates.sample
+    within '.panel-success > .panel-body' do
+      within '.panel', text: @category.name do
+        find('.list-group-item', text: @template.article_name).click
+      end
+    end
+  end
+
   step 'I click on choice :choice' do |choice|
     case choice
       when 'yes'
@@ -89,7 +98,7 @@ steps_for :managing_requests do
   end
 
   step 'I click on the email icon' do
-    within '.panel-success .panel-heading' do
+    within '.panel-success > .panel-heading' do
       find('.fa-envelope').click
     end
   end
@@ -145,9 +154,16 @@ steps_for :managing_requests do
     find(".list-group-item[data-request_id='#{@request.id}']").click
   end
 
+  step 'I press on a category' do
+    @category = Procurement::TemplateCategory.all.sample
+    within '.panel-success > .panel-body' do
+      find('.panel-heading', text: @category.name).click
+    end
+  end
+
   step 'I press on the plus icon of the budget period' do
     within '#filter_target' do
-      within '.panel-success .panel-heading' do
+      within '.panel-success > .panel-heading' do
         find('i.fa-plus-circle').click
       end
     end
@@ -162,6 +178,24 @@ steps_for :managing_requests do
   step 'I receive a message asking me if I am sure I want to delete the data' do
     # page.driver.browser.switch_to.alert.accept
     page.driver.browser.switch_to.alert
+  end
+
+  step 'I see all categories of all groups listed' do
+    Procurement::TemplateCategory.all.each do |category|
+      within '.panel-success > .panel-body' do
+        find '.panel-heading', text: category.name
+      end
+    end
+  end
+
+  step 'I see all template articles of this category' do
+    within '.panel-success > .panel-body' do
+      within '.panel', text: @category.name do
+        @category.templates.each do |template|
+          find '.list-group-item', text: template.article_name
+        end
+      end
+    end
   end
 
   step 'I see the following request information' do |table|

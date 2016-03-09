@@ -7,6 +7,27 @@ module DatasetSteps
     step 'there exist 3 requesters'
   end
 
+  ######################################################
+
+  step 'a procurement admin exists' do
+    Procurement::Access.admins.exists? \
+      || FactoryGirl.create(:procurement_access, :admin)
+  end
+
+  step 'there exist :count requesters' do |count|
+    count.to_i.times do
+      FactoryGirl.create(:procurement_access, :requester)
+    end
+  end
+
+  step 'there exists a procurement group' do
+    @group = Procurement::Group.first || FactoryGirl.create(:procurement_group)
+  end
+
+  step 'the current budget period exist' do
+    FactoryGirl.create(:procurement_budget_period)
+  end
+
 end
 
 RSpec.configure { |c| c.include DatasetSteps }

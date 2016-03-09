@@ -33,11 +33,6 @@ module PersonasSteps
     expect(@group.inspectable_by?(@current_user)).to be true
   end
 
-  step 'a procurement admin exists' do
-    Procurement::Access.admins.exists? \
-      || FactoryGirl.create(:procurement_access, :admin)
-  end
-
   step 'admins exist' do
     Procurement::Access.admins.count >= 3 \
       || 3.times { FactoryGirl.create(:procurement_access, :admin) }
@@ -46,12 +41,6 @@ module PersonasSteps
   step 'there exists a requester' do
     @user = find_or_create_user(Faker::Name.first_name)
     FactoryGirl.create(:procurement_access, :requester, user: @user)
-  end
-
-  step 'there exist :count requesters' do |count|
-    count.to_i.times do
-      FactoryGirl.create(:procurement_access, :requester)
-    end
   end
 
   def find_or_create_user(firstname, as_requester = false)

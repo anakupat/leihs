@@ -168,9 +168,13 @@ module CommonSteps
   end
 
   step 'I fill in all mandatory information' do
-    # TODO also for template
     @changes = {}
-    within ".request[data-request_id='new_request']" do
+    request_el = if @template
+           ".request[data-template_id='#{@template.id}']"
+         else
+           ".request[data-request_id='new_request']"
+         end
+    within request_el do
       all('[data-to_be_required]', minimum: 1).each do |el|
         key = el['name'].match(/.*\[(.*)\]\[(.*)\]/)[2]
 
@@ -262,7 +266,7 @@ module CommonSteps
   end
 
   step 'I see the current budget period' do
-    find '.panel-success .panel-heading .h4',
+    find '.panel-success > .panel-heading .h4',
          text: Procurement::BudgetPeriod.current.name
   end
   # alias
@@ -279,7 +283,7 @@ module CommonSteps
                 .where(group_id: displayed_groups)
     requests = requests.where(user_id: @current_user) if filtered_own_requests?
     total = requests.map { |r| r.total_price(@current_user) }.sum
-    find '.panel-success .panel-heading .label-primary.big_total_price',
+    find '.panel-success > .panel-heading .label-primary.big_total_price',
          text: number_with_delimiter(total.to_i)
   end
 
@@ -299,7 +303,7 @@ module CommonSteps
   end
 
   step 'I see when the requesting phase of this budget period ends' do
-    within '.panel-success .panel-heading' do
+    within '.panel-success > .panel-heading' do
       find '.row',
            text: _('requesting phase until %s') \
                   % I18n.l(Procurement::BudgetPeriod.current.inspection_start_date)
@@ -307,7 +311,7 @@ module CommonSteps
   end
 
   step 'I see when the inspection phase of this budget period ends' do
-    within '.panel-success .panel-heading' do
+    within '.panel-success > .panel-heading' do
       find '.row',
            text: _('inspection phase until %s') \
                   % I18n.l(Procurement::BudgetPeriod.current.end_date)
@@ -356,8 +360,19 @@ module CommonSteps
     end
   end
 
-  step 'the current budget period exist' do
-    FactoryGirl.create(:procurement_budget_period)
+  step 'several template categories exist' do
+    h = {}
+    h[:group] = @group if @group
+    3.times do
+      FactoryGirl.create :procurement_template_category, h
+    end
+  end
+
+  step 'several template articles in categories exist' do
+    Procurement::TemplateCategory.all.each do |category|
+      @category = category
+      step 'the template category contains articles'
+    end
   end
 
   step 'the current date is after the budget period end date' do
@@ -409,8 +424,11 @@ module CommonSteps
     end
   end
 
-  step 'there exists a procurement group' do
-    @group = Procurement::Group.first || FactoryGirl.create(:procurement_group)
+  step 'the template category contains articles' do
+    3.times do
+      FactoryGirl.create :procurement_template,
+                         template_category: @category
+    end
   end
 
   def visit_request(request)
