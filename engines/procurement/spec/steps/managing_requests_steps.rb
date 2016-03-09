@@ -179,7 +179,7 @@ steps_for :managing_requests do
           # when 'price'
           #   find '.col-sm-1 .total_price', text: request.price.to_i
           # when 'requested amount'
-          #   within all('.col-sm-2.quantities div', exact: 3)[0] do
+          #   within all('.col-sm-2.quantities div', count: 3)[0] do
           #     expect(page).to have_content request.requested_quantity
           #   end
           when 'approved amount'
@@ -187,7 +187,7 @@ steps_for :managing_requests do
               find '.label', text: @request.approved_quantity
             end
           # when 'order amount'
-          #   within all('.col-sm-2.quantities div', exact: 3)[2] do
+          #   within all('.col-sm-2.quantities div', count: 3)[2] do
           #     expect(page).to have_content request.order_quantity
           #   end
           # when 'total amount'
@@ -224,26 +224,27 @@ steps_for :managing_requests do
   end
 
   step 'several points of delivery exist' do
-    3.times do
+    5.times do
       FactoryGirl.create :location
     end
   end
 
   step 'several receivers exist' do
-    3.times do
+    5.times do
       step 'a receiver exists'
     end
   end
 
   step 'several requests created by myself exist' do
-    n = 3
+    budget_period = Procurement::BudgetPeriod.current
+    n = 5
     n.times do
       FactoryGirl.create :procurement_request,
                          user: @current_user,
-                         budget_period: Procurement::BudgetPeriod.current
+                         budget_period: budget_period
     end
     expect(Procurement::Request.where(user_id: @current_user,
-                                      budget_period_id: Procurement::BudgetPeriod.current).count).to eq n
+                                  budget_period_id: budget_period).count).to eq n
   end
 
   step 'the amount and the price are multiplied and the result is shown' do
@@ -253,6 +254,11 @@ steps_for :managing_requests do
                                   @changes[:requested_quantity])
       expect(find('.label.label-primary.total_price').text).to eq currency(total)
     end
+  end
+
+  step 'the amount of requests found is shown' do
+    step "I see the amount of requests which are listed is %d" % \
+      @found_requests.count
   end
 
   step 'the attachment is deleted successfully from the database' do
@@ -279,6 +285,23 @@ steps_for :managing_requests do
         within 'label', text: /^#{_(value)}$/ do
           find("input[type='radio']:checked")
         end
+      end
+    end
+  end
+
+  step 'the list of requests is adjusted immediately ' \
+       'according to the filters chosen' do
+    within '#filter_target' do
+      step 'page has been loaded'
+      @found_requests = Procurement::Request.where(
+          budget_period_id: @filter[:budget_period_ids],
+          group_id: @filter[:group_ids],
+          priority: @filter[:priorities]
+      ).select do |r|
+        @filter[:states].map(&:to_sym).include? r.state(@current_user)
+      end
+      all('[data-request_id]', minimum: 1).map {|el| el['data-request_id'] }.each do |id|
+        expect(@found_requests.map(&:id)).to include id.to_i
       end
     end
   end

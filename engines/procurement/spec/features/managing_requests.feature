@@ -38,6 +38,10 @@ Feature: section Managing Requests
   @managing_requests
   Scenario: Using the filters as requester only
     Given I am Roger
+
+#FS# need to check the filter result
+    And several requests created by myself exist
+
     When I navigate to the requests overview page
     Then I do not see the filter "Only show my own requests"
     When I select one or more budget periods

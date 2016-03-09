@@ -43,8 +43,16 @@ module FilterSteps
   end
 
   step 'I enter a search string' do
+    @filter ||= {}
+    request = Procurement::Request.where(
+        budget_period_id: @filter[:budget_period_ids],
+        group_id: @filter[:group_ids],
+        priority: @filter[:priorities]
+    ).all.sample
+    text = request.article_name[0, 6]
     within '#filter_panel .form-group', text: _('Search') do
-      find('input[name="filter[search]"]').set Faker::Lorem.word
+      find('input[name="filter[search]"]').set text
+      @filter[:search] = text
     end
   end
 
@@ -103,41 +111,57 @@ module FilterSteps
   end
 
   step 'I select both priorities' do
+    @filter ||= {}
     within '#filter_panel .form-group', text: _('Priority') do
-      all(:checkbox, exact: 2).each { |x| x.set true }
+      @filter[:priorities] = all(:checkbox, count: 2).map do |x|
+        x.set true
+        x[:value]
+      end
     end
   end
 
   step 'I select one ore both priorities' do
+    @filter ||= {}
     if [true, false].sample
       step 'I select both priorities'
     else
       within '#filter_panel .form-group', text: _('Priority') do
-        find(:checkbox, match: :first).set true
+        @filter[:priorities] = [find(:checkbox, match: :first)].map do |x|
+          x.set true
+          x[:value]
+        end
       end
     end
   end
 
   step 'I select one or more :string_with_spaces' do |string_with_spaces|
-    text = case string_with_spaces
+    @filter ||= {}
+    text, key = case string_with_spaces
              when 'groups'
-               _('Groups')
+               [_('Groups'), :group_ids]
              when 'budget periods'
-               _('Budget periods')
+               [_('Budget periods'), :budget_period_ids]
              when 'states'
-               _('State of Request')
+               [_('State of Request'), :states]
              else
                raise
            end
     within '#filter_panel .form-group', text: text do
       case string_with_spaces
         when 'states'
-          all(:checkbox, minimum: 1).each { |x| x.set true }
+          @filter[key] = all(:checkbox, minimum: 1).map do |x|
+              x.set true
+              x[:value]
+          end
         else
           within '.btn-group' do
             find('button.multiselect').click # NOTE open the dropdown
             within '.dropdown-menu' do
-              all(:checkbox, minimum: 1).sample(2).each { |x| x.set true }
+              @filter[key] = all(:checkbox, minimum: 1).sample(2).map do |x|
+                x.set true
+                x[:value]
+              end
+              @filter[key].delete('multiselect-all')
             end
             find('button.multiselect').click # NOTE close the dropdown
           end

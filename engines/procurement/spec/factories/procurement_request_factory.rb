@@ -15,6 +15,7 @@ FactoryGirl.define do
     requested_quantity { 5 }
     approved_quantity { nil }
     template { nil }
+    priority { ['high', 'normal'].sample }
 
     before :create do |request|
       if request.template
