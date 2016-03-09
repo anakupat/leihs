@@ -3134,8 +3134,8 @@ msgstr "Lieferort"
 msgid "max 255 characters"
 msgstr "Max. 255 Zeichen"
 
-msgid "Article/Project"
-msgstr "Artikel/Projekt"
+msgid "Article / Project"
+msgstr "Artikel / Projekt"
 
 msgid "Procurement"
 msgstr "Bedarfsermittlung"

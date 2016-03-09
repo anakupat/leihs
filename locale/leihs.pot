@@ -3037,7 +3037,7 @@ msgstr ""
 msgid "max 255 characters"
 msgstr ""
 
-msgid "Article/Project"
+msgid "Article / Project"
 msgstr ""
 
 msgid "Procurement"
