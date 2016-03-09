@@ -3037,7 +3037,7 @@ msgstr ""
 msgid "max 255 characters"
 msgstr ""
 
-msgid "Article"
+msgid "Article/Project"
 msgstr ""
 
 msgid "Procurement"
@@ -3052,7 +3052,7 @@ msgstr ""
 msgid "Replacement"
 msgstr ""
 
-msgid "Custom articles"
+msgid "Choose an article/project"
 msgstr ""
 
 msgid "Request moved"
@@ -3085,7 +3085,7 @@ msgstr ""
 msgid "Name of the requester"
 msgstr ""
 
-msgid "Create request for specific group"
+msgid "Add article for specific group"
 msgstr ""
 
 msgid "You have unsaved data. Would you like to delete the data?"
@@ -3094,14 +3094,14 @@ msgstr ""
 msgid "Only show my own requests"
 msgstr ""
 
-msgid "Create request"
-msgstr "Antrag erstellen"
+msgid "Add article"
+msgstr ""
 
-msgid "Create request for this group"
-msgstr "Antrag für Gruppe erstellen"
+msgid "Add article for this group"
+msgstr ""
 
-msgid "Create request for another user"
-msgstr "Antrag für einen anderen Benutzer erstellen"
+msgid "Add article for another user"
+msgstr ""
 
 msgid "Select all"
 msgstr ""

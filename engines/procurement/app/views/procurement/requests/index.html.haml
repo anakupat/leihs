@@ -18,7 +18,7 @@
         - content_for :sidebar do
           %h4
             %i.fa.fa-plus-circle
-            = _('Create request')
+            = _('Add article')
           - if @group.template_categories.exists?
             %hr
             = render partial: 'procurement/templates/categories', locals: {template_categories: @group.template_categories}

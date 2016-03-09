@@ -2,9 +2,9 @@
   .col-xs-6
     .form-group
       %label.col-xs-4.control-label
-        = _('Article')
+        = _('Article/Project')
       .col-xs-8
-        %input.form-control{name: "requests[new_#{i}][article_name]", placeholder: _('Article'), data: {to_be_required: true}}
+        %input.form-control{name: "requests[new_#{i}][article_name]", placeholder: _('Article/Project'), data: {to_be_required: true}}
         %input{type: :hidden, name: "requests[new_#{i}][model_id]"}
     .form-group
       %label.col-xs-4.control-label

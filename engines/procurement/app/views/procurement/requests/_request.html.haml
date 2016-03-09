@@ -5,10 +5,10 @@
 
     .form-group
       %label.col-xs-4.control-label
-        = _('Article')
+        = _('Article/Project')
       .col-xs-8
         - if request.editable?(current_user) and (request.template_id.nil? or request.group.inspectable_by?(current_user))
-          %input.form-control{name: "requests[#{request.id}][article_name]", placeholder: _('Article'), value: request.article_name, data: {toggle: 'tooltip'}, title: request.article_name, required: true}
+          %input.form-control{name: "requests[#{request.id}][article_name]", placeholder: _('Article/Project'), value: request.article_name, data: {toggle: 'tooltip'}, title: request.article_name, required: true}
           %input{type: :hidden, name: "requests[#{request.id}][model_id]", value: request.model_id}
         - else
           = request.article_name

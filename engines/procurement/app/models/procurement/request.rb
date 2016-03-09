@@ -142,7 +142,7 @@ module Procurement
           _('Budget period') => request.budget_period,
           _('Group') => request.group,
           _('Requester') => request.user,
-          _('Article') => request.article_name,
+          _('Article/Project') => request.article_name,
           _('Article nr. / Producer nr.') => request.article_number,
           _('Supplier') => request.supplier_name,
           _('Requested quantity') => request.requested_quantity,

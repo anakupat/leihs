@@ -4,7 +4,7 @@
       %i.fa.fa-calendar
       = budget_period.name
       - if @user == current_user and not budget_period.past?
-        %a{href: new_user_budget_period_request_path(@user, budget_period), title: _('Create request'), data: {toggle: 'tooltip'}}
+        %a{href: new_user_budget_period_request_path(@user, budget_period), title: _('Add article'), data: {toggle: 'tooltip'}}
           %i.fa.fa-plus-circle
     - if @user and @group
       = render partial: 'procurement/budget_periods/phases', locals: {budget_period: budget_period}
