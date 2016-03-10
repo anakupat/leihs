@@ -387,25 +387,41 @@ module CommonSteps
   step 'the field :field is marked red' do |field|
     el = if @request
            ".request[data-request_id='#{@request.id}']"
+         elsif has_selector? ".request[data-request_id='new_request']"
+          ".request[data-request_id='new_request']"
          else
            all('form table tbody tr', minimum: 1).last
          end
     within el do
-      input_field = case field
-                      when 'requester name', 'name'
-                        find("input[name*='[name]']")
-                      when 'department'
-                        find("input[name*='[department]']")
-                      when 'organization'
-                        find("input[name*='[organization]']")
-                      when 'inspection start date'
-                        find("input[name*='[inspection_start_date]']")
-                      when 'end date'
-                        find("input[name*='[end_date]']")
-                      when 'inspection comment'
-                        find("input[name*='[inspection_comment]']")
-                    end
+      case field
+        when 'new/replacement'
+          input_field = find("input[name*='[replacement]']", match: :first)
+          label_field = input_field.find(:xpath, "./following-sibling::div[contains(@class, 'label')]")
+        else
+          input_field = case field
+                          when 'requester name', 'name'
+                            find("input[name*='[name]']")
+                          when 'department'
+                            find("input[name*='[department]']")
+                          when 'organization'
+                            find("input[name*='[organization]']")
+                          when 'inspection start date'
+                            find("input[name*='[inspection_start_date]']")
+                          when 'end date'
+                            find("input[name*='[end_date]']")
+                          when 'article'
+                            find("input[name*='[article_name]']")
+                          when 'requested quantity'
+                            find("input[name*='[requested_quantity]']")
+                          when 'motivation'
+                            find("input[name*='[motivation]']")
+                          when 'inspection comment'
+                            find("input[name*='[inspection_comment]']")
+                        end
+      end
       expect(input_field['required']).to eq 'true' # ;-)
+      color = (label_field || input_field).native.css_value('background-color')
+      expect(color).to eq 'rgba(242, 222, 222, 1)'
     end
   end
 

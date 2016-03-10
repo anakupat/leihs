@@ -276,15 +276,27 @@ Feature: section Managing Requests
   @managing_requests
   Scenario Outline: Request deleted because no information entered
     Given I am <username>
-    When I navigate the requests overview page
+
+#FS# typo
+#    When I navigate the requests overview page
+    When I navigate to the requests overview page
+
     And I press on the plus icon of a group
     Then I am navigated to the new request form
     When I type the first character in a field of the request form
-    Then the field "article" is marked red
-    And the field "requested quantity" is marked red
-    And the field "motivation" is marked red
-    And the field "new/replacement" is marked red
-    And the fields marked red are mandatory
+
+#FS# single step with table
+#    Then the field "article" is marked red
+#    And the field "requested quantity" is marked red
+#    And the field "motivation" is marked red
+#    And the field "new/replacement" is marked red
+#    And the fields marked red are mandatory
+    Then the following fields are mandatory and marked red
+      | article            |
+      | requested quantity |
+      | motivation         |
+      | new/replacement    |
+
     And the field where I have typed the character is not marked red
     When I delete this character
     Then all fields turn white
@@ -299,21 +311,46 @@ Feature: section Managing Requests
   @managing_requests
   Scenario Outline: sorting requests
     Given I am <username>
+
+#FS# need this to check sorting
+    And several requests created by myself exist
+
     When I navigate to the requests overview page
-    And I sort the requests by
-      | article name     |
-      | requester        |
-      | organisation     |
-      | price            |
-      | quantity         |
-      | the total amount |
-      | priority         |
-      | state            |
+
+#FS# need to get all requests
+    And I select all groups
+
+#FS# changed to outline to checkit out on the next step
+#    And I sort the requests by
+#      | article name     |
+#      | requester        |
+#      | organisation     |
+#      | price            |
+#      | quantity         |
+#      | the total amount |
+#      | priority         |
+#      | state            |
+    And I sort the requests by "<field>"
+
     Then the data is shown in the according sort order
     Examples:
-      | username |
-      | Barbara  |
-      | Roger    |
+      | username | field            |
+      | Barbara  | article name     |
+      | Barbara  | requester        |
+      | Barbara  | organisation     |
+      | Barbara  | price            |
+      | Barbara  | quantity         |
+      | Barbara  | the total amount |
+      | Barbara  | priority         |
+      | Barbara  | state            |
+      | Roger    | article name     |
+      | Roger    | requester        |
+      | Roger    | organisation     |
+      | Roger    | price            |
+      | Roger    | quantity         |
+      | Roger    | the total amount |
+      | Roger    | priority         |
+      | Roger    | state            |
 
   @managing_requests
   Scenario Outline: Delete a Request

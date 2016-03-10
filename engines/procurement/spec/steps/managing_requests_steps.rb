@@ -16,6 +16,16 @@ steps_for :managing_requests do
 
   end
 
+  step 'all fields turn white' do
+    within '.request[data-request_id="new_request"]' do
+      all('input', minimum: 1).each do |el|
+        color = el.native.css_value('background-color')
+        next if el[:type] == 'file'
+        expect(color).to eq 'rgba(255, 255, 255, 1)'
+      end
+    end
+  end
+
   step 'an email for a group exists' do
     @group = FactoryGirl.create :procurement_group,
                                 email: Faker::Internet.email
@@ -164,6 +174,10 @@ steps_for :managing_requests do
     end
   end
 
+  step 'I delete this character' do
+    @field.set ''
+  end
+
   step 'I do not see the budget limits' do
     within '.panel-success .panel-body' do
       displayed_groups.each do |group|
@@ -287,6 +301,44 @@ steps_for :managing_requests do
     end
   end
 
+  step 'I sort the requests by :field' do |field|
+    within '#column-titles' do
+      label, @key = case field
+                      when 'article name'
+                        [_('Article / Project'), 'article_name']
+                      when 'requester'
+                        [_('Requester'), 'user']
+                      when 'organisation'
+                        [_('Organisation'), 'department']
+                      when 'price'
+                        [_('Price'), 'price']
+                      when 'quantity'
+                        [_('Quantities'), 'requested_quantity']
+                      when 'the total amount'
+                        [_('Total'), 'total_price']
+                      when 'priority'
+                        [_('Priority'), 'priority']
+                      when 'state'
+                        [_('State'), 'state']
+                      else
+                        raise
+                    end
+      click_on label
+    end
+
+    # NOTE trick waiting page load
+    if have_selector '#filter_target.transparency'
+      expect(page).to have_no_selector '#filter_target.transparency'
+    end
+  end
+
+  step 'I type the first character in a field of the request form' do
+    within ".request[data-request_id='new_request']" do
+      @field = find("input[name*='[article_number]']")
+      @field.set 'a'
+    end
+  end
+
   step 'only my requests are shown' do
     elements = all('[data-request_id]', minimum: 1)
     expect(elements).not_to be_empty
@@ -294,6 +346,10 @@ steps_for :managing_requests do
       request = Procurement::Request.find element['data-request_id']
       expect(request.user_id).to eq @current_user.id
     end
+  end
+
+  step 'no information is saved to the database' do
+    expect(Procurement::Request.all).to be_empty
   end
 
   step 'no requests exist' do
@@ -349,6 +405,34 @@ steps_for :managing_requests do
       Procurement::BudgetPeriod.current.inspection_start_date
   end
 
+  step 'the data is shown in the according sort order' do
+    client_ids = all('[data-request_id]', minimum: 1).map do |el|
+      el['data-request_id'].to_i
+    end
+
+    server_ids = Procurement::Request.where(id: client_ids).sort do |a, b|
+      case @key
+        when 'total_price'
+          a.total_price(@current_user) <=> b.total_price(@current_user)
+        when 'state'
+          Procurement::Request::STATES.index(a.state(@current_user)) <=> \
+                Procurement::Request::STATES.index(b.state(@current_user))
+        when 'department'
+          a.organization.parent.to_s.downcase <=> \
+                b.organization.parent.to_s.downcase
+        when 'article_name', 'user'
+          a.send(@key).to_s.downcase <=> b.send(@key).to_s.downcase
+        else
+          a.send(@key) <=> b.send(@key)
+      end
+    end.map &:id
+
+    # NOTE the default sort is on state, then the first click sorts descending
+    server_ids.reverse! if @key == 'state'
+
+    expect(client_ids).to eq server_ids
+  end
+
   step 'the :field value :value is set by default' do |field, value|
     within '.request[data-request_id="new_request"]' do
       label = case field
@@ -367,6 +451,17 @@ steps_for :managing_requests do
     end
   end
 
+  step 'the field where I have typed the character is not marked red' do
+    color = @field.native.css_value('background-color')
+    expect(color).not_to eq 'rgba(242, 222, 222, 1)'
+  end
+
+  step 'the following fields are mandatory and marked red' do |table|
+    table.raw.flatten.each do |key|
+      step 'the field "%s" is marked red' % key
+    end
+  end
+
   step 'the following template data are prefilled' do |table|
     within ".request[data-template_id='#{@template.id}']" do
       table.raw.flatten.each do |value|
@@ -381,6 +476,10 @@ steps_for :managing_requests do
         end
       end
     end
+  end
+
+  step 'the line is deleted' do
+    find '.request[data-request_id="new_request"]', visible: false
   end
 
   step 'the list of requests is adjusted immediately ' \
