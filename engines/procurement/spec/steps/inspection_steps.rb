@@ -48,42 +48,6 @@ steps_for :inspection do
     find 'button[disabled]', text: _('Save'), match: :first
   end
 
-  step 'I move a request to the future budget period' do
-    within '.request', match: :first do
-      @request = Procurement::Request.find current_scope['data-request_id']
-      el = find('.btn-group .fa-gear')
-      btn = el.find(:xpath, ".//parent::button//parent::div")
-      btn.click unless btn['class'] =~ /open/
-      within btn do
-        find('a', text: @future_budget_period.to_s).click
-      end
-    end
-
-    @changes = {
-      budget_period_id: @future_budget_period.id
-    }
-  end
-
-  step 'I move a request to the other group where I am not inspector' do
-    within '.request', match: :first do
-      @request = Procurement::Request.find current_scope['data-request_id']
-      @other_group = Procurement::Group.where.not(id: @request.group_id) \
-        .detect do |group|
-          not group.inspectable_by?(@current_user)
-      end
-      el = find('.btn-group .fa-gear')
-      btn = el.find(:xpath, ".//parent::button//parent::div")
-      btn.click unless btn['class'] =~ /open/
-      within btn do
-        find('a', text: @other_group.to_s).click
-      end
-    end
-
-    @changes = {
-        group_id: @other_group.id
-    }
-  end
-
   step 'I press on the Userplus icon of a group I am inspecting' do
     within '#filter_target' do
       within '.panel-success .panel-body' do
@@ -196,13 +160,6 @@ steps_for :inspection do
       find("input[name*='[approved_quantity]']").value
   end
 
-  step 'the changes are saved successfully to the database' do
-    @request.reload
-    @changes.each_pair do |k,v|
-      expect(@request.send(k)).to eq v
-    end
-  end
-
   step 'the current budget period is in inspection phase' do
     current_budget_period = Procurement::BudgetPeriod.current
     travel_to_date(current_budget_period.inspection_start_date + 1.day)
@@ -242,13 +199,6 @@ steps_for :inspection do
     @past_budget_period = FactoryGirl.create :procurement_budget_period,
      inspection_start_date: current_budget_period.inspection_start_date - 2.months,
      end_date: current_budget_period.inspection_start_date - 1.month
-  end
-
-  step 'there is a future budget period' do
-    current_budget_period = Procurement::BudgetPeriod.current
-    @future_budget_period = FactoryGirl.create :procurement_budget_period,
-     inspection_start_date: current_budget_period.end_date + 1.month,
-     end_date: current_budget_period.end_date + 2.months
   end
 
 end

@@ -432,8 +432,18 @@ Feature: section Managing Requests
     And several budget periods exist
     And several requests created by myself exist
     And the current date has not yet reached the inspection start date
-    When I navigate to the requests overview page
-    And I move the request to the other budget period
+
+#FS# needed to move to a future budget period
+    And there is a future budget period
+
+#FS# let's go to the correct page
+#    When I navigate to the requests overview page
+    When I navigate to the requests form of myself
+
+#FS# reusing step
+#    And I move the request to the other budget period
+    And I move a request to the future budget period
+
     And I see a success message
     And the changes are saved successfully to the database
 
@@ -443,8 +453,15 @@ Feature: section Managing Requests
     And several groups exist
     And several requests created by myself exist
     And the current date has not yet reached the inspection start date
-    When I navigate to the requests overview page
-    And I move the request to the other group
+
+#FS# let's go to the correct page
+#    When I navigate to the requests overview page
+    When I navigate to the requests form of myself
+
+#FS# reusing step
+#    And I move the request to the other group
+    And I move a request to the other group
+
     Then I see a success message
     And the changes are saved successfully to the database
 
@@ -499,7 +516,10 @@ Feature: section Managing Requests
     When I navigate to the requests form of myself
     And I download the attachment
     Then The file is downloaded
+
+#FS# why?
     Then I see a success message
+
     Examples:
       | username |
       | Barbara  |

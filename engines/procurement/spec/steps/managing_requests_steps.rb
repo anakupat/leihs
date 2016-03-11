@@ -122,7 +122,7 @@ steps_for :managing_requests do
 
   step 'I search :boolean model by typing the article name' do |boolean|
     @text = if boolean
-             @model = Model.all.sample
+             @model = Model.order('RAND()').first
              expect(@model).to be
              @model.to_s[0, 4]
            else
@@ -398,11 +398,15 @@ steps_for :managing_requests do
 
   step 'several requests created by myself exist' do
     budget_period = Procurement::BudgetPeriod.current
+    h = {
+      user: @current_user,
+      budget_period: budget_period
+    }
+    h[:group] = @group if @group
+
     n = 5
     n.times do
-      FactoryGirl.create :procurement_request,
-                         user: @current_user,
-                         budget_period: budget_period
+      FactoryGirl.create :procurement_request, h
     end
     expect(Procurement::Request.where(user_id: @current_user,
                                       budget_period_id: budget_period).count).to eq n

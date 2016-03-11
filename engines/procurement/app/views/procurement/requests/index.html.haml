@@ -303,6 +303,7 @@
         li.css('text-decoration', 'none').find("input[name*='[attachments_delete]']").val('')
       else
         li.css('text-decoration', 'line-through').find("input[name*='[attachments_delete]']").val('1')
+      li.closest('form').change()
       false
 
     $("a.show_template").on 'click', ->

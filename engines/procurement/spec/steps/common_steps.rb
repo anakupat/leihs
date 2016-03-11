@@ -217,6 +217,53 @@ module CommonSteps
     end
   end
 
+  step 'I move a request to the future budget period' do
+    within '.request', match: :first do
+      @request = Procurement::Request.find current_scope['data-request_id']
+      el = find('.btn-group .fa-gear')
+      btn = el.find(:xpath, ".//parent::button//parent::div")
+      btn.click unless btn['class'] =~ /open/
+      within btn do
+        find('a', text: @future_budget_period.to_s).click
+      end
+    end
+
+    @changes = {
+        budget_period_id: @future_budget_period.id
+    }
+  end
+
+  step 'I move a request to the other group' do
+    within '.request', match: :first do
+      @request = Procurement::Request.find current_scope['data-request_id']
+      groups = Procurement::Group.where.not(id: @request.group_id)
+
+      @other_group = if @not_inspected_group
+                       groups.detect do |group|
+                         not group.inspectable_by?(@current_user)
+                       end
+                     else
+                       groups.first
+                     end
+
+      el = find('.btn-group .fa-gear')
+      btn = el.find(:xpath, ".//parent::button//parent::div")
+      btn.click unless btn['class'] =~ /open/
+      within btn do
+        find('a', text: @other_group.to_s).click
+      end
+    end
+
+    @changes = {
+        group_id: @other_group.id
+    }
+  end
+
+  step 'I move a request to the other group where I am not inspector' do
+    @not_inspected_group = true
+    step 'I move a request to the other group'
+  end
+
   step 'I press on the plus icon of a group' do
     @group ||= Procurement::Group.first.name
     within '#filter_target' do
@@ -380,6 +427,13 @@ module CommonSteps
     end
   end
 
+  step 'the changes are saved successfully to the database' do
+    @request.reload
+    @changes.each_pair do |k,v|
+      expect(@request.send(k)).to eq v
+    end
+  end
+
   step 'the current date is after the budget period end date' do
     travel_to_date @request.budget_period.end_date + 1.day
     expect(Time.zone.today).to be > @request.budget_period.end_date
@@ -450,6 +504,13 @@ module CommonSteps
       FactoryGirl.create :procurement_template,
                          template_category: @category
     end
+  end
+
+  step 'there is a future budget period' do
+    current_budget_period = Procurement::BudgetPeriod.current
+    @future_budget_period = FactoryGirl.create :procurement_budget_period,
+                                               inspection_start_date: current_budget_period.end_date + 1.month,
+                                               end_date: current_budget_period.end_date + 2.months
   end
 
   def visit_request(request)
