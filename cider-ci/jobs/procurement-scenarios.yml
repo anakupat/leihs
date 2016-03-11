@@ -13,11 +13,7 @@ jobs:
 
     context:
       task-defaults:
-        max-auto-trials: 2
-        trial-attachments:
-          screenshots:
-            include-match: tmp\/capybara\/.*\.png$
-            content-type: image/png
+        max-auto-trials: 1
 
       _cider-ci_include:
         - cider-ci/shared/tests-context.yml
