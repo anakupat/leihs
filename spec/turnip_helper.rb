@@ -10,6 +10,10 @@ Capybara.register_driver :firefox do |app|
   Capybara::Selenium::Driver.new app, browser: :firefox
 end
 
+Capybara.register_driver :phantomjs do |app|
+  Capybara::Selenium::Driver.new app, browser: :phantomjs
+end
+
 RSpec.configure do |config|
 
   config.raise_error_for_unimplemented_steps = true
@@ -33,7 +37,7 @@ RSpec.configure do |config|
   config.before(type: :feature) do
     FactoryGirl.create(:setting) unless Setting.first
 
-    Capybara.current_driver = :firefox
+    Capybara.current_driver = :phantomjs
   end
 
   config.after(type: :feature) do
