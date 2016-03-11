@@ -202,18 +202,14 @@ steps_for :periods_and_states do
     end
   end
 
-  step 'I have not filled the mandatory fields' do
+  step 'I :boolean filled the mandatory fields' do |boolean|
     within all('form table tbody tr', minimum: 1).last do
       all('input[required]', minimum: 1).each do |el|
-        expect(el.value).to be_empty
-      end
-    end
-  end
-
-  step 'I have filled the mandatory fields' do
-    within all('form table tbody tr', minimum: 1).last do
-      all('input[required]', minimum: 1).each do |el|
-        el.set Faker::Lorem.sentence
+        if boolean
+          el.set Faker::Lorem.sentence
+        else
+          expect(el.value).to be_empty
+        end
       end
     end
   end
@@ -366,8 +362,7 @@ steps_for :periods_and_states do
 
   step 'this budget period disappears from the list' do
     expect(first('form table tbody tr td:first-child input',
-                 text: @budget_period.name))
-        .not_to be
+                 text: @budget_period.name)).not_to be
   end
 
   step 'this budget period was deleted from the database' do

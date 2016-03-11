@@ -116,6 +116,26 @@ steps_for :managing_requests do
     expect(request.reload.motivation).to eq text
   end
 
+  step 'I choose the article from the suggested list' do
+    find('.ui-autocomplete .ui-menu-item a', text: @model.to_s).click
+  end
+
+  step 'I search :boolean model by typing the article name' do |boolean|
+    @text = if boolean
+             @model = Model.all.sample
+             expect(@model).to be
+             @model.to_s[0, 4]
+           else
+             Faker::Lorem.sentence
+           end
+
+    within '.request[data-request_id="new_request"]' do
+      within '.form-group', text: _('Article / Project') do
+        find('input').set @text
+      end
+    end
+  end
+
   step 'I choose a group' do
     @group ||= Procurement::Group.first.name
     within '.panel-success .panel-body' do
@@ -326,10 +346,7 @@ steps_for :managing_requests do
       click_on label
     end
 
-    # NOTE trick waiting page load
-    if have_selector '#filter_target.transparency'
-      expect(page).to have_no_selector '#filter_target.transparency'
-    end
+    step 'page has been loaded'
   end
 
   step 'I type the first character in a field of the request form' do
@@ -337,6 +354,10 @@ steps_for :managing_requests do
       @field = find("input[name*='[article_number]']")
       @field.set 'a'
     end
+  end
+
+  step 'no search result is found' do
+    expect(page).to have_no_selector '.ui-autocomplete'
   end
 
   step 'only my requests are shown' do
@@ -355,6 +376,12 @@ steps_for :managing_requests do
   step 'no requests exist' do
     Procurement::Request.destroy_all
     expect(Procurement::Request.count).to be_zero
+  end
+
+  step 'several models exist' do
+    5.times do
+      FactoryGirl.create(:model)
+    end
   end
 
   step 'several points of delivery exist' do
@@ -433,6 +460,13 @@ steps_for :managing_requests do
     expect(client_ids).to eq server_ids
   end
 
+  step 'the entered article name is saved' do
+    @changes[:article_name] = @text
+    step 'I see a success message'
+    step 'the request with all given information ' \
+         'was created successfully in the database'
+  end
+
   step 'the :field value :value is set by default' do |field, value|
     within '.request[data-request_id="new_request"]' do
       label = case field
@@ -487,6 +521,7 @@ steps_for :managing_requests do
     within '#filter_target' do
       step 'page has been loaded'
       @found_requests = Procurement::Request.where(
+          user_id: @current_user,
           budget_period_id: @filter[:budget_period_ids],
           group_id: @filter[:group_ids],
           priority: @filter[:priorities]
@@ -497,6 +532,14 @@ steps_for :managing_requests do
         el['data-request_id']
       end.each do |id|
         expect(@found_requests.map(&:id)).to include id.to_i
+      end
+    end
+  end
+
+  step 'the model name is copied into the article name field' do
+    within '.request[data-request_id="new_request"]' do
+      within '.form-group', text: _('Article / Project') do
+        expect(find('input').value).to eq @model.to_s
       end
     end
   end

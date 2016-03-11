@@ -163,7 +163,11 @@ Feature: section Managing Requests
   Scenario Outline: Creating a freetext request inside the new request page
     Given I am <username>
     And I am on the new request form of a group
-    And I press on the plus icon on the left sidebar
+
+#FS# When instead of Given
+#    And I press on the plus icon on the left sidebar
+    When I press on the plus icon on the left sidebar
+
     Then a new request line is added
     When I fill in all mandatory information
     And I click on save
@@ -393,10 +397,29 @@ Feature: section Managing Requests
   @managing_requests
   Scenario Outline: Choosing an existing or non existing Model
     Given I am <username>
-    When I am navigated to the new request form
-    Then I can search a model by typing the article name
-    And according to the search result I can choose the article from a list
-    When no search result is found
+
+#FS# needed
+    And several models exist
+
+#FS# correct step
+#    When I am navigated to the new request form
+    When I navigate to the requests form of myself
+
+#FS# needed
+    When I press on the plus icon on the left sidebar
+
+#FS# more precise
+#    Then I can search a model by typing the article name
+#    And according to the search result I can choose the article from a list
+#    When no search result is found
+    When I search an existing model by typing the article name
+    And I choose the article from the suggested list
+    Then the model name is copied into the article name field
+    When I search a non existing model by typing the article name
+    Then no search result is found
+    When I fill in all mandatory information
+    And I click on save
+
     Then the entered article name is saved
     Examples:
       | username |

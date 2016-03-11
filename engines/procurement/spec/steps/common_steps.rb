@@ -175,7 +175,7 @@ module CommonSteps
            ".request[data-request_id='new_request']"
          end
     within request_el do
-      all('[data-to_be_required]', minimum: 1).each do |el|
+      all('[data-to_be_required]:invalid', minimum: 1).each do |el|
         key = el['name'].match(/.*\[(.*)\]\[(.*)\]/)[2]
 
         case key
@@ -343,6 +343,11 @@ module CommonSteps
   end
 
   step 'page has been loaded' do
+    # NOTE trick waiting page load
+    if have_selector '#filter_target.transparency'
+      expect(page).to have_no_selector '#filter_target.transparency'
+    end
+
     expect(page).to have_no_selector '.spinner'
   end
 
