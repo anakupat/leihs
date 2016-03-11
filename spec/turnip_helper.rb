@@ -23,6 +23,7 @@ RSpec.configure do |config|
 
     config.before(type: :feature) do
       DatabaseCleaner.start
+      page.driver.browser.manage.window.maximize
     end
 
     config.after(type: :feature) do
