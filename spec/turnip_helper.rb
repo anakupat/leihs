@@ -28,24 +28,20 @@ RSpec.configure do |config|
 
     config.after(type: :feature) do
       DatabaseCleaner.clean
+      unless example.exception.nil?
+        take_screenshot
+      end
     end
   end
 
   config.before(type: :feature) do
     FactoryGirl.create(:setting) unless Setting.first
-
     Capybara.current_driver = :firefox
   end
 
   config.after(type: :feature) do
     page.driver.quit # OPTIMIZE force close browser popups
     Capybara.current_driver = Capybara.default_driver
-  end
-
-  config.after(:each) do |example|
-    unless example.exception.nil?
-      take_screenshot
-    end
   end
 
   def take_screenshot(screenshot_dir = nil, name = nil)
