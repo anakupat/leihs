@@ -151,6 +151,12 @@ steps_for :users_and_organisations do
   #     .order('RAND()').first.user
   # end
 
+  step 'I can delete an admin' do
+    @admin = Procurement::Access.admins \
+              .where.not(user_id: @current_user).first.user
+    step 'I can delete the admin'
+  end
+
   step 'I can delete the admin' do
     find('.token-input-list .token-input-token', text: @admin.name)
       .find('.token-input-delete-token').click

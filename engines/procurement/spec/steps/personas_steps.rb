@@ -33,7 +33,7 @@ module PersonasSteps
     expect(@group.inspectable_by?(@current_user)).to be true
   end
 
-  step 'admins exist' do
+  step 'several admin users exist' do
     Procurement::Access.admins.count >= 3 \
       || 3.times { FactoryGirl.create(:procurement_access, :admin) }
   end

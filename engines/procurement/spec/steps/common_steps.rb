@@ -9,6 +9,7 @@ module CommonSteps
         group: @group
     }
     table.hashes.each do |hash|
+      hash['value'] = nil if hash['value'] == 'random'
       case hash['key']
         when 'budget period'
           @changes[:budget_period] = if hash['value'] == 'current'
@@ -24,16 +25,13 @@ module CommonSteps
                                 find_or_create_user(hash['value'], true)
                             end
         when 'requested amount'
-          @changes[:requested_quantity] = hash['value'].to_i
+          @changes[:requested_quantity] = \
+            (hash['value'] || Faker::Number.number(2)).to_i
         when 'approved amount'
-          @changes[:approved_quantity] = hash['value'].to_i
+          @changes[:approved_quantity] = \
+            (hash['value'] || Faker::Number.number(2)).to_i
         when 'inspection comment'
-          @changes[:inspection_comment] = case hash['value']
-                                            when 'random'
-                                              Faker::Lorem.sentence
-                                            else
-                                              hash['value']
-                                          end
+          @changes[:inspection_comment] = hash['value'] || Faker::Lorem.sentence
         else
           raise
       end
@@ -175,7 +173,12 @@ module CommonSteps
            ".request[data-request_id='new_request']"
          end
     within request_el do
-      all('[data-to_be_required]:invalid', minimum: 1).each do |el|
+      selector = if has_selector? '[data-to_be_required]:invalid'
+                   '[data-to_be_required]:invalid'
+                 else
+                   '[data-to_be_required]'
+                 end
+      all(selector, minimum: 1).each do |el|
         key = el['name'].match(/.*\[(.*)\]\[(.*)\]/)[2]
 
         case key
@@ -195,7 +198,7 @@ module CommonSteps
   step 'I fill in the following fields' do |table|
     @changes ||= {}
     table.hashes.each do |hash|
-      hash['value'] = nil if hash['value'].blank?
+      hash['value'] = nil if hash['value'] == 'random'
       case hash['key']
         when 'Price'
           v = (hash['value'] || Faker::Number.number(4)).to_i
@@ -204,7 +207,7 @@ module CommonSteps
           v = (hash['value'] || Faker::Number.number(2)).to_i
           fill_in _(hash['key']), with: v
         when 'Replacement / New'
-          v = hash['value'] || 1
+          v = hash['value'] || [0, 1].sample
           find("input[name*='[replacement]'][value='#{v}']").click
         else
           v = hash['value'] || Faker::Lorem.sentence

@@ -59,13 +59,13 @@ Feature: section Managing Requests
     And several points of delivery exist
     When I want to create a new request
     And I fill in the following fields
-      | key                        | value |
-      | Article / Project          |       |
-      | Article nr. / Producer nr. |       |
-      | Supplier                   |       |
-      | Motivation                 |       |
-      | Price                      |       |
-      | Requested quantity         |       |
+      | key                        | value  |
+      | Article / Project          | random |
+      | Article nr. / Producer nr. | random |
+      | Supplier                   | random |
+      | Motivation                 | random |
+      | Price                      | random |
+      | Requested quantity         | random |
     Then the amount and the price are multiplied and the result is shown
     When I upload a file
     And I choose the name of a receiver
@@ -86,11 +86,11 @@ Feature: section Managing Requests
     And I press on the plus icon of a group
     Then I am navigated to the new request form
     When I fill in the following fields
-      | key                | value |
-      | Article / Project  |       |
-      | Requested quantity |       |
-      | Motivation         |       |
-      | Replacement / New  |       |
+      | key                | value  |
+      | Article / Project  | random |
+      | Requested quantity | random |
+      | Motivation         | random |
+      | Replacement / New  | random |
     And I click on save
     Then I see a success message
     And the request with all given information was created successfully in the database
@@ -263,9 +263,9 @@ Feature: section Managing Requests
 #    And I modify the name of the already inserted template article
 #    And I modify or delete the articlenr./suppliernr. of the already inserted template article
     And I fill in the following fields
-      | key                        | value |
-      | Article / Project          |       |
-      | Article nr. / Producer nr. |       |
+      | key                        | value  |
+      | Article / Project          | random |
+      | Article nr. / Producer nr. | random |
 #FS# for Nadja !!! this only works for Barbara, instead Roget doesn't see the input fields, just the plain text
 
     When I click on save

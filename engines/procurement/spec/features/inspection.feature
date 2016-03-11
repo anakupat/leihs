@@ -71,18 +71,18 @@ Feature: Inspection (state-behaviour described in seperate feature-file)
     And a point of delivery exists
     When I want to create a new request
     And I fill in the following fields
-      | key                        | value |
-      | Article / Project          |       |
-      | Article nr. / Producer nr. |       |
-      | Supplier                   |       |
-      | Motivation                 |       |
-      | Price                      |       |
-      | Requested quantity         |       |
-      | Approved quantity          |       |
+      | key                        | value  |
+      | Article / Project          | random |
+      | Article nr. / Producer nr. | random |
+      | Supplier                   | random |
+      | Motivation                 | random |
+      | Price                      | random |
+      | Requested quantity         | 3      |
+      | Approved quantity          | 3      |
     Then the "Approved quantity" is copied to the field "Order quantity"
     And I fill in the following fields
       | key            | value |
-      | Order quantity |       |
+      | Order quantity | 2     |
 
     And the ordered amount and the price are multiplied and the result is shown
     When I upload a file
@@ -125,8 +125,8 @@ Feature: Inspection (state-behaviour described in seperate feature-file)
     Then the field "inspection comment" is marked red
     And I can not save the request
     When I fill in the following fields
-      | key                | value |
-      | Inspection comment |       |
+      | key                | value  |
+      | Inspection comment | random |
 
     And I click on save
     Then I see a success message
@@ -140,8 +140,8 @@ Feature: Inspection (state-behaviour described in seperate feature-file)
     Then the field "inspection comment" is marked red
     And I can not save the request
     When I fill in the following fields
-      | key                | value |
-      | Inspection comment |       |
+      | key                | value  |
+      | Inspection comment | random |
 
     And I click on save
     Then I see a success message

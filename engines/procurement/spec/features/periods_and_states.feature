@@ -78,14 +78,14 @@ Feature: Periods and states
     And the current date is before the inspection date
     When I want to create a new request
     And I fill in the following fields
-      | key                        | value |
-      | Article / Project                    |       |
-      | Article nr. / Producer nr. |       |
-      | Supplier                   |       |
-      | Motivation                 |       |
-      | Price                      |       |
-      | Requested quantity         |       |
-      | Replacement / New          |       |
+      | key                        | value  |
+      | Article / Project          | random |
+      | Article nr. / Producer nr. | random |
+      | Supplier                   | random |
+      | Motivation                 | random |
+      | Price                      | random |
+      | Requested quantity         | random |
+      | Replacement / New          | random |
     And I click on save
     Then I see a success message
     And the status of the request saved to the database is "New"
