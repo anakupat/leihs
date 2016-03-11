@@ -23,11 +23,19 @@ RSpec.configure do |config|
 
     config.before(type: :feature) do
       DatabaseCleaner.start
-      page.driver.browser.manage.window.maximize
     end
 
     config.after(type: :feature) do
       DatabaseCleaner.clean
+    end
+  end
+
+  if ENV['CIDER_CI_TRIAL_ID'].present?
+    config.before(type: :feature) do
+      page.driver.browser.manage.window.maximize
+    end
+
+    config.after(type: :feature) do
       unless example.exception.nil?
         take_screenshot
       end
