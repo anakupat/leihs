@@ -37,7 +37,7 @@ RSpec.configure do |config|
   config.before(type: :feature) do
     FactoryGirl.create(:setting) unless Setting.first
 
-    Capybara.current_driver = :phantomjs
+    Capybara.current_driver = :firefox
   end
 
   config.after(type: :feature) do
