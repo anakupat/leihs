@@ -102,35 +102,22 @@ Feature: section Managing Requests
   @managing_requests
   Scenario Outline: Creating a request through a budget period selecting a template article
     Given I am <username>
-
-#FS# needed
     And several template categories exist
     And several template articles in categories exist
-
     When I navigate to the requests overview page
 ##NW: we might need to discuss this in the next development phase. This needs explanation for the inspectors and its usually easyer, if they have the same possibilities as requesters, withuot having to change the settings.
 #!!# this is needed for the inspectors, to see the plus icon
     And I select "Only show my own requests" if present
     And I press on the plus icon of the budget period
-
     Then I am navigated to the templates overview
     And I see the budget period
-
-#FS#
-#    And I see the end date of the request phase
-#    And I see the end date of the inspection phase
     And I see when the requesting phase of this budget period ends
     And I see when the inspection phase of this budget period ends
-
     And I see all categories of all groups listed
     When I press on a category
     Then I see all template articles of this category
     When I choose a template article
-
-#FS# we focus the template request
-#    Then I am navigated to the new request form of the specific group
     Then I am navigated to the template request form of the specific group
-
     When I fill in all mandatory information
     And I click on save
     Then I see a success message
@@ -163,11 +150,7 @@ Feature: section Managing Requests
   Scenario Outline: Creating a freetext request inside the new request page
     Given I am <username>
     And I am on the new request form of a group
-
-#FS# When instead of Given
-#    And I press on the plus icon on the left sidebar
     When I press on the plus icon on the left sidebar
-
     Then a new request line is added
     When I fill in all mandatory information
     And I click on save
@@ -181,47 +164,21 @@ Feature: section Managing Requests
   @managing_requests
   Scenario Outline: Creating a request from a group template inside the new request page
     Given I am <username>
-
-#FS# reusing step
-#    And several template articles exist
     And several template categories exist
     And several template articles in categories exist
-
-#FS# single step with table
-#    And the template articles contain an articlenr/suppliernr
-#    And the template articles contain a supplier
-#    And the template articles contain a price
     And each template article contains
       | Article nr. / Producer nr. |
       | Supplier                   |
       | Price                      |
-
-#FS# let's go to the correct page
-#    When I am navigated to the new request form
     When I navigate to the templates overview
-
-#FS# reusing steps
-#    And I click on a category
-#    And I click on a template article
     And I press on a category
     And I choose a template article
-
-#FS# we focus the template request
-#    Then a new request line is added
     Then I am navigated to the template request form of the specific group
-
-#FS# single step with table
-#    And the field article is prefilled with the name of the template article chosen
-#    And the field articlenr/suppliernr is prefilled with the articlenr/suppliernr of the template article chosen
-#    And the field supplier is prefilled with the supplier of the template article chosen
-#    And the field price is prefilled with the price of the template article chosen
     And the following template data are prefilled
       | Article / Project          |
       | Article nr. / Producer nr. |
       | Supplier                   |
       | Price                      |
-#FS# for Nadja !!! this only works for Barbara, instead Roget doesn't see the input fields, just the plain text
-
     And no option is chosen yet for the field Replacement / New
     When I enter the motivation
     And I choose the option "new"
@@ -237,11 +194,7 @@ Feature: section Managing Requests
   Scenario Outline: Inserting an already inserted template article
     Given I am <username>
     And a request containing a template article exists
-
-#FS# correct step
-#    When I am navigated to the new request form
     When I navigate to the requests form of myself
-
     And I click on the template article which has already been added to the request
     Then I am navigated to the request containing this template article
     Examples:
@@ -254,14 +207,7 @@ Feature: section Managing Requests
     Given I am <username>
     And a request containing a template article exists
     And the template article contains an articlenr./suppliernr.
-
-#FS# correct step
-#    When I am navigated to the new request form
     When I navigate to the requests form of myself
-
-#FS# reusing step
-#    And I modify the name of the already inserted template article
-#    And I modify or delete the articlenr./suppliernr. of the already inserted template article
     And I fill in the following fields
       | key                        | value  |
       | Article / Project          | random |
@@ -280,27 +226,15 @@ Feature: section Managing Requests
   @managing_requests
   Scenario Outline: Request deleted because no information entered
     Given I am <username>
-
-#FS# typo
-#    When I navigate the requests overview page
     When I navigate to the requests overview page
-
     And I press on the plus icon of a group
     Then I am navigated to the new request form
     When I type the first character in a field of the request form
-
-#FS# single step with table
-#    Then the field "article" is marked red
-#    And the field "requested quantity" is marked red
-#    And the field "motivation" is marked red
-#    And the field "new/replacement" is marked red
-#    And the fields marked red are mandatory
     Then the following fields are mandatory and marked red
       | article            |
       | requested quantity |
       | motivation         |
       | new/replacement    |
-
     And the field where I have typed the character is not marked red
     When I delete this character
     Then all fields turn white
@@ -360,14 +294,10 @@ Feature: section Managing Requests
   Scenario Outline: Delete a Request
     Given I am <username>
     And the current date has not yet reached the inspection start date
-
-#FS# reusing step
-#    And a request created by myself exists
     And a request with following data exist
       | key           | value   |
       | budget period | current |
       | user          | myself  |
-
     When I navigate to the requests overview page
     And I select all budget periods
     And I select all groups
@@ -397,21 +327,9 @@ Feature: section Managing Requests
   @managing_requests
   Scenario Outline: Choosing an existing or non existing Model
     Given I am <username>
-
-#FS# needed
     And several models exist
-
-#FS# correct step
-#    When I am navigated to the new request form
     When I navigate to the requests form of myself
-
-#FS# needed
     When I press on the plus icon on the left sidebar
-
-#FS# more precise
-#    Then I can search a model by typing the article name
-#    And according to the search result I can choose the article from a list
-#    When no search result is found
     When I search an existing model by typing the article name
     And I choose the article from the suggested list
     Then the model name is copied into the article name field
@@ -419,7 +337,6 @@ Feature: section Managing Requests
     Then no search result is found
     When I fill in all mandatory information
     And I click on save
-
     Then the entered article name is saved
     Examples:
       | username |
@@ -435,15 +352,8 @@ Feature: section Managing Requests
 
 #FS# needed to move to a future budget period
     And there is a future budget period
-
-#FS# let's go to the correct page
-#    When I navigate to the requests overview page
     When I navigate to the requests form of myself
-
-#FS# reusing step
-#    And I move the request to the other budget period
     And I move a request to the future budget period
-
     And I see a success message
     And the changes are saved successfully to the database
 
@@ -453,15 +363,8 @@ Feature: section Managing Requests
     And several groups exist
     And several requests created by myself exist
     And the current date has not yet reached the inspection start date
-
-#FS# let's go to the correct page
-#    When I navigate to the requests overview page
     When I navigate to the requests form of myself
-
-#FS# reusing step
-#    And I move the request to the other group
     And I move a request to the other group
-
     Then I see a success message
     And the changes are saved successfully to the database
 
@@ -481,9 +384,6 @@ Feature: section Managing Requests
   @managing_requests
   Scenario Outline: Delete an attachment
     Given I am <username>
-
-#FS# reusing step
-#    And a request created by myself exists
     And a request with following data exist
       | key           | value   |
       | budget period | current |
@@ -504,22 +404,14 @@ Feature: section Managing Requests
   @managing_requests
   Scenario Outline: Download an attachment
     Given I am <username>
-
-#FS# reusing step
-#    And a request created by myself exists
     And a request with following data exist
       | key           | value   |
       | budget period | current |
       | user          | myself  |
-
     And the request includes an attachment
     When I navigate to the requests form of myself
     And I download the attachment
     Then The file is downloaded
-
-#FS# why?
-    Then I see a success message
-
     Examples:
       | username |
       | Barbara  |
@@ -528,14 +420,10 @@ Feature: section Managing Requests
   @managing_requests
   Scenario Outline: View an attachment .jpg
     Given I am <username>
-
-#FS# reusing step
-#    And a request created by myself exists
     And a request with following data exist
       | key           | value   |
       | budget period | current |
       | user          | myself  |
-
     And the request includes an attachment with the attribute .jpg
     When I navigate to the requests form of myself
     And I click on the attachment
@@ -576,12 +464,6 @@ Feature: section Managing Requests
   @managing_requests
   Scenario: Additional Fields shown to requester only after budget period has ended
     Given I am Roger
-
-#FS# reusing step
-#    And the budget period has ended
-#    And several requests created by myself exist
-#    And the inspector has approved the request
-#    And the inspector has entered an inspection comment
     And a request with following data exist
       | key                | value   |
       | budget period      | current |
@@ -590,23 +472,11 @@ Feature: section Managing Requests
       | approved amount    | 2       |
       | inspection comment | random  |
     And the budget period has ended
-
     When I navigate to the requests overview page
-
-#FS# reusing step
-#    Then I see the requested quantity
-#    And I see the approved quantity
     And for each request I see the following information
       | requested amount |
       | approved amount  |
-
-#FS# reusing step
-#    When I edit the request
     When I open the request
-
-#FS# reusing step
-#    Then I see the approved quantity
-#    And I see the inspection comment
     And I see the following request information
       | approved amount    |
       | inspection comment |

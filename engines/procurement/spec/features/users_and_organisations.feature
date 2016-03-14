@@ -81,19 +81,12 @@ Feature: Section Users
     Then I can add an admin
     When I click on save
     Then I see a success message
-
-#FS# reusing step
-#    And the new admin was created in the database
     And the new admin was saved to the database
 
   @users_and_organisations
   Scenario: Sorting of Admins
     Given I am Hans Ueli
-
-#FS# reusing step
-#    Given admins exist
     And several admin users exist
-
     When I navigate to the users page
     Then the admins are sorted alphabetically from a-z
 

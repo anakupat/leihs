@@ -24,11 +24,7 @@ Feature: Periods and states
   @periods_and_states
   Scenario: Editing a Budget Period
     Given I am Hans Ueli
-
-#FS# reusing step
-#    And budget periods exist
     And several budget periods exist
-
     When I navigate to the budget periods
     And I edit a budget period
     And I change the name of the budget period
@@ -42,11 +38,7 @@ Feature: Periods and states
   @periods_and_states
   Scenario: Budget Period End Date earlyer than Inspection Start Date
     Given I am Hans Ueli
-
-#FS# reusing step
-#    And budget periods exist
     And several budget periods exist
-
     And I navigate to the budget periods
     When I edit a budget period
     And I set the end date of the budget period earlier than the inspection start date
@@ -94,14 +86,10 @@ Feature: Periods and states
   Scenario: State "Inspection" - Current Date between Inspection Date and Budget Period End Date
     Given the basic dataset is ready
     And I am Roger
-
-#FS# reusing step
-#    And a request created by myself exists
     And a request with following data exist
       | key                | value   |
       | budget period      | current |
       | user               | myself  |
-
     And the current date is between the inspection date and the budget period end date
     When I navigate to the requests overview page
     Then I see the status of my request is "In inspection"
@@ -111,11 +99,7 @@ Feature: Periods and states
   @periods_and_states
   Scenario: Overview of Budget Periods
     Given I am Hans Ueli
-
-#FS# reusing step
-#    And budget periods exist
     And several budget periods exist
-
     And requests with status "New" exist
     And requests with status "Approved" exist
     And requests with status "Partially approved" exist
