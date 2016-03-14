@@ -8,10 +8,9 @@
         .col-sm-2.h4
           %i.fa.fa-calendar
           = budget_period
-          - unless budget_period.past?
-            - if procurement_requester? and (budget_period.in_requesting_phase? or procurement_inspector_or_admin?)
-              %a{href: new_user_budget_period_request_path(current_user, budget_period), title: _('Add article'), data: {toggle: 'tooltip'}}
-                %i.fa.fa-plus-circle
+          - if budget_period.in_requesting_phase? and procurement_requester?
+            %a{href: new_user_budget_period_request_path(current_user, budget_period), title: _('Add article'), data: {toggle: 'tooltip'}}
+              %i.fa.fa-plus-circle
         .col-sm-7
           = render partial: 'procurement/budget_periods/phases', locals: {budget_period: budget_period}
         .col-sm-3
