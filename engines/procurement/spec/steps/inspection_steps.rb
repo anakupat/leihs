@@ -183,9 +183,7 @@ steps_for :inspection do
   end
 
   step 'the list of requests is adjusted immediately' do
-    within '#filter_target' do
-      step 'page has been loaded'
-    end
+    step 'page has been loaded'
   end
 
   step 'the ordered amount and the price are multiplied and the result is shown' do

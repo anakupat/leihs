@@ -218,6 +218,34 @@ steps_for :managing_requests do
     end
   end
 
+  step 'I click on the attachment' do
+    within '.form-group', text: _('Attachments') do
+      within 'ul' do
+        @attachment = @request.attachments.first
+        within 'li', text: @attachment.file.original_filename do
+          find('img').click
+        end
+      end
+    end
+  end
+  step 'I download the attachment' do
+    within '.form-group', text: _('Attachments') do
+      within 'ul' do
+        @attachment = @request.attachments.first
+        find('li a', text: @attachment.file.original_filename).click
+      end
+    end
+  end
+  step 'the file is downloaded' do
+    new_window = page.driver.browser.window_handles.last
+    page.driver.browser.switch_to.window new_window
+    expect(current_path).to match /#{@attachment.file.original_filename}$/
+  end
+  # alias
+  step 'the content of the file is shown in a viewer' do
+    step 'the file is downloaded'
+  end
+
   step 'I enter the requested amount' do
     within '.request[data-request_id="new_request"]' do
       within '.form-group', text: _('Item price') do
@@ -522,8 +550,8 @@ steps_for :managing_requests do
 
   step 'the list of requests is adjusted immediately ' \
        'according to the filters chosen' do
+    step 'page has been loaded'
     within '#filter_target' do
-      step 'page has been loaded'
       @found_requests = Procurement::Request.where(
           user_id: @current_user,
           budget_period_id: @filter[:budget_period_ids],
@@ -548,9 +576,19 @@ steps_for :managing_requests do
     end
   end
 
-  step 'the request includes an attachment' do
+  step 'the request includes an :string_with_spaces' do |string_with_spaces|
+    file_path = case string_with_spaces
+                  when 'attachment'
+                    'features/data/LDAP_generic.yml'
+                  when 'attachment with the attribute .jpg'
+                    'features/data/images/image1.jpg'
+                  when 'attachment with the attribute .pdf'
+                    'features/data/test.pdf'
+                  else
+                    raise
+                end
     @request.update_attributes(attachments_attributes:
-        [{file: File.open('features/data/images/image1.jpg')}] )
+                                   [{file: File.open(file_path)}])
   end
 
   step 'the request is :result in the database' do |result|

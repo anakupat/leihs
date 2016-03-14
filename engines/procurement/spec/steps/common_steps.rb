@@ -394,11 +394,13 @@ module CommonSteps
 
   step 'page has been loaded' do
     # NOTE trick waiting page load
-    if have_selector '#filter_target.transparency'
+    if has_selector? '#filter_target.transparency'
       expect(page).to have_no_selector '#filter_target.transparency'
     end
 
-    expect(page).to have_no_selector '.spinner'
+    within '#filter_target' do
+      expect(page).to have_no_selector '.spinner'
+    end
   end
 
   step 'several budget periods exist' do

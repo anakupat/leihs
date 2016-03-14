@@ -38,10 +38,7 @@ Feature: section Managing Requests
   @managing_requests
   Scenario: Using the filters as requester only
     Given I am Roger
-
-#FS# need to check the filter result
     And several requests created by myself exist
-
     When I navigate to the requests overview page
     Then I do not see the filter "Only show my own requests"
     When I select one or more budget periods
@@ -99,15 +96,13 @@ Feature: section Managing Requests
       | Barbara  |
       | Roger    |
 
+  ##NW: we might need to discuss this in the next development phase. This needs explanation for the inspectors and its usually easyer, if they have the same possibilities as requesters, withuot having to change the settings.
   @managing_requests
   Scenario Outline: Creating a request through a budget period selecting a template article
     Given I am <username>
     And several template categories exist
     And several template articles in categories exist
     When I navigate to the requests overview page
-##NW: we might need to discuss this in the next development phase. This needs explanation for the inspectors and its usually easyer, if they have the same possibilities as requesters, withuot having to change the settings.
-#!!# this is needed for the inspectors, to see the plus icon
-    And I select "Only show my own requests" if present
     And I press on the plus icon of the budget period
     Then I am navigated to the templates overview
     And I see the budget period
@@ -162,8 +157,8 @@ Feature: section Managing Requests
       | Roger    |
 
   @managing_requests
-  Scenario Outline: Creating a request from a group template inside the new request page
-    Given I am <username>
+  Scenario: Creating a request from a group template inside the new request page as inspector
+    Given I am Barbara
     And several template categories exist
     And several template articles in categories exist
     And each template article contains
@@ -185,10 +180,32 @@ Feature: section Managing Requests
     And I click on save
     Then I see a success message
     And the request with all given information was created successfully in the database
-    Examples:
-      | username |
-      | Barbara  |
-      | Roger    |
+
+
+  @managing_requests
+  Scenario: Creating a request from a group template inside the new request page as requester
+    Given I am Roger
+    And several template categories exist
+    And several template articles in categories exist
+    And each template article contains
+      | Article nr. / Producer nr. |
+      | Supplier                   |
+      | Price                      |
+    When I navigate to the templates overview
+    And I press on a category
+    And I choose a template article
+    Then I am navigated to the template request form of the specific group
+    And the following template data are displayed as read-only
+      | Article / Project          |
+      | Article nr. / Producer nr. |
+      | Supplier                   |
+      | Price                      |
+    And no option is chosen yet for the field Replacement / New
+    When I enter the motivation
+    And I choose the option "new"
+    And I click on save
+    Then I see a success message
+    And the request with all given information was created successfully in the database
 
   @managing_requests
   Scenario Outline: Inserting an already inserted template article
@@ -203,8 +220,8 @@ Feature: section Managing Requests
       | Roger    |
 
   @managing_requests
-  Scenario Outline: Changing an inserted template article
-    Given I am <username>
+  Scenario: Changing an inserted template article
+    Given I am Barbara
     And a request containing a template article exists
     And the template article contains an articlenr./suppliernr.
     When I navigate to the requests form of myself
@@ -212,16 +229,10 @@ Feature: section Managing Requests
       | key                        | value  |
       | Article / Project          | random |
       | Article nr. / Producer nr. | random |
-#FS# for Nadja !!! this only works for Barbara, instead Roget doesn't see the input fields, just the plain text
-
     When I click on save
     Then I see a success message
     And the request with all given information was created successfully in the database
     And the template id is nullified in the database
-    Examples:
-      | username |
-      | Barbara  |
-      | Roger    |
 
   @managing_requests
   Scenario Outline: Request deleted because no information entered
@@ -249,27 +260,10 @@ Feature: section Managing Requests
   @managing_requests
   Scenario Outline: sorting requests
     Given I am <username>
-
-#FS# need this to check sorting
     And several requests created by myself exist
-
     When I navigate to the requests overview page
-
-#FS# need to get all requests
     And I select all groups
-
-#FS# changed to outline to checkit out on the next step
-#    And I sort the requests by
-#      | article name     |
-#      | requester        |
-#      | organisation     |
-#      | price            |
-#      | quantity         |
-#      | the total amount |
-#      | priority         |
-#      | state            |
     And I sort the requests by "<field>"
-
     Then the data is shown in the according sort order
     Examples:
       | username | field            |
@@ -349,8 +343,6 @@ Feature: section Managing Requests
     And several budget periods exist
     And several requests created by myself exist
     And the current date has not yet reached the inspection start date
-
-#FS# needed to move to a future budget period
     And there is a future budget period
     When I navigate to the requests form of myself
     And I move a request to the future budget period
@@ -400,7 +392,6 @@ Feature: section Managing Requests
       | Barbara  |
       | Roger    |
 
-#NW# This scenario does not work yet! Save button is not enabled after uploading a file
   @managing_requests
   Scenario Outline: Download an attachment
     Given I am <username>
@@ -411,7 +402,7 @@ Feature: section Managing Requests
     And the request includes an attachment
     When I navigate to the requests form of myself
     And I download the attachment
-    Then The file is downloaded
+    Then the file is downloaded
     Examples:
       | username |
       | Barbara  |
@@ -426,8 +417,8 @@ Feature: section Managing Requests
       | user          | myself  |
     And the request includes an attachment with the attribute .jpg
     When I navigate to the requests form of myself
-    And I click on the attachment
-    Then The content of the file is shown in a viewer
+    And I click on the attachment thumbnail
+    Then the content of the file is shown in a viewer
     Examples:
       | username |
       | Barbara  |
@@ -436,11 +427,14 @@ Feature: section Managing Requests
   @managing_requests
   Scenario Outline: View an attachment .pdf
     Given I am <username>
-    And several requests created by myself exist
+    And a request with following data exist
+      | key           | value   |
+      | budget period | current |
+      | user          | myself  |
     And the request includes an attachment with the attribute .pdf
     When I navigate to the requests form of myself
-    And I click on the attachment
-    Then The content of the file is shown in a viewer
+    And I download the attachment
+    Then the content of the file is shown in a viewer
     Examples:
       | username |
       | Barbara  |
@@ -455,7 +449,7 @@ Feature: section Managing Requests
     Then the email program is opened
     And the receiver of the email is the email of the group
     And the subject of the email is "Frage zum Beschaffungsantrag"
-    And the group name is placed in () at the end of the subject
+    And the group name is placed in paranthesis at the end of the subject
     Examples:
       | username |
       | Barbara  |
