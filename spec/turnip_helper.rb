@@ -36,12 +36,33 @@ RSpec.configure do |config|
 
   config.before(type: :feature) do
     FactoryGirl.create(:setting) unless Setting.first
-
     Capybara.current_driver = :firefox
+    page.driver.browser.manage.window.maximize
   end
 
-  config.after(type: :feature) do
+  config.after(type: :feature) do |example|
+    if ENV['CIDER_CI_TRIAL_ID'].present?
+      unless example.exception.nil?
+        take_screenshot
+      end
+    end
     page.driver.quit # OPTIMIZE force close browser popups
     Capybara.current_driver = Capybara.default_driver
+  end
+
+  def take_screenshot(screenshot_dir = nil, name = nil)
+    screenshot_dir ||= Rails.root.join('tmp', 'capybara')
+    name ||= "screenshot_#{Time.zone.now.iso8601.gsub(/:/, '-')}.png"
+    Dir.mkdir screenshot_dir rescue nil
+    path = screenshot_dir.join(name)
+    case Capybara.current_driver
+    when :firefox
+      page.driver.browser.save_screenshot(path) rescue nil
+    else
+      Rails
+        .logger
+        .warn "Taking screenshots is not implemented for \
+      #{Capybara.current_driver}."
+    end
   end
 end
