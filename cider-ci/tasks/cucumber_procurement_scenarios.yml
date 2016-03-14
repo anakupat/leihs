@@ -1,9 +1,9 @@
 ---
 tasks:
-- name: engines/procurement/spec/features/csv.feature:4
+- name: engines/procurement/spec/features/csv.feature:7
   scripts:
     test:
-      body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/csv.feature:4
+      body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/csv.feature:7
 - name: engines/procurement/spec/features/inspection.feature:7
   scripts:
     test:

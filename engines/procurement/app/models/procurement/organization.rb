@@ -20,5 +20,15 @@ module Procurement
       name
     end
 
+    def name_with_parent
+      s = ''
+      if parent
+        s += parent.name
+        s += ', '
+      end
+      s += name
+      s
+    end
+
   end
 end

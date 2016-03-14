@@ -163,9 +163,21 @@ steps_for :managing_requests do
     end
   end
 
+  step 'I click on the attachment thumbnail' do
+    within '.form-group', text: _('Attachments') do
+      within 'ul' do
+        @attachment = @request.attachments.first
+        within 'li', text: @attachment.file.original_filename do
+          find('img').click
+        end
+      end
+    end
+  end
+
   step 'I click on the email icon' do
+    # NOTE we don't click to open the mail client, just parsing the mailto link
     within '.panel-success > .panel-heading' do
-      find('.fa-envelope').click
+      @mailto_link = find('.fa-envelope').find(:xpath, 'ancestor::a')[:href]
     end
   end
 
@@ -218,16 +230,6 @@ steps_for :managing_requests do
     end
   end
 
-  step 'I click on the attachment' do
-    within '.form-group', text: _('Attachments') do
-      within 'ul' do
-        @attachment = @request.attachments.first
-        within 'li', text: @attachment.file.original_filename do
-          find('img').click
-        end
-      end
-    end
-  end
   step 'I download the attachment' do
     within '.form-group', text: _('Attachments') do
       within 'ul' do
@@ -235,15 +237,6 @@ steps_for :managing_requests do
         find('li a', text: @attachment.file.original_filename).click
       end
     end
-  end
-  step 'the file is downloaded' do
-    new_window = page.driver.browser.window_handles.last
-    page.driver.browser.switch_to.window new_window
-    expect(current_path).to match /#{@attachment.file.original_filename}$/
-  end
-  # alias
-  step 'the content of the file is shown in a viewer' do
-    step 'the file is downloaded'
   end
 
   step 'I enter the requested amount' do
@@ -424,22 +417,6 @@ steps_for :managing_requests do
     end
   end
 
-  step 'several requests created by myself exist' do
-    budget_period = Procurement::BudgetPeriod.current
-    h = {
-      user: @current_user,
-      budget_period: budget_period
-    }
-    h[:group] = @group if @group
-
-    n = 5
-    n.times do
-      FactoryGirl.create :procurement_request, h
-    end
-    expect(Procurement::Request.where(user_id: @current_user,
-                                      budget_period_id: budget_period).count).to eq n
-  end
-
   step 'the amount and the price are multiplied and the result is shown' do
     within '.request[data-request_id="new_request"]' do
       total = @changes[:price] * (@changes[:order_quantity] || \
@@ -456,6 +433,12 @@ steps_for :managing_requests do
 
   step 'the attachment is deleted successfully from the database' do
     expect(@request.reload.attachments).to be_empty
+  end
+
+  step 'the content of the file is shown in a viewer' do
+    new_window = page.driver.browser.window_handles.last
+    page.driver.browser.switch_to.window new_window
+    expect(current_path).to match /#{@attachment.file.original_filename}$/
   end
 
   step 'the current date has not yet reached the inspection start date' do
@@ -522,6 +505,11 @@ steps_for :managing_requests do
     expect(color).not_to eq 'rgba(242, 222, 222, 1)'
   end
 
+  step 'the file is downloaded' do
+    pending
+    # TODO check response_headers
+  end
+
   step 'the following fields are mandatory and marked red' do |table|
     table.raw.flatten.each do |key|
       step 'the field "%s" is marked red' % key
@@ -568,12 +556,28 @@ steps_for :managing_requests do
     end
   end
 
+  step 'the email program is opened' do
+    # NOTE we don't click to open the mail client, just parsing the mailto link
+  end
+
   step 'the model name is copied into the article name field' do
     within '.request[data-request_id="new_request"]' do
       within '.form-group', text: _('Article / Project') do
         expect(find('input').value).to eq @model.to_s
       end
     end
+  end
+
+  step 'the receiver of the email is the email of the group' do
+    expect(@mailto_link.match(/mailto:(.*)\?.*/)[1]).to eq @group.email
+  end
+  step 'the subject of the email is :subject' do |subject|
+    expect(@mailto_link.match(/.*subject=(.*)\(.*/)[1].gsub('%20', ' ').strip).to \
+      eq subject
+  end
+  step 'the group name is placed in paranthesis at the end of the subject' do
+    expect(@mailto_link.match(/.*subject=.*\((.*)\)/)[1].gsub('%20', ' ')).to \
+      eq @group.name
   end
 
   step 'the request includes an :string_with_spaces' do |string_with_spaces|

@@ -417,6 +417,23 @@ module CommonSteps
     end
   end
 
+  step 'several requests created by myself exist' do
+    budget_period = Procurement::BudgetPeriod.current
+    h = {
+        user: @current_user,
+        budget_period: budget_period
+    }
+    h[:group] = @group if @group
+
+    n = 5
+    n.times do
+      FactoryGirl.create :procurement_request, h
+    end
+    requests = Procurement::Request.where(user_id: @current_user,
+                                          budget_period_id: budget_period)
+    expect(requests.count).to eq n
+  end
+
   step 'several template categories exist' do
     h = {}
     h[:group] = @group if @group

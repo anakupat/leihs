@@ -142,6 +142,7 @@ module Procurement
           _('Budget period') => request.budget_period,
           _('Group') => request.group,
           _('Requester') => request.user,
+          _('Organisation unit') => request.organization.name_with_parent,
           _('Article / Project') => request.article_name,
           _('Article nr. / Producer nr.') => request.article_number,
           _('Supplier') => request.supplier_name,
@@ -159,6 +160,7 @@ module Procurement
                                                       else
                                                         _('New')
                                                       end,
+          _('Receiver') => request.receiver,
           _('Point of Delivery') => request.location_name,
           _('Motivation') => request.motivation,
           _('Inspection comment') => (show_all ? request.inspection_comment : nil)
