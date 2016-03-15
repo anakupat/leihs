@@ -19,7 +19,7 @@
           %a.dropdown-item{href: admin.root_path}
             %i.fa.fa-wrench
             %span= _('Admin')
-      - if ("Procurement".constantize rescue false) and Procurement::Access.has_some_access?(current_user)
+      - if ("Procurement".constantize rescue false) and Procurement::Access.some_access?(current_user)
         %li.separated-top
           %a.dropdown-item{href: procurement.root_path}
             %i.fa.fa-pie-chart
