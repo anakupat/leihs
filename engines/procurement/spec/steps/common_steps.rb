@@ -1,3 +1,4 @@
+# rubocop:disable Metrics/ModuleLength
 module CommonSteps
 
   step 'a receiver exists' do
@@ -94,11 +95,11 @@ module CommonSteps
     within el do
       label = case field
               when 'priority'
-                  _('Priority')
+                _('Priority')
               when 'replacement'
-                  '%s / %s' % [_('Replacement'), _('New')]
+                format('%s / %s', _('Replacement'), _('New'))
               else
-                  raise
+                raise
               end
       within '.form-group', text: label do
         table.raw.flatten.each do |value|
@@ -173,10 +174,10 @@ module CommonSteps
   step 'I fill in all mandatory information' do
     @changes = {}
     request_el = if @template
-           ".request[data-template_id='#{@template.id}']"
+                   ".request[data-template_id='#{@template.id}']"
                  else
-           ".request[data-request_id='new_request']"
-         end
+                   ".request[data-request_id='new_request']"
+                 end
     within request_el do
       selector = if has_selector? '[data-to_be_required]:invalid'
                    '[data-to_be_required]:invalid'
@@ -482,7 +483,9 @@ module CommonSteps
       case field
       when 'new/replacement'
           input_field = find("input[name*='[replacement]']", match: :first)
-          label_field = input_field.find(:xpath, "./following-sibling::div[contains(@class, 'label')]")
+          label_field = \
+            input_field.find(:xpath,
+                             "./following-sibling::div[contains(@class, 'label')]")
       else
           input_field = case field
                         when 'requester name', 'name'
@@ -535,9 +538,11 @@ module CommonSteps
 
   step 'there is a future budget period' do
     current_budget_period = Procurement::BudgetPeriod.current
-    @future_budget_period = FactoryGirl.create :procurement_budget_period,
-                                               inspection_start_date: current_budget_period.end_date + 1.month,
-                                               end_date: current_budget_period.end_date + 2.months
+    @future_budget_period = \
+      FactoryGirl.create(:procurement_budget_period,
+                         inspection_start_date: \
+                           current_budget_period.end_date + 1.month,
+                         end_date: current_budget_period.end_date + 2.months)
   end
 
   def visit_request(request)
@@ -553,7 +558,8 @@ module CommonSteps
       Timecop.return
     end
 
-    # The minimum representable time is 1901-12-13, and the maximum representable time is 2038-01-19
+    # The minimum representable time is 1901-12-13,
+    # and the maximum representable time is 2038-01-19
     ActiveRecord::Base.connection.execute \
       "SET TIMESTAMP=unix_timestamp('#{Time.now.iso8601}')"
     mysql_now = ActiveRecord::Base.connection \
@@ -602,5 +608,6 @@ module CommonSteps
   end
 
 end
+# rubocop:enable Metrics/ModuleLength
 
 RSpec.configure { |c| c.include CommonSteps }
