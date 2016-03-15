@@ -558,7 +558,9 @@ module CommonSteps
       "SET TIMESTAMP=unix_timestamp('#{Time.now.iso8601}')"
     mysql_now = ActiveRecord::Base.connection \
     .exec_query('SELECT CURDATE()').rows.flatten.first
-    raise 'MySQL current datetime has not been changed' if mysql_now != Date.today
+    if mysql_now != Time.zone.today
+      raise 'MySQL current datetime has not been changed'
+    end
   end
 
   def currency(amount)

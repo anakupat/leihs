@@ -36,50 +36,6 @@ module Procurement
     end
 
     def overview
-      def get_requests
-        fallback_filters
-        h = {}
-        Procurement::BudgetPeriod.order(end_date: :desc) \
-          .find(@filter['budget_period_ids']).each do |budget_period|
-
-          requests = budget_period.requests.search(@filter['search']) \
-                      .where(group_id: @filter['group_ids'],
-                             priority: @filter['priorities'])
-          requests = requests.where(user_id: @user) if @user
-          if @filter['organization_id']
-            requests = requests.joins(:organization)
-                           .where(['organization_id = :id OR procurement_organizations.parent_id = :id', { id: @filter['organization_id'] }])
-          end
-          requests = requests.select do |r|
-                       @filter['states'] \
-                        .map(&:to_sym).include? r.state(current_user)
-          end
-
-          requests = requests.sort do |a, b|
-            case @filter['sort_by']
-            when 'total_price'
-                a.total_price(current_user) <=> b.total_price(current_user)
-            when 'state'
-                Request::STATES.index(a.state(current_user)) <=> \
-                Request::STATES.index(b.state(current_user))
-            when 'department'
-                a.organization.parent.to_s.downcase <=> \
-                b.organization.parent.to_s.downcase
-            when 'article_name', 'user'
-                a.send(@filter['sort_by']).to_s.downcase <=> \
-                b.send(@filter['sort_by']).to_s.downcase
-            else
-                a.send(@filter['sort_by']) <=> \
-                b.send(@filter['sort_by'])
-            end
-          end
-          requests.reverse! if @filter['sort_dir'] == 'desc'
-
-          h[budget_period] = requests
-        end
-        h
-      end
-
       respond_to do |format|
         format.html do
           default_filters
@@ -221,5 +177,52 @@ module Procurement
       @filter['states'] ||= []
       session[:requests_filter] = @filter
     end
+
+    def get_requests
+      fallback_filters
+      h = {}
+      Procurement::BudgetPeriod.order(end_date: :desc) \
+          .find(@filter['budget_period_ids']).each do |budget_period|
+
+        requests = budget_period.requests.search(@filter['search']) \
+                      .where(group_id: @filter['group_ids'],
+                             priority: @filter['priorities'])
+        requests = requests.where(user_id: @user) if @user
+        if @filter['organization_id']
+          requests = requests.joins(:organization)
+                         .where(['organization_id = :id OR ' \
+                                 'procurement_organizations.parent_id = :id',
+                                 { id: @filter['organization_id'] }])
+        end
+        requests = requests.select do |r|
+          @filter['states'] \
+                        .map(&:to_sym).include? r.state(current_user)
+        end
+
+        requests = requests.sort do |a, b|
+          case @filter['sort_by']
+          when 'total_price'
+              a.total_price(current_user) <=> b.total_price(current_user)
+          when 'state'
+              Request::STATES.index(a.state(current_user)) <=> \
+                Request::STATES.index(b.state(current_user))
+          when 'department'
+              a.organization.parent.to_s.downcase <=> \
+                b.organization.parent.to_s.downcase
+          when 'article_name', 'user'
+              a.send(@filter['sort_by']).to_s.downcase <=> \
+                b.send(@filter['sort_by']).to_s.downcase
+          else
+              a.send(@filter['sort_by']) <=> \
+                b.send(@filter['sort_by'])
+          end
+        end
+        requests.reverse! if @filter['sort_dir'] == 'desc'
+
+        h[budget_period] = requests
+      end
+      h
+    end
+
   end
 end

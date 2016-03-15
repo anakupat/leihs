@@ -15,7 +15,7 @@ module Procurement
 
     ####################################################
 
-    scope :future, -> { where('end_date > ?', Date.today) }
+    scope :future, -> { where('end_date > ?', Time.zone.today) }
 
     ####################################################
 
@@ -24,11 +24,11 @@ module Procurement
     end
 
     def in_requesting_phase?
-      Date.today < inspection_start_date
+      Time.zone.today < inspection_start_date
     end
 
     def in_inspection_phase?
-      inspection_start_date <= Date.today and Date.today <= end_date
+      inspection_start_date <= Time.zone.today and Time.zone.today <= end_date
     end
 
     def previous
@@ -36,11 +36,12 @@ module Procurement
     end
 
     def current?
-      Date.today <= end_date and (previous.nil? or Date.today > previous.end_date)
+      Time.zone.today <= end_date and \
+        (previous.nil? or Time.zone.today > previous.end_date)
     end
 
     def past?
-      end_date < Date.today
+      end_date < Time.zone.today
     end
 
     class << self

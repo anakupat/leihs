@@ -7,7 +7,7 @@ FactoryGirl.define do
       if last_budget_period
         last_budget_period.end_date + 1.month
       else
-        Date.today + 1.month
+        Time.zone.today + 1.month
       end
     end
 

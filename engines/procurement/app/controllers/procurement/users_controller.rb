@@ -14,8 +14,10 @@ module Procurement
           @requester_accesses = Access.requesters.joins(:user) \
                                   .order('users.firstname')
           @admins = User.not_as_delegations \
-                        .joins('INNER JOIN procurement_accesses ON users.id = procurement_accesses.user_id')
-                        .where(procurement_accesses: { is_admin: true }).order(:firstname)
+                        .joins('INNER JOIN procurement_accesses ON ' \
+                               'users.id = procurement_accesses.user_id')
+                        .where(procurement_accesses: { is_admin: true })
+                        .order(:firstname)
         end
         format.json do
           render json: User.not_as_delegations.filter(params) \
@@ -30,8 +32,8 @@ module Procurement
         next if param[:name].blank? or param[:_destroy] == '1'
         access = Access.requesters.find_or_initialize_by(user_id: param[:user_id])
         parent = Organization.find_or_create_by(name: param[:department])
-        organization = parent.children.find_or_create_by(name: param[:organization])
-        access.update_attributes(organization: organization)
+        org = parent.children.find_or_create_by(name: param[:organization])
+        access.update_attributes(organization: org)
       end
 
       # existing_requester_ids = Access.requesters.pluck(:user_id)
