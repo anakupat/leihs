@@ -115,7 +115,8 @@ steps_for :periods_and_states do
     expect(@request.editable?(@current_user)).to be false
   end
 
-  step 'I can not move a request of a budget period which has ended to another budget period' do
+  step 'I can not move a request of a budget period ' \
+       'which has ended to another budget period' do
     request = Procurement::BudgetPeriod.all
                   .detect { |bp| bp.past? and bp.requests.exists? }
                   .requests.first
@@ -129,7 +130,8 @@ steps_for :periods_and_states do
     expect(request.reload.budget_period).to_not be budget_period
   end
 
-  step 'I can not move a request of a budget period which has ended to another procurement group' do
+  step 'I can not move a request of a budget period ' \
+       'which has ended to another procurement group' do
     request = Procurement::BudgetPeriod.all
                   .detect { |bp| bp.past? and bp.requests.exists? }
                   .requests.first
@@ -314,16 +316,16 @@ steps_for :periods_and_states do
     new_quantity, new_comment = \
       case string_with_spaces
       when 'empty'
-                                          [nil, nil]
+        [nil, nil]
       when 'equal to the requested quantity'
-                                          [@request.requested_quantity, nil]
+        [@request.requested_quantity, nil]
       when 'smaller than the requested quantity, not equal 0'
-                                          raise if @request.requested_quantity == 1
-                                          [@request.requested_quantity - 1, 'inspection comment']
+        raise if @request.requested_quantity == 1
+        [@request.requested_quantity - 1, 'inspection comment']
       when 'equal 0'
-                                          [0, 'inspection comment']
+        [0, 'inspection comment']
       else
-                                          raise
+        raise
       end
     @request.update_attributes approved_quantity: new_quantity,
                                inspection_comment: new_comment
