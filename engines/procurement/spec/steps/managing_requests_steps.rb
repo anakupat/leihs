@@ -395,7 +395,7 @@ steps_for :managing_requests do
   end
 
   step 'no option is chosen yet for the field Replacement / New' do
-    label = '%s / %s' % [_('Replacement'), _('New')]
+    label = format('%s / %s', _('Replacement'), _('New'))
     within '.form-group', text: label do
       expect(page).to have_no_selector "input[type='radio']:checked"
     end
@@ -434,8 +434,9 @@ steps_for :managing_requests do
   end
 
   step 'the amount of requests found is shown' do
-    step 'I see the amount of requests which are listed is %d' % \
-      @found_requests.count
+    step \
+      format('I see the amount of requests which are listed is %d',
+             @found_requests.count)
   end
 
   step 'the attachment is deleted successfully from the database' do
@@ -519,11 +520,12 @@ steps_for :managing_requests do
 
   step 'the following fields are mandatory and marked red' do |table|
     table.raw.flatten.each do |key|
-      step 'the field "%s" is marked red' % key
+      step format('the field "%s" is marked red', key)
     end
   end
 
-  step 'the following template data are :string_with_spaces' do |string_with_spaces, table|
+  step 'the following template data are :string_with_spaces' \
+    do |string_with_spaces, table|
     within ".request[data-template_id='#{@template.id}']" do
       table.raw.flatten.each do |value|
         within '.form-group', text: _(value) do
@@ -650,8 +652,9 @@ steps_for :managing_requests do
   private
 
   def get_current_request(user)
-    Procurement::Request.find_by user_id: user.id,
-                                 budget_period_id: Procurement::BudgetPeriod.current
+    Procurement::Request.find_by \
+      user_id: user.id,
+      budget_period_id: Procurement::BudgetPeriod.current
   end
 
 end
