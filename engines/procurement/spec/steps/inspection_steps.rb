@@ -1,11 +1,13 @@
 require_relative 'shared/common_steps'
 require_relative 'shared/dataset_steps'
+require_relative 'shared/filter_steps'
 require_relative 'shared/navigation_steps'
 require_relative 'shared/personas_steps'
 
 steps_for :inspection do
   include CommonSteps
   include DatasetSteps
+  include FilterSteps
   include NavigationSteps
   include PersonasSteps
 
