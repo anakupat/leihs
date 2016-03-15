@@ -513,8 +513,8 @@ steps_for :managing_requests do
   end
 
   step 'the file is downloaded' do
-    pending
-    # TODO check response_headers
+    expect(page.driver.browser.switch_to.active_element.text).to eq \
+      @attachment.file.original_filename
   end
 
   step 'the following fields are mandatory and marked red' do |table|
@@ -571,7 +571,7 @@ steps_for :managing_requests do
        'according to the filters chosen' do
     step 'page has been loaded'
     within '#filter_target' do
-      @found_requests = Procurement::Request.where(
+      @found_requests = Procurement::Request.search(@filter[:search]).where(
           user_id: @current_user,
           budget_period_id: @filter[:budget_period_ids],
           group_id: @filter[:group_ids],

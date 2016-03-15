@@ -77,6 +77,7 @@ module NavigationSteps
     within '.navbar' do
       click_on _('Requests')
     end
+    step 'page has been loaded'
     expect(page).to have_selector('h4', text: _('Requests'))
   end
   # alias
