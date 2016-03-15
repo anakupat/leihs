@@ -43,7 +43,7 @@
             .label.label-default= _(priority)
     .form-group
       %label.col-xs-4.control-label
-        = "%s / %s" % [_('Replacement'), _('New')]
+        = format('%s / %s', _('Replacement'), _('New'))
       .col-xs-8
         %label
           %input{type: :radio, name: "requests[new_#{i}][replacement]", value: 1, data: {to_be_required: true}}
@@ -54,10 +54,10 @@
   .col-xs-6
     .form-group
       %label.col-xs-4.control-label
-        = "%s %s" % [_('Item price'), MoneyRails.default_currency]
+        = format('%s %s', _('Item price'), MoneyRails.default_currency)
         %span.small= _('incl. VAT')
       .col-xs-4
-        %input.form-control{name: "requests[new_#{i}][price]", type: :number, min: 0, placeholder: ("%s %s" % [_('Item price'), _('incl. VAT')]), autocomplete: :off}
+        %input.form-control{name: "requests[new_#{i}][price]", type: :number, min: 0, placeholder: format('%s %s', _('Item price'), _('incl. VAT')), autocomplete: :off}
       .col-xs-4
     .form-group
       %label.col-xs-4.control-label
@@ -81,7 +81,7 @@
         .col-xs-4
     .form-group
       %label.col-xs-4.control-label
-        = "%s %s" % [_('Total'), MoneyRails.default_currency]
+        = format('%s %s' % _('Total'), MoneyRails.default_currency)
         %span.small= _('incl. VAT')
       .col-xs-8
         .label.label-primary.total_price

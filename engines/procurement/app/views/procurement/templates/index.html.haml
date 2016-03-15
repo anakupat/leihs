@@ -32,7 +32,7 @@
           %tr.row
             %th.col-xs-3= _('Article / Project')
             %th.col-xs-3= _('Article nr. / Producer nr.')
-            %th.col-xs-2= "%s %s %s" % [_('Price'), MoneyRails.default_currency, _('incl. VAT')]
+            %th.col-xs-2= format('%s %s %s', _('Price'), MoneyRails.default_currency, _('incl. VAT'))
             %th.col-xs-3= _('Supplier')
             %th.col-xs-1
         %tbody
@@ -45,7 +45,7 @@
               %td.col-xs-3
                 %input.form-control{name: "template_categories[#{template_category.object_id}][templates_attributes][][article_number]", placeholder: _('Article nr. / Producer nr.'), value: template.article_number}
               %td.col-xs-2
-                %input.form-control{name: "template_categories[#{template_category.object_id}][templates_attributes][][price]", type: :number, min: 0, value: template.price, placeholder: ("%s %s" % [_('Price'), _('incl. VAT')]), autocomplete: :off}
+                %input.form-control{name: "template_categories[#{template_category.object_id}][templates_attributes][][price]", type: :number, min: 0, value: template.price, placeholder: format('%s %s', _('Price'), _('incl. VAT')), autocomplete: :off}
               %td.col-xs-3
                 %input.form-control{name: "template_categories[#{template_category.object_id}][templates_attributes][][supplier_name]", placeholder: _('Supplier'), value: template.supplier_name}
               %td.col-xs-1.text-right
@@ -56,7 +56,7 @@
             %td.col-xs-3
               %input.form-control{name: "template_categories[#{template_category.object_id}][templates_attributes][][article_number]", placeholder: _('Article nr. / Producer nr.')}
             %td.col-xs-2
-              %input.form-control{name: "template_categories[#{template_category.object_id}][templates_attributes][][price]", type: :number, min: 0, placeholder: ("%s %s" % [_('Price'), _('incl. VAT')]), autocomplete: :off}
+              %input.form-control{name: "template_categories[#{template_category.object_id}][templates_attributes][][price]", type: :number, min: 0, placeholder: format('%s %s', _('Price'), _('incl. VAT')), autocomplete: :off}
             %td.col-xs-3
               %input.form-control{name: "template_categories[#{template_category.object_id}][templates_attributes][][supplier_name]", placeholder: _('Supplier')}
             %td.col-xs-1.text-right

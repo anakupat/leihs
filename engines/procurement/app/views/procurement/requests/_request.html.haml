@@ -74,7 +74,7 @@
 
     .form-group
       %label.col-xs-4.control-label
-        = "%s / %s" % [_('Replacement'), _('New')]
+        = format('%s / %s', _('Replacement'), _('New'))
       .col-xs-8
         - if request.editable?(current_user) and request.user_id == current_user.id
           %label
@@ -89,11 +89,11 @@
   .col-xs-6
     .form-group
       %label.col-xs-4.control-label
-        = "%s %s" % [_('Item price'), MoneyRails.default_currency]
+        = format('%s %s', _('Item price'), MoneyRails.default_currency)
         %span.small= _('incl. VAT')
       .col-xs-4
         - if request.editable?(current_user) and (request.template_id.nil? or request.group.inspectable_by?(current_user))
-          %input.form-control{name: "requests[#{request.id}][price]", type: :number, min: 0, value: request.price.to_i, placeholder: ("%s %s" % [_('Item price'), _('incl. VAT')]), autocomplete: :off}
+          %input.form-control{name: "requests[#{request.id}][price]", type: :number, min: 0, value: request.price.to_i, placeholder: format('%s %s', _('Item price'), _('incl. VAT')), autocomplete: :off}
         - else
           .label.label-primary
             = money_without_cents_and_with_symbol request.price
@@ -139,7 +139,7 @@
 
     .form-group
       %label.col-xs-4.control-label
-        = "%s %s" % [_('Total'), MoneyRails.default_currency]
+        = format('%s %s', _('Total'), MoneyRails.default_currency)
         %span.small= _('incl. VAT')
       .col-xs-8
         .label.label-primary.total_price{data: {total: request.total_price(current_user)}}

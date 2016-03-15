@@ -15,7 +15,7 @@ module Procurement
     accepts_nested_attributes_for :budget_limits,
                                   allow_destroy: true
 
-    default_scope -> { order(:name) }
+    default_scope { order(:name) }
 
     def to_s
       name

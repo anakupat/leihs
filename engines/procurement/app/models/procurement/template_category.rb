@@ -13,7 +13,7 @@ module Procurement
       name
     end
 
-    default_scope -> { order(:name) }
+    default_scope { order(:name) }
 
   end
 end

@@ -1,4 +1,4 @@
-%h4= "%d %s" % [@h.values.flatten.count, _('Requests')]
+%h4= format('%d %s', @h.values.flatten.count, _('Requests'))
 
 - @h.each_pair do |budget_period, requests|
 

@@ -151,17 +151,17 @@ module Procurement
           _('Requested quantity') => request.requested_quantity,
           _('Approved quantity') => (show_all ? request.approved_quantity : nil),
           _('Order quantity') => (show_all ? request.order_quantity : nil),
-          ('%s %s' % [_('Price'), _('incl. VAT')]) => request.price,
-          ('%s %s' % [_('Total'), _('incl. VAT')]) => \
+          format('%s %s', _('Price'), _('incl. VAT')) => request.price,
+          format('%s %s', _('Total'), _('incl. VAT')) => \
                                               request.total_price(current_user),
           _('State') => _(request.state(current_user).to_s.humanize),
           _('Priority') => request.priority,
           _('Article nr. / Producer nr.') => request.article_number,
-          '%s / %s' % [_('Replacement'), _('New')] => if request.replacement
-                                                        _('Replacement')
-                                                      else
-                                                        _('New')
-                                                      end,
+          format('%s / %s', _('Replacement'), _('New')) => if request.replacement
+                                                             _('Replacement')
+                                                           else
+                                                              _('New')
+                                                           end,
           _('Receiver') => request.receiver,
           _('Point of Delivery') => request.location_name,
           _('Motivation') => request.motivation,

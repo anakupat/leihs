@@ -7,7 +7,7 @@
         %th= _('Name')
         %th= _('Inspection start date')
         %th= _('Budget period end date')
-        %th= '%s %s' % [_('Total'), _('Requests')]
+        %th= format('%s %s', _('Total'), _('Requests'))
     %tbody
       - if @budget_periods.empty?
         %tr
