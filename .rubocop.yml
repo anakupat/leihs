@@ -13,8 +13,7 @@ AllCops:
     - 'node_modules/**/*'
     - 'script/**/*'
     - 'spec/**/*'
-  Rails:
-    enable: true
+  RunRailsCops: true
 
 Lint/AmbiguousOperator:
   Enabled: false
