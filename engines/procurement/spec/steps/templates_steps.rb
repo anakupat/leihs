@@ -48,7 +48,8 @@ steps_for :templates do
 
   step 'the article of the category is marked red' do
     within '.panel-collapse.in' do
-      find ".bg-danger input[name*='[article_name]'][value='#{@template.article_name}']"
+      find ".bg-danger input[name*='[article_name]']" \
+           "[value='#{@template.article_name}']"
     end
   end
 
@@ -115,7 +116,8 @@ steps_for :templates do
   step 'the following fields are filled' do |table|
     within '.panel-collapse.in' do
       el = if @template
-             find :xpath, "//input[@value='#{@template.article_name}']/ancestor::tr"
+             find(:xpath,
+                  "//input[@value='#{@template.article_name}']/ancestor::tr")
            else
              all('tbody tr', minimum: 1).last
            end
@@ -126,7 +128,8 @@ steps_for :templates do
           when 'Price'
               find("input[name*='[price]']").set @changes[mapped_key(value)] = 123
           else
-              fill_in _(value), with: @changes[mapped_key(value)] = Faker::Lorem.sentence
+              fill_in(_(value),
+                      with: @changes[mapped_key(value)] = Faker::Lorem.sentence)
           end
         end
       end
