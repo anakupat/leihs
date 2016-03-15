@@ -86,7 +86,12 @@ module CommonSteps
   end
 
   step 'I choose the following :field value' do |field, table|
-    within '.request[data-request_id="new_request"]' do
+    el = if @template
+           ".request[data-template_id='#{@template.id}']"
+         else
+           '.request[data-request_id="new_request"]'
+         end
+    within el do
       label = case field
                 when 'priority'
                   _('Priority')

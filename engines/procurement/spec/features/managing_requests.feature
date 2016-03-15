@@ -164,7 +164,11 @@ Feature: section Managing Requests
     And each template article contains
       | Article nr. / Producer nr. |
       | Supplier                   |
-      | Price                      |
+
+#FS# more precise
+#      | Price                      |
+      | Item price                 |
+
     When I navigate to the templates overview
     And I press on a category
     And I choose a template article
@@ -173,10 +177,22 @@ Feature: section Managing Requests
       | Article / Project          |
       | Article nr. / Producer nr. |
       | Supplier                   |
-      | Price                      |
+
+#FS# more precise
+#      | Price                      |
+      | Item price                 |
+
     And no option is chosen yet for the field Replacement / New
-    When I enter the motivation
-    And I choose the option "new"
+
+#FS# reusing steps
+#    When I enter the motivation
+#    And I choose the option "new"
+    And I fill in the following fields
+      | key                        | value  |
+      | Motivation                 | random |
+    And I choose the following replacement value
+      | New |
+
     And I click on save
     Then I see a success message
     And the request with all given information was created successfully in the database
@@ -190,7 +206,11 @@ Feature: section Managing Requests
     And each template article contains
       | Article nr. / Producer nr. |
       | Supplier                   |
-      | Price                      |
+
+#FS# more precise
+#      | Price                      |
+      | Item price                 |
+
     When I navigate to the templates overview
     And I press on a category
     And I choose a template article
@@ -199,10 +219,22 @@ Feature: section Managing Requests
       | Article / Project          |
       | Article nr. / Producer nr. |
       | Supplier                   |
-      | Price                      |
+
+#FS# more precise
+#      | Price                      |
+      | Item price                 |
+
     And no option is chosen yet for the field Replacement / New
-    When I enter the motivation
-    And I choose the option "new"
+
+#FS# reusing steps
+#    When I enter the motivation
+#    And I choose the option "new"
+    And I fill in the following fields
+      | key                        | value  |
+      | Motivation                 | random |
+    And I choose the following replacement value
+      | New |
+
     And I click on save
     Then I see a success message
     And the request with all given information was created successfully in the database

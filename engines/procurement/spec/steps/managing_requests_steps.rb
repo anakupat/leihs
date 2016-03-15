@@ -8,7 +8,7 @@ steps_for :managing_requests do
     template_category = FactoryGirl.create :procurement_template_category,
                                            group: @group
     @template = FactoryGirl.create :procurement_template,
-                                  template_category: template_category
+                                   template_category: template_category
     @request = FactoryGirl.create :procurement_request,
                                   user: @current_user,
                                   group: @group,
@@ -36,7 +36,7 @@ steps_for :managing_requests do
       key = case value
               when 'Article nr. / Producer nr.'
                 :article_number
-              when 'Price'
+              when 'Item price'
                 :price
               when 'Supplier'
                 :supplier_name
@@ -122,12 +122,12 @@ steps_for :managing_requests do
 
   step 'I search :boolean model by typing the article name' do |boolean|
     @text = if boolean
-             @model = Model.order('RAND()').first
-             expect(@model).to be
-             @model.to_s[0, 4]
-           else
-             Faker::Lorem.sentence
-           end
+              @model = Model.order('RAND()').first
+              expect(@model).to be
+              @model.to_s[0, 4]
+            else
+              Faker::Lorem.sentence
+            end
 
     within '.request[data-request_id="new_request"]' do
       within '.form-group', text: _('Article / Project') do
@@ -394,6 +394,13 @@ steps_for :managing_requests do
     expect(Procurement::Request.all).to be_empty
   end
 
+  step 'no option is chosen yet for the field Replacement / New' do
+    label = "%s / %s" % [_('Replacement'), _('New')]
+    within '.form-group', text: label do
+      expect(page).to have_no_selector "input[type='radio']:checked"
+    end
+  end
+
   step 'no requests exist' do
     Procurement::Request.destroy_all
     expect(Procurement::Request.count).to be_zero
@@ -487,8 +494,8 @@ steps_for :managing_requests do
       label = case field
                 when 'priority'
                   _('Priority')
-                when 'replacement'
-                  "%s / %s" % [_('Replacement'), _('New')]
+                # when 'replacement'
+                #   "%s / %s" % [_('Replacement'), _('New')]
                 else
                   raise
               end
@@ -516,17 +523,41 @@ steps_for :managing_requests do
     end
   end
 
-  step 'the following template data are prefilled' do |table|
+  step 'the following template data are :string_with_spaces' do
+  |string_with_spaces, table|
     within ".request[data-template_id='#{@template.id}']" do
       table.raw.flatten.each do |value|
-        pending
-        case value
-          when 'Article / Project'
-          when 'Article nr. / Producer nr.'
-          when 'Price'
-          when 'Supplier'
-          else
-            raise
+        within '.form-group', text: _(value) do
+          case string_with_spaces
+            when 'prefilled'
+              expect(find('input').value).to eq \
+               case value
+                 when 'Article / Project'
+                   @template.article_name
+                 when 'Article nr. / Producer nr.'
+                   @template.article_number
+                 when 'Item price'
+                   @template.price.to_i.to_s
+                 when 'Supplier'
+                   @template.supplier_name
+                 else
+                   raise
+               end
+            when 'displayed as read-only'
+              expect(page).to have_content \
+               case value
+                when 'Article / Project'
+                  @template.article_name
+                when 'Article nr. / Producer nr.'
+                  @template.article_number
+                when 'Item price'
+                  currency @template.price.to_i
+                when 'Supplier'
+                  @template.supplier_name
+                else
+                  raise
+               end
+          end
         end
       end
     end
