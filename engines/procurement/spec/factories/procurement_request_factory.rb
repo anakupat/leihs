@@ -3,8 +3,10 @@ FactoryGirl.define do
     user { FactoryGirl.create(:procurement_access, :requester).user }
 
     # association :budget_period, factory: :procurement_budget_period
-    budget_period { Procurement::BudgetPeriod.current ||
-                    FactoryGirl.create(:procurement_budget_period) }
+    budget_period do
+      Procurement::BudgetPeriod.current ||
+                    FactoryGirl.create(:procurement_budget_period)
+    end
 
     # association :group, factory: :procurement_group
     group { Procurement::Group.first || FactoryGirl.create(:procurement_group) }

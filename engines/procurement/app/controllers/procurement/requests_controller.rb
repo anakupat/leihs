@@ -14,7 +14,7 @@ module Procurement
       @budget_period = \
         BudgetPeriod.find(params[:budget_period_id]) if params[:budget_period_id]
 
-      if not RequestPolicy.new(current_user, request_user: @user).allowed?
+      unless RequestPolicy.new(current_user, request_user: @user).allowed?
         raise Pundit::NotAuthorizedError
       end
     end
@@ -57,18 +57,18 @@ module Procurement
 
           requests = requests.sort do |a, b|
             case @filter['sort_by']
-              when 'total_price'
+            when 'total_price'
                 a.total_price(current_user) <=> b.total_price(current_user)
-              when 'state'
+            when 'state'
                 Request::STATES.index(a.state(current_user)) <=> \
                 Request::STATES.index(b.state(current_user))
-              when 'department'
+            when 'department'
                 a.organization.parent.to_s.downcase <=> \
                 b.organization.parent.to_s.downcase
-              when 'article_name', 'user'
+            when 'article_name', 'user'
                 a.send(@filter['sort_by']).to_s.downcase <=> \
                 b.send(@filter['sort_by']).to_s.downcase
-              else
+            else
                 a.send(@filter['sort_by']) <=> \
                 b.send(@filter['sort_by'])
             end
@@ -121,7 +121,7 @@ module Procurement
 
         if param[:id]
           r = Request.find(param[:id])
-          param[:attachments_delete].each_pair do |k,v|
+          param[:attachments_delete].each_pair do |k, v|
             if v == '1'
               r.attachments.destroy(k)
             end
@@ -162,7 +162,7 @@ module Procurement
 
       if @request.update_attributes h
         render partial: 'layouts/procurement/flash',
-               locals: {flash: {success: _('Request moved')}}
+               locals: { flash: { success: _('Request moved') } }
       else
         render status: :bad_request
       end
@@ -176,7 +176,7 @@ module Procurement
       request.destroy
       if request.destroyed?
         render partial: 'layouts/procurement/flash',
-               locals: {flash: {success: _('Deleted')}}
+               locals: { flash: { success: _('Deleted') } }
       else
         render status: :bad_request
       end

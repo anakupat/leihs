@@ -44,8 +44,10 @@ module Procurement
 
     validates_presence_of :user, :group, :organization, :article_name, :motivation
     validates_presence_of :inspection_comment,
-                          if: proc { |r| r.approved_quantity \
-                                  and r.approved_quantity < r.requested_quantity }
+                          if: proc { |r|
+                                r.approved_quantity \
+                                  and r.approved_quantity < r.requested_quantity
+                          }
     validates :requested_quantity,
               presence: true,
               numericality: { greater_than: 0 }
@@ -124,7 +126,7 @@ module Procurement
                           .or(arel_table[:inspection_comment].matches(q))
                           .or(User.arel_table[:firstname].matches(q))
                           .or(User.arel_table[:lastname].matches(q))
-        )
+                       )
       end
       sql.joins(:user)
     }

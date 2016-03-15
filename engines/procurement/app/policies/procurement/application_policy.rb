@@ -5,7 +5,7 @@ module Procurement
     # application is a dummy argument in order to
     # make headless policies work in pundit due to
     # the argument arity
-    def initialize(user, application = nil)
+    def initialize(user, _application = nil)
       @user = user
     end
 

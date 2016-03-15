@@ -66,13 +66,13 @@ module Procurement
       if params[:sort_by] and params[:sort_dir]
         @requester_accesses = @requester_accesses.sort do |a, b|
           case params[:sort_by]
-            when 'user'
+          when 'user'
               a.user.to_s <=> b.user.to_s
-            when 'organization'
+          when 'organization'
               a.organization.to_s <=> b.organization.to_s
-            when 'department'
+          when 'department'
               a.organization.parent.to_s <=> b.organization.parent.to_s
-            else
+          else
               a.send(params[:sort_by]) <=> b.send(params[:sort_by])
           end
         end

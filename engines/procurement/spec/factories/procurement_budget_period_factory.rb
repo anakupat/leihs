@@ -11,6 +11,6 @@ FactoryGirl.define do
       end
     end
 
-    end_date { inspection_start_date + 6.month}
+    end_date { inspection_start_date + 6.months }
   end
 end
