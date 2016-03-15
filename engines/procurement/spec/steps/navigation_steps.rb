@@ -47,8 +47,8 @@ module NavigationSteps
   step 'I am navigated to the templates overview' do
     expect(page).to have_current_path \
       procurement.new_user_budget_period_request_path(
-          @current_user,
-          Procurement::BudgetPeriod.current)
+        @current_user,
+        Procurement::BudgetPeriod.current)
 
     within '.panel-success .panel-body' do
       find('h4', text: _('Choose an article/project'))
@@ -58,16 +58,16 @@ module NavigationSteps
 
   step 'I navigate to the templates overview' do
     visit procurement.new_user_budget_period_request_path(
-            @current_user,
-            Procurement::BudgetPeriod.current)
+      @current_user,
+      Procurement::BudgetPeriod.current)
   end
 
   step 'I am on the new request form of a group' do
     @group ||= Procurement::Group.first.name
     visit procurement.group_budget_period_user_requests_path(
-        @group,
-        Procurement::BudgetPeriod.current,
-        @current_user)
+      @group,
+      Procurement::BudgetPeriod.current,
+      @current_user)
   end
 
   step 'I navigate to the requests overview page' do
@@ -87,14 +87,14 @@ module NavigationSteps
 
   step 'I navigate to the requests form of :name' do |name|
     user = case name
-             when 'myself' then @current_user
-             else
+           when 'myself' then @current_user
+           else
                User.find_by(firstname: name)
            end
     path = procurement.group_budget_period_user_requests_path(
-                         @group,
-                         Procurement::BudgetPeriod.current,
-                         user)
+      @group,
+      Procurement::BudgetPeriod.current,
+      user)
     visit path
     expect(page).to have_current_path path
     find '.panel-heading h4', text: user.name

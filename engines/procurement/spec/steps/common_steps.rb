@@ -6,33 +6,33 @@ module CommonSteps
 
   step 'a request with following data exist' do |table|
     @changes = {
-        group: @group
+      group: @group
     }
     table.hashes.each do |hash|
       hash['value'] = nil if hash['value'] == 'random'
       case hash['key']
-        when 'budget period'
+      when 'budget period'
           @changes[:budget_period] = if hash['value'] == 'current'
                                        Procurement::BudgetPeriod.current
                                      else
                                        Procurement::BudgetPeriod.all.sample
                                      end
-        when 'user'
+      when 'user'
           @changes[:user] = case hash['value']
-                              when 'myself'
+                            when 'myself'
                                 @current_user
-                              else
+                            else
                                 find_or_create_user(hash['value'], true)
                             end
-        when 'requested amount'
+      when 'requested amount'
           @changes[:requested_quantity] = \
             (hash['value'] || Faker::Number.number(2)).to_i
-        when 'approved amount'
+      when 'approved amount'
           @changes[:approved_quantity] = \
             (hash['value'] || Faker::Number.number(2)).to_i
-        when 'inspection comment'
+      when 'inspection comment'
           @changes[:inspection_comment] = hash['value'] || Faker::Lorem.sentence
-        else
+      else
           raise
       end
     end
@@ -47,37 +47,37 @@ module CommonSteps
       within element do
         table.raw.flatten.each do |value|
           case value
-            when 'article name'
+          when 'article name'
               find '.col-sm-2', text: request.article_name
-            when 'name of the requester'
+          when 'name of the requester'
               find '.col-sm-2', text: request.user.to_s
-            when 'department'
+          when 'department'
               find '.col-sm-2', text: request.organization.parent.to_s
-            when 'organisation'
+          when 'organisation'
               find '.col-sm-2', text: request.organization.to_s
-            when 'price'
+          when 'price'
               find '.col-sm-1 .total_price', text: request.price.to_i
-            when 'requested amount'
+          when 'requested amount'
               within all('.col-sm-2.quantities div', count: 3)[0] do
                 expect(page).to have_content request.requested_quantity
               end
-            when 'approved amount'
+          when 'approved amount'
               within all('.col-sm-2.quantities div', count: 3)[1] do
                 expect(page).to have_content request.approved_quantity
               end
-            when 'order amount'
+          when 'order amount'
               within all('.col-sm-2.quantities div', count: 3)[2] do
                 expect(page).to have_content request.order_quantity
               end
-            when 'total amount'
+          when 'total amount'
               find '.col-sm-1 .total_price',
                    text: request.total_price(@current_user).to_i
-            when 'priority'
+          when 'priority'
               find '.col-sm-1', text: _(request.priority.capitalize)
-            when 'state'
+          when 'state'
               state = request.state(@current_user)
               find '.col-sm-1', text: _(state.to_s.humanize)
-            else
+          else
               raise
           end
         end
@@ -93,11 +93,11 @@ module CommonSteps
          end
     within el do
       label = case field
-                when 'priority'
+              when 'priority'
                   _('Priority')
-                when 'replacement'
-                  "%s / %s" % [_('Replacement'), _('New')]
-                else
+              when 'replacement'
+                  '%s / %s' % [_('Replacement'), _('New')]
+              else
                   raise
               end
       within '.form-group', text: label do
@@ -118,7 +118,7 @@ module CommonSteps
     # find('.form-group', text: _('Name of receiver')). \
     #   find('input').set @receiver.to_s
     fill_in _('Name of receiver'), with: @receiver.name
-    #not working#
+    # not working#
     # within '.ui-autocomplete' do
     #   find('.ui-menu-item', text: @receiver.name).click
     # end
@@ -146,8 +146,8 @@ module CommonSteps
   step 'I delete the following fields' do |table|
     el1, el2 = if @template
                  ['.panel-collapse.in',
-                 find(:xpath,
-                      "//input[@value='#{@template.article_name}']/ancestor::tr")]
+                  find(:xpath,
+                       "//input[@value='#{@template.article_name}']/ancestor::tr")]
                elsif @request
                  ['.panel-body',
                   ".request[data-request_id='#{@request.id}']"]
@@ -160,9 +160,9 @@ module CommonSteps
       within el2 do
         table.raw.flatten.each do |value|
           case value
-            when 'Price'
+          when 'Price'
               find("input[name*='[price]']").set ''
-            else
+          else
               fill_in _(value), with: ''
           end
         end
@@ -174,7 +174,7 @@ module CommonSteps
     @changes = {}
     request_el = if @template
            ".request[data-template_id='#{@template.id}']"
-         else
+                 else
            ".request[data-request_id='new_request']"
          end
     within request_el do
@@ -187,11 +187,11 @@ module CommonSteps
         key = el['name'].match(/.*\[(.*)\]\[(.*)\]/)[2]
 
         case key
-          when 'requested_quantity'
+        when 'requested_quantity'
             el.set v = Faker::Number.number(2).to_i
-          when 'replacement'
+        when 'replacement'
             find("input[name*='[replacement]'][value='#{v = 1}']").click
-          else
+        else
             el.set v = Faker::Lorem.sentence
         end
 
@@ -205,23 +205,23 @@ module CommonSteps
     table.hashes.each do |hash|
       hash['value'] = nil if hash['value'] == 'random'
       case hash['key']
-        when 'Price'
+      when 'Price'
           v = (hash['value'] || Faker::Number.number(4)).to_i
           find("input[name*='[price]']").set v
-        when /quantity/
+      when /quantity/
           v = (hash['value'] || Faker::Number.number(2)).to_i
           fill_in _(hash['key']), with: v
-        when 'Replacement / New'
+      when 'Replacement / New'
           v = hash['value'] || [0, 1].sample
           find("input[name*='[replacement]'][value='#{v}']").click
-        else
+      else
           v = hash['value'] || Faker::Lorem.sentence
           fill_in _(hash['key']), with: v
       end
       @changes[mapped_key(hash['key'])] = v
 
       # NOTE trigger change event
-      find('body').native.send_keys(:tab) #find('body').click
+      find('body').native.send_keys(:tab) # find('body').click
     end
   end
 
@@ -229,7 +229,7 @@ module CommonSteps
     within '.request', match: :first do
       @request = Procurement::Request.find current_scope['data-request_id']
       el = find('.btn-group .fa-gear')
-      btn = el.find(:xpath, ".//parent::button//parent::div")
+      btn = el.find(:xpath, './/parent::button//parent::div')
       btn.click unless btn['class'] =~ /open/
       within btn do
         find('a', text: @future_budget_period.to_s).click
@@ -237,7 +237,7 @@ module CommonSteps
     end
 
     @changes = {
-        budget_period_id: @future_budget_period.id
+      budget_period_id: @future_budget_period.id
     }
   end
 
@@ -255,7 +255,7 @@ module CommonSteps
                      end
 
       el = find('.btn-group .fa-gear')
-      btn = el.find(:xpath, ".//parent::button//parent::div")
+      btn = el.find(:xpath, './/parent::button//parent::div')
       btn.click unless btn['class'] =~ /open/
       within btn do
         find('a', text: @other_group.to_s).click
@@ -263,7 +263,7 @@ module CommonSteps
     end
 
     @changes = {
-        group_id: @other_group.id
+      group_id: @other_group.id
     }
   end
 
@@ -285,7 +285,7 @@ module CommonSteps
 
   step 'I :boolean a success message' do |boolean|
     if boolean
-      #expect(page).to have_content _('Saved')
+      # expect(page).to have_content _('Saved')
       find '.flash .alert-success', match: :first
     else
       expect(page).not_to have_selector '.flash .alert-success'
@@ -299,7 +299,7 @@ module CommonSteps
   step 'I see all groups' do
     within '.panel-success .panel-body' do
       Procurement::Group.all.each do |group|
-        find'.row', text: group.name
+        find '.row', text: group.name
       end
     end
   end
@@ -351,7 +351,7 @@ module CommonSteps
       within '.panel-success .panel-body' do
         within '.row', text: group.name do
           find '.label-primary.big_total_price',
-            text: number_with_delimiter(total.to_i)
+               text: number_with_delimiter(total.to_i)
         end
       end
     end
@@ -375,7 +375,7 @@ module CommonSteps
 
   step 'I upload a file' do
     field = find "input[name*='[attachments_attributes][][file]']"
-    attach_file(field[:name], #_('Attachments'),
+    attach_file(field[:name], # _('Attachments'),
                 "#{Rails.root}/features/data/images/image1.jpg")
   end
 
@@ -386,9 +386,9 @@ module CommonSteps
 
   step ':count groups exist' do |count|
     n = case count
-          when 'several'
+        when 'several'
             3
-          else
+        else
             count.to_i
         end
     @groups = []
@@ -418,15 +418,15 @@ module CommonSteps
           name: current_year + num,
           inspection_start_date: Date.new(current_year + num, 1, 1),
           end_date: Date.new(current_year + num, 1, 2)
-      )
+        )
     end
   end
 
   step 'several requests created by myself exist' do
     budget_period = Procurement::BudgetPeriod.current
     h = {
-        user: @current_user,
-        budget_period: budget_period
+      user: @current_user,
+      budget_period: budget_period
     }
     h[:group] = @group if @group
 
@@ -456,7 +456,7 @@ module CommonSteps
 
   step 'the changes are saved successfully to the database' do
     @request.reload
-    @changes.each_pair do |k,v|
+    @changes.each_pair do |k, v|
       expect(@request.send(k)).to eq v
     end
   end
@@ -480,28 +480,28 @@ module CommonSteps
          end
     within el do
       case field
-        when 'new/replacement'
+      when 'new/replacement'
           input_field = find("input[name*='[replacement]']", match: :first)
           label_field = input_field.find(:xpath, "./following-sibling::div[contains(@class, 'label')]")
-        else
+      else
           input_field = case field
-                          when 'requester name', 'name'
+                        when 'requester name', 'name'
                             find("input[name*='[name]']")
-                          when 'department'
+                        when 'department'
                             find("input[name*='[department]']")
-                          when 'organization'
+                        when 'organization'
                             find("input[name*='[organization]']")
-                          when 'inspection start date'
+                        when 'inspection start date'
                             find("input[name*='[inspection_start_date]']")
-                          when 'end date'
+                        when 'end date'
                             find("input[name*='[end_date]']")
-                          when 'article'
+                        when 'article'
                             find("input[name*='[article_name]']")
-                          when 'requested quantity'
+                        when 'requested quantity'
                             find("input[name*='[requested_quantity]']")
-                          when 'motivation'
+                        when 'motivation'
                             find("input[name*='[motivation]']")
-                          when 'inspection comment'
+                        when 'inspection comment'
                             find("input[name*='[inspection_comment]']")
                         end
       end
@@ -555,7 +555,7 @@ module CommonSteps
 
     # The minimum representable time is 1901-12-13, and the maximum representable time is 2038-01-19
     ActiveRecord::Base.connection.execute \
-    "SET TIMESTAMP=unix_timestamp('#{Time.now.iso8601}')"
+      "SET TIMESTAMP=unix_timestamp('#{Time.now.iso8601}')"
     mysql_now = ActiveRecord::Base.connection \
     .exec_query('SELECT CURDATE()').rows.flatten.first
     raise 'MySQL current datetime has not been changed' if mysql_now != Date.today
@@ -563,22 +563,22 @@ module CommonSteps
 
   def currency(amount)
     ActionController::Base.helpers.number_to_currency(
-        amount,
-        unit: Setting.local_currency_string,
-        precision: 0)
+      amount,
+      unit: Setting.local_currency_string,
+      precision: 0)
   end
 
   def mapped_key(from)
     case from
-      when 'Article / Project'
+    when 'Article / Project'
         :article_name
-      when 'Article nr. / Producer nr.'
+    when 'Article nr. / Producer nr.'
         :article_number
-      when 'Replacement / New'
+    when 'Replacement / New'
         :replacement
-      when 'Supplier'
+    when 'Supplier'
         :supplier_name
-      else
+    else
         from.parameterize.underscore.to_sym
     end
   end

@@ -25,7 +25,7 @@ steps_for :periods_and_states do
       within(:xpath, "//input[@value='#{budget_period.name}']/ancestor::tr") do
         total = budget_period.requests
                 .where(approved_quantity: nil)
-                    .map {|r| r.total_price(@current_user) }.sum
+                    .map { |r| r.total_price(@current_user) }.sum
         find('.label-info', text: currency(total))
       end
     end
@@ -38,7 +38,7 @@ steps_for :periods_and_states do
       within(:xpath, "//input[@value='#{budget_period.name}']/ancestor::tr") do
         total = budget_period.requests
                 .where.not(approved_quantity: nil)
-                    .map {|r| r.total_price(@current_user) }.sum
+                    .map { |r| r.total_price(@current_user) }.sum
         find('.label-success', text: currency(total))
       end
     end
@@ -67,12 +67,12 @@ steps_for :periods_and_states do
 
     find '.flash .alert-danger', text: _('The budget period is closed')
 
-    expect {
+    expect do
       FactoryGirl.create :procurement_request,
                          user: @current_user,
                          budget_period: @request.budget_period
 
-    }.to raise_error(ActiveRecord::RecordInvalid)
+    end.to raise_error(ActiveRecord::RecordInvalid)
   end
 
   step 'I can not delete any requests for the budget period which has ended' do
@@ -90,7 +90,7 @@ steps_for :periods_and_states do
     end
     if has_selector? '.btn-group .fa-gear'
       el = find('.btn-group .fa-gear')
-      btn = el.find(:xpath, ".//parent::button//parent::div")
+      btn = el.find(:xpath, './/parent::button//parent::div')
       btn.click unless btn['class'] =~ /open/
       within btn do
         expect(page).to have_no_selector('a', text: _('Delete'))
@@ -117,7 +117,7 @@ steps_for :periods_and_states do
 
   step 'I can not move a request of a budget period which has ended to another budget period' do
     request = Procurement::BudgetPeriod.all
-                  .detect{|bp| bp.past? and bp.requests.exists? }
+                  .detect { |bp| bp.past? and bp.requests.exists? }
                   .requests.first
     visit_request(request)
     budget_period = Procurement::BudgetPeriod.last
@@ -131,7 +131,7 @@ steps_for :periods_and_states do
 
   step 'I can not move a request of a budget period which has ended to another procurement group' do
     request = Procurement::BudgetPeriod.all
-                  .detect{|bp| bp.past? and bp.requests.exists? }
+                  .detect { |bp| bp.past? and bp.requests.exists? }
                   .requests.first
     visit_request(request)
     group = Procurement::Group.where.not(id: request.group).first
@@ -224,7 +224,7 @@ steps_for :periods_and_states do
     step 'I select all groups'
     step 'page has been loaded'
     @el = find(".list-group-item[data-request_id='#{@request.id}']")
-    @el.find(".label", text: _(state))
+    @el.find('.label', text: _(state))
   end
 
   step 'I see which fields are mandatory' do
@@ -237,7 +237,7 @@ steps_for :periods_and_states do
     expect(@request.state(@current_user)).to be :in_inspection
     @el = find ".row[data-request_id='#{@request.id}']"
     within @el do
-      find '.col-sm-1', text: _("In inspection")
+      find '.col-sm-1', text: _('In inspection')
     end
   end
 
@@ -260,23 +260,23 @@ steps_for :periods_and_states do
   step 'requests with status :status exist' do |status|
     5.times do |i|
       case status
-        when "New"
+      when 'New'
           FactoryGirl.create :procurement_request,
                              budget_period: Procurement::BudgetPeriod.current,
-                             requested_quantity: i+1,
+                             requested_quantity: i + 1,
                              approved_quantity: nil
-        when "Approved"
+      when 'Approved'
           FactoryGirl.create :procurement_request,
                              budget_period: Procurement::BudgetPeriod.current,
-                             requested_quantity: i+1,
-                             approved_quantity: i+1
-        when "Partially approved"
+                             requested_quantity: i + 1,
+                             approved_quantity: i + 1
+      when 'Partially approved'
           FactoryGirl.create :procurement_request,
                              budget_period: Procurement::BudgetPeriod.current,
-                             requested_quantity: i+1,
-                             approved_quantity: (i/2).to_i,
+                             requested_quantity: i + 1,
+                             approved_quantity: (i / 2).to_i,
                              inspection_comment: 'just a test'
-        else
+      else
           raise
       end
     end
@@ -313,16 +313,16 @@ steps_for :periods_and_states do
   step 'the approved quantity is :string_with_spaces' do |string_with_spaces|
     new_quantity, new_comment = \
       case string_with_spaces
-                                        when 'empty'
+      when 'empty'
                                           [nil, nil]
-                                        when 'equal to the requested quantity'
+      when 'equal to the requested quantity'
                                           [@request.requested_quantity, nil]
-                                        when 'smaller than the requested quantity, not equal 0'
+      when 'smaller than the requested quantity, not equal 0'
                                           raise if @request.requested_quantity == 1
                                           [@request.requested_quantity - 1, 'inspection comment']
-                                        when 'equal 0'
+      when 'equal 0'
                                           [0, 'inspection comment']
-                                        else
+      else
                                           raise
       end
     @request.update_attributes approved_quantity: new_quantity,
@@ -344,8 +344,8 @@ steps_for :periods_and_states do
 
   step 'the status of the request saved to the database is "New"' do
     expect(page).to have_no_selector ".request[data-request_id='new_request']"
-    all('.request', minimum: 1).map {|el| el['data-request_id'] }.each do |id|
-      request =  Procurement::Request.find id
+    all('.request', minimum: 1).map { |el| el['data-request_id'] }.each do |id|
+      request = Procurement::Request.find id
       expect(request.state(@current_user)).to be :new
     end
   end

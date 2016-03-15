@@ -59,7 +59,7 @@ steps_for :templates do
         within '.panel-collapse.in' do
           texts = all("tbody tr input[name*='[article_name]']", minimum: 1) \
                     .map &:value
-          texts.delete("")
+          texts.delete('')
           expect(texts).to eq texts.sort
         end
       end
@@ -68,7 +68,7 @@ steps_for :templates do
 
   step 'the categories are sorted 0-10 and a-z' do
     texts = all('.panel-heading input', minimum: 1).map &:value
-    texts.delete("")
+    texts.delete('')
     expect(texts).to eq texts.sort
   end
 
@@ -91,7 +91,7 @@ steps_for :templates do
 
   step 'the data modified is saved to the database' do
     @template.reload
-    @changes.each_pair do |k,v|
+    @changes.each_pair do |k, v|
       stored_value = @template.send k
       stored_value = stored_value.to_i if k == :price
       expect(stored_value).to eq v
@@ -123,9 +123,9 @@ steps_for :templates do
         @changes = {}
         table.raw.flatten.each do |value|
           case value
-            when 'Price'
+          when 'Price'
               find("input[name*='[price]']").set @changes[mapped_key(value)] = 123
-            else
+          else
               fill_in _(value), with: @changes[mapped_key(value)] = Faker::Lorem.sentence
           end
         end

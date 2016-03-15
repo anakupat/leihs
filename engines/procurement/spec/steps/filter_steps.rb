@@ -45,9 +45,9 @@ module FilterSteps
   step 'I enter a search string' do
     @filter ||= {}
     request = Procurement::Request.where(
-        budget_period_id: @filter[:budget_period_ids],
-        group_id: @filter[:group_ids],
-        priority: @filter[:priorities]
+      budget_period_id: @filter[:budget_period_ids],
+      group_id: @filter[:group_ids],
+      priority: @filter[:priorities]
     ).all.sample
     text = request.article_name[0, 6]
     within '#filter_panel .form-group', text: _('Search') do
@@ -77,30 +77,30 @@ module FilterSteps
 
   step 'I select all :string_with_spaces' do |string_with_spaces|
     text = case string_with_spaces
-             when 'groups'
+           when 'groups'
                _('Groups')
-             when 'budget periods'
+           when 'budget periods'
                _('Budget periods')
-             when 'organisations'
+           when 'organisations'
                _('Organisations')
-             when 'states'
+           when 'states'
                _('State of Request')
-             else
+           else
                raise
            end
     within '#filter_panel .form-group', text: text do
       case string_with_spaces
-        when 'states'
+      when 'states'
           all(:checkbox, minimum: 4).each { |x| x.set true }
-        else
+      else
           within '.btn-group' do
             # find('button.multiselect').click unless current_scope['class'] =~ /open/
             find('button.multiselect').click # NOTE open the dropdown
             within '.dropdown-menu' do
               case string_with_spaces
-                when 'organisations'
+              when 'organisations'
                   choose _('All')
-                else
+              else
                   check _('Select all')
               end
             end
@@ -137,23 +137,23 @@ module FilterSteps
   step 'I select one or more :string_with_spaces' do |string_with_spaces|
     @filter ||= {}
     text, key = case string_with_spaces
-             when 'groups'
+                when 'groups'
                [_('Groups'), :group_ids]
-             when 'budget periods'
+                when 'budget periods'
                [_('Budget periods'), :budget_period_ids]
-             when 'states'
+                when 'states'
                [_('State of Request'), :states]
-             else
+                else
                raise
            end
     within '#filter_panel .form-group', text: text do
       case string_with_spaces
-        when 'states'
+      when 'states'
           @filter[key] = all(:checkbox, minimum: 1).map do |x|
               x.set true
               x[:value]
           end
-        else
+      else
           within '.btn-group' do
             find('button.multiselect').click # NOTE open the dropdown
             within '.dropdown-menu' do
@@ -251,14 +251,14 @@ module FilterSteps
   end
 
   step 'the state :state :boolean present' do |state, boolean|
-    expect(Procurement::Request::STATES.map{|state| _(state.to_s.humanize)}).to \
+    expect(Procurement::Request::STATES.map { |state| _(state.to_s.humanize) }).to \
       include _(state)
 
     within '#filter_panel .form-group', text: _('State of Request') do
       if boolean
-        expect(page).to have_selector "ul li label .label", text: _(state)
+        expect(page).to have_selector 'ul li label .label', text: _(state)
       else
-        expect(page).to have_no_selector "ul li label .label", text: _(state)
+        expect(page).to have_no_selector 'ul li label .label', text: _(state)
       end
     end
   end

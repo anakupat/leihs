@@ -19,21 +19,21 @@ steps_for :csv do
 
     require 'csv'
     @csv = CSV.parse Procurement::Request.csv_export(requests, @current_user),
-                     {col_sep: ';',
-                      quote_char: "\"",
-                      force_quotes: true,
-                      headers: :first_row}
+                     col_sep: ';',
+                     quote_char: "\"",
+                     force_quotes: true,
+                     headers: :first_row
     headers = @csv.headers
 
     table.raw.flatten.each do |value|
       expect(headers).to include case value
-                                   when 'Replacement / New'
+                                 when 'Replacement / New'
                                      '%s / %s' % [_('Replacement'), _('New')]
-                                   when 'Price'
+                                 when 'Price'
                                      '%s %s' % [_('Price'), _('incl. VAT')]
-                                   when 'Total'
+                                 when 'Total'
                                      '%s %s' % [_('Total'), _('incl. VAT')]
-                                   else
+                                 else
                                     _(value)
                                  end
     end

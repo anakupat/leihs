@@ -9,13 +9,13 @@ steps_for :inspection do
     table.hashes.each do |value|
       n = value['quantity'].to_i
       user = case value['user']
-               when 'myself' then @current_user
-               else
+             when 'myself' then @current_user
+             else
                  find_or_create_user(value['user'], true)
              end
       h = {
-          user: user,
-          budget_period: current_budget_period
+        user: user,
+        budget_period: current_budget_period
       }
       if value['group'] == 'inspected' or not @group.nil?
         h[:group] = @group
@@ -31,7 +31,7 @@ steps_for :inspection do
   step 'I can not move any request to the old budget period' do
     within '.request', match: :first do
       el = find('.btn-group .fa-gear')
-      btn = el.find(:xpath, ".//parent::button//parent::div")
+      btn = el.find(:xpath, './/parent::button//parent::div')
       btn.click unless btn['class'] =~ /open/
       within btn do
         expect(page).to have_no_selector('a', text: @past_budget_period.to_s)
@@ -90,7 +90,7 @@ steps_for :inspection do
                        .try(:amount).to_i
           used = Procurement::BudgetPeriod.current.requests
                      .where(group_id: group)
-                     .map {|r| r.total_price(@current_user) }.sum.to_i
+                     .map { |r| r.total_price(@current_user) }.sum.to_i
           percentage = if amount > 0
                          used * 100 / amount
                        elsif used > 0
@@ -108,7 +108,7 @@ steps_for :inspection do
   step 'I see the total of all ordered amounts of a budget period' do
     total = Procurement::BudgetPeriod.current.requests
               .where(group_id: displayed_groups)
-              .map {|r| r.total_price(@current_user) }.sum
+              .map { |r| r.total_price(@current_user) }.sum
 
     find '.panel-success > .panel-heading .label-primary.big_total_price',
          text: number_with_delimiter(total.to_i)
@@ -170,13 +170,13 @@ steps_for :inspection do
   step 'the following information is deleted from the request' do |table|
     table.raw.flatten.each do |value|
       case value
-        when 'Approved quantity'
+      when 'Approved quantity'
           expect(@request.approved_quantity).to be_nil
-        when 'Order quantity'
+      when 'Order quantity'
           expect(@request.order_quantity).to be_nil
-        when 'Inspection comment'
+      when 'Inspection comment'
           expect(@request.inspection_comment).to be_nil
-        else
+      else
           raise
       end
     end
@@ -195,8 +195,8 @@ steps_for :inspection do
   step 'there is a budget period which has already ended' do
     current_budget_period = Procurement::BudgetPeriod.current
     @past_budget_period = FactoryGirl.create :procurement_budget_period,
-     inspection_start_date: current_budget_period.inspection_start_date - 2.months,
-     end_date: current_budget_period.inspection_start_date - 1.month
+                                             inspection_start_date: current_budget_period.inspection_start_date - 2.months,
+                                             end_date: current_budget_period.inspection_start_date - 1.month
   end
 
 end

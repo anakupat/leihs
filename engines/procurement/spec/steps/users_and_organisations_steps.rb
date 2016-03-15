@@ -192,7 +192,7 @@ steps_for :users_and_organisations do
 
   step 'the departments are sorted from 0-10 and a-z' do
     @roots = all('article .container-fluid > ul > li', minimum: 1)
-    texts = @roots.map {|x| x.find(:xpath, './b').text }
+    texts = @roots.map { |x| x.find(:xpath, './b').text }
     expect(texts).to eq texts.sort
   end
 

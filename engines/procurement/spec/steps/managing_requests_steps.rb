@@ -34,13 +34,13 @@ steps_for :managing_requests do
   step 'each template article contains' do |table|
     table.raw.flatten.each do |value|
       key = case value
-              when 'Article nr. / Producer nr.'
+            when 'Article nr. / Producer nr.'
                 :article_number
-              when 'Item price'
+            when 'Item price'
                 :price
-              when 'Supplier'
+            when 'Supplier'
                 :supplier_name
-              else
+            else
                 raise
             end
       Procurement::Template.all.each do |template|
@@ -58,12 +58,12 @@ steps_for :managing_requests do
   step 'I can change the budget period of my request' do
     request = get_current_request @current_user
     visit_request(request)
-    next_budget_period = Procurement::BudgetPeriod.\
-        where("end_date > ?", request.budget_period.end_date).first
+    next_budget_period = Procurement::BudgetPeriod\
+        .where('end_date > ?', request.budget_period.end_date).first
 
     within ".request[data-request_id='#{request.id}']" do
       el = find('.btn-group .fa-gear')
-      btn = el.find(:xpath, ".//parent::button//parent::div")
+      btn = el.find(:xpath, './/parent::button//parent::div')
       btn.click unless btn['class'] =~ /open/
       within btn do
         click_on next_budget_period.name
@@ -81,7 +81,7 @@ steps_for :managing_requests do
 
     within ".request[data-request_id='#{request.id}']" do
       el = find('.btn-group .fa-gear')
-      btn = el.find(:xpath, ".//parent::button//parent::div")
+      btn = el.find(:xpath, './/parent::button//parent::div')
       btn.click unless btn['class'] =~ /open/
       within btn do
         click_on other_group.name
@@ -154,11 +154,11 @@ steps_for :managing_requests do
 
   step 'I click on choice :choice' do |choice|
     case choice
-      when 'yes'
+    when 'yes'
         page.driver.browser.switch_to.alert.accept
-      when 'no'
+    when 'no'
         page.driver.browser.switch_to.alert.dismiss
-      else
+    else
         raise
     end
   end
@@ -198,7 +198,7 @@ steps_for :managing_requests do
   step 'I delete the request' do
     within ".request[data-request_id='#{@request.id}']" do
       el = find('.btn-group .fa-gear')
-      btn = el.find(:xpath, ".//parent::button//parent::div")
+      btn = el.find(:xpath, './/parent::button//parent::div')
       btn.click unless btn['class'] =~ /open/
       within btn do
         click_on _('Delete')
@@ -315,7 +315,7 @@ steps_for :managing_requests do
           #   within all('.col-sm-2.quantities div', count: 3)[0] do
           #     expect(page).to have_content request.requested_quantity
           #   end
-          when 'approved amount'
+        when 'approved amount'
             within '.form-group', text: _('Approved quantity') do
               find '.label', text: @request.approved_quantity
             end
@@ -331,11 +331,11 @@ steps_for :managing_requests do
           # when 'state'
           #   state = request.state(@current_user)
           #   find '.col-sm-1', text: _(state.to_s.humanize)
-          when 'inspection comment'
+        when 'inspection comment'
             within '.form-group', text: _('Inspection comment') do
               find 'div', text: @request.inspection_comment
             end
-          else
+        else
             raise
         end
       end
@@ -345,23 +345,23 @@ steps_for :managing_requests do
   step 'I sort the requests by :field' do |field|
     within '#column-titles' do
       label, @key = case field
-                      when 'article name'
+                    when 'article name'
                         [_('Article / Project'), 'article_name']
-                      when 'requester'
+                    when 'requester'
                         [_('Requester'), 'user']
-                      when 'organisation'
+                    when 'organisation'
                         [_('Organisation'), 'department']
-                      when 'price'
+                    when 'price'
                         [_('Price'), 'price']
-                      when 'quantity'
+                    when 'quantity'
                         [_('Quantities'), 'requested_quantity']
-                      when 'the total amount'
+                    when 'the total amount'
                         [_('Total'), 'total_price']
-                      when 'priority'
+                    when 'priority'
                         [_('Priority'), 'priority']
-                      when 'state'
+                    when 'state'
                         [_('State'), 'state']
-                      else
+                    else
                         raise
                     end
       click_on label
@@ -395,7 +395,7 @@ steps_for :managing_requests do
   end
 
   step 'no option is chosen yet for the field Replacement / New' do
-    label = "%s / %s" % [_('Replacement'), _('New')]
+    label = '%s / %s' % [_('Replacement'), _('New')]
     within '.form-group', text: label do
       expect(page).to have_no_selector "input[type='radio']:checked"
     end
@@ -434,7 +434,7 @@ steps_for :managing_requests do
   end
 
   step 'the amount of requests found is shown' do
-    step "I see the amount of requests which are listed is %d" % \
+    step 'I see the amount of requests which are listed is %d' % \
       @found_requests.count
   end
 
@@ -461,17 +461,17 @@ steps_for :managing_requests do
 
     server_ids = Procurement::Request.where(id: client_ids).sort do |a, b|
       case @key
-        when 'total_price'
+      when 'total_price'
           a.total_price(@current_user) <=> b.total_price(@current_user)
-        when 'state'
+      when 'state'
           Procurement::Request::STATES.index(a.state(@current_user)) <=> \
                 Procurement::Request::STATES.index(b.state(@current_user))
-        when 'department'
+      when 'department'
           a.organization.parent.to_s.downcase <=> \
                 b.organization.parent.to_s.downcase
-        when 'article_name', 'user'
+      when 'article_name', 'user'
           a.send(@key).to_s.downcase <=> b.send(@key).to_s.downcase
-        else
+      else
           a.send(@key) <=> b.send(@key)
       end
     end.map &:id
@@ -492,11 +492,11 @@ steps_for :managing_requests do
   step 'the :field value :value is set by default' do |field, value|
     within '.request[data-request_id="new_request"]' do
       label = case field
-                when 'priority'
+              when 'priority'
                   _('Priority')
                 # when 'replacement'
                 #   "%s / %s" % [_('Replacement'), _('New')]
-                else
+              else
                   raise
               end
       within '.form-group', text: label do
@@ -523,40 +523,39 @@ steps_for :managing_requests do
     end
   end
 
-  step 'the following template data are :string_with_spaces' do
-  |string_with_spaces, table|
+  step 'the following template data are :string_with_spaces' do |string_with_spaces, table|
     within ".request[data-template_id='#{@template.id}']" do
       table.raw.flatten.each do |value|
         within '.form-group', text: _(value) do
           case string_with_spaces
-            when 'prefilled'
+          when 'prefilled'
               expect(find('input').value).to eq \
-               case value
-                 when 'Article / Project'
-                   @template.article_name
-                 when 'Article nr. / Producer nr.'
-                   @template.article_number
-                 when 'Item price'
-                   @template.price.to_i.to_s
-                 when 'Supplier'
-                   @template.supplier_name
-                 else
-                   raise
-               end
-            when 'displayed as read-only'
-              expect(page).to have_content \
-               case value
+                case value
                 when 'Article / Project'
-                  @template.article_name
+                    @template.article_name
                 when 'Article nr. / Producer nr.'
-                  @template.article_number
+                    @template.article_number
                 when 'Item price'
-                  currency @template.price.to_i
+                    @template.price.to_i.to_s
                 when 'Supplier'
-                  @template.supplier_name
+                    @template.supplier_name
                 else
-                  raise
-               end
+                    raise
+                end
+          when 'displayed as read-only'
+              expect(page).to have_content \
+                case value
+                when 'Article / Project'
+                   @template.article_name
+                when 'Article nr. / Producer nr.'
+                   @template.article_number
+                when 'Item price'
+                   currency @template.price.to_i
+                when 'Supplier'
+                   @template.supplier_name
+                else
+                   raise
+                end
           end
         end
       end
@@ -572,10 +571,10 @@ steps_for :managing_requests do
     step 'page has been loaded'
     within '#filter_target' do
       @found_requests = Procurement::Request.search(@filter[:search]).where(
-          user_id: @current_user,
-          budget_period_id: @filter[:budget_period_ids],
-          group_id: @filter[:group_ids],
-          priority: @filter[:priorities]
+        user_id: @current_user,
+        budget_period_id: @filter[:budget_period_ids],
+        group_id: @filter[:group_ids],
+        priority: @filter[:priorities]
       ).select do |r|
         @filter[:states].map(&:to_sym).include? r.state(@current_user)
       end
@@ -613,27 +612,27 @@ steps_for :managing_requests do
 
   step 'the request includes an :string_with_spaces' do |string_with_spaces|
     file_path = case string_with_spaces
-                  when 'attachment'
+                when 'attachment'
                     'features/data/LDAP_generic.yml'
-                  when 'attachment with the attribute .jpg'
+                when 'attachment with the attribute .jpg'
                     'features/data/images/image1.jpg'
-                  when 'attachment with the attribute .pdf'
+                when 'attachment with the attribute .pdf'
                     'features/data/test.pdf'
-                  else
+                else
                     raise
                 end
     @request.update_attributes(attachments_attributes:
-                                   [{file: File.open(file_path)}])
+                                   [{ file: File.open(file_path) }])
   end
 
   step 'the request is :result in the database' do |result|
     case result
-      when 'successfully deleted'
+    when 'successfully deleted'
         step 'I see a success message'
         expect { @request.reload }.to raise_error ActiveRecord::RecordNotFound
-      when 'not deleted'
+    when 'not deleted'
         expect(@request.reload).not_to be_nil
-      else
+    else
         raise
     end
   end
