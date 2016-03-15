@@ -1,7 +1,11 @@
-# require_relative 'personas_steps'
+require_relative 'shared/common_steps'
+require_relative 'shared/navigation_steps'
+require_relative 'shared/personas_steps'
 
 steps_for :users_and_organisations do
-  # include PersonasSteps
+  include CommonSteps
+  include NavigationSteps
+  include PersonasSteps
 
   step 'I am already an admin' do
     expect(Procurement::Access.admin?(@current_user)).to be true

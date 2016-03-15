@@ -1,4 +1,15 @@
+require_relative 'shared/common_steps'
+require_relative 'shared/dataset_steps'
+require_relative 'shared/filter_steps'
+require_relative 'shared/navigation_steps'
+require_relative 'shared/personas_steps'
+
 steps_for :managing_requests do
+  include CommonSteps
+  include DatasetSteps
+  include FilterSteps
+  include NavigationSteps
+  include PersonasSteps
 
   step 'a new request line is added' do
     find '.request[data-request_id="new_request"]', visible: true

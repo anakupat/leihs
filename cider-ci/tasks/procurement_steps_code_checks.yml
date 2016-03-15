@@ -1,25 +1,10 @@
 ---
 tasks:
-- name: common_steps.rb
-  scripts:
-    test:
-      body: bundle exec rubocop -c engines/procurement/.rubocop.yml --except Metrics/ModuleLength
-        engines/procurement/spec/steps/common_steps.rb
 - name: csv_steps.rb
   scripts:
     test:
       body: bundle exec rubocop -c engines/procurement/.rubocop.yml --except Metrics/ModuleLength
         engines/procurement/spec/steps/csv_steps.rb
-- name: dataset_steps.rb
-  scripts:
-    test:
-      body: bundle exec rubocop -c engines/procurement/.rubocop.yml --except Metrics/ModuleLength
-        engines/procurement/spec/steps/dataset_steps.rb
-- name: filter_steps.rb
-  scripts:
-    test:
-      body: bundle exec rubocop -c engines/procurement/.rubocop.yml --except Metrics/ModuleLength
-        engines/procurement/spec/steps/filter_steps.rb
 - name: inspection_steps.rb
   scripts:
     test:
@@ -30,26 +15,11 @@ tasks:
     test:
       body: bundle exec rubocop -c engines/procurement/.rubocop.yml --except Metrics/ModuleLength
         engines/procurement/spec/steps/managing_requests_steps.rb
-- name: navigation_steps.rb
-  scripts:
-    test:
-      body: bundle exec rubocop -c engines/procurement/.rubocop.yml --except Metrics/ModuleLength
-        engines/procurement/spec/steps/navigation_steps.rb
 - name: periods_and_states_steps.rb
   scripts:
     test:
       body: bundle exec rubocop -c engines/procurement/.rubocop.yml --except Metrics/ModuleLength
         engines/procurement/spec/steps/periods_and_states_steps.rb
-- name: personas_steps.rb
-  scripts:
-    test:
-      body: bundle exec rubocop -c engines/procurement/.rubocop.yml --except Metrics/ModuleLength
-        engines/procurement/spec/steps/personas_steps.rb
-- name: placeholders.rb
-  scripts:
-    test:
-      body: bundle exec rubocop -c engines/procurement/.rubocop.yml --except Metrics/ModuleLength
-        engines/procurement/spec/steps/placeholders.rb
 - name: procurement_groups_steps.rb
   scripts:
     test:
@@ -60,11 +30,41 @@ tasks:
     test:
       body: bundle exec rubocop -c engines/procurement/.rubocop.yml --except Metrics/ModuleLength
         engines/procurement/spec/steps/roles_steps.rb
-- name: section_my_requests_steps.rb
+- name: shared
   scripts:
     test:
       body: bundle exec rubocop -c engines/procurement/.rubocop.yml --except Metrics/ModuleLength
-        engines/procurement/spec/steps/section_my_requests_steps.rb
+        engines/procurement/spec/steps/shared
+- name: shared/common_steps.rb
+  scripts:
+    test:
+      body: bundle exec rubocop -c engines/procurement/.rubocop.yml --except Metrics/ModuleLength
+        engines/procurement/spec/steps/shared/common_steps.rb
+- name: shared/dataset_steps.rb
+  scripts:
+    test:
+      body: bundle exec rubocop -c engines/procurement/.rubocop.yml --except Metrics/ModuleLength
+        engines/procurement/spec/steps/shared/dataset_steps.rb
+- name: shared/filter_steps.rb
+  scripts:
+    test:
+      body: bundle exec rubocop -c engines/procurement/.rubocop.yml --except Metrics/ModuleLength
+        engines/procurement/spec/steps/shared/filter_steps.rb
+- name: shared/navigation_steps.rb
+  scripts:
+    test:
+      body: bundle exec rubocop -c engines/procurement/.rubocop.yml --except Metrics/ModuleLength
+        engines/procurement/spec/steps/shared/navigation_steps.rb
+- name: shared/personas_steps.rb
+  scripts:
+    test:
+      body: bundle exec rubocop -c engines/procurement/.rubocop.yml --except Metrics/ModuleLength
+        engines/procurement/spec/steps/shared/personas_steps.rb
+- name: shared/placeholders.rb
+  scripts:
+    test:
+      body: bundle exec rubocop -c engines/procurement/.rubocop.yml --except Metrics/ModuleLength
+        engines/procurement/spec/steps/shared/placeholders.rb
 - name: templates_steps.rb
   scripts:
     test:

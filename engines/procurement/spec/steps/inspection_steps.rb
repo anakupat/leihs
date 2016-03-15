@@ -1,4 +1,13 @@
+require_relative 'shared/common_steps'
+require_relative 'shared/dataset_steps'
+require_relative 'shared/navigation_steps'
+require_relative 'shared/personas_steps'
+
 steps_for :inspection do
+  include CommonSteps
+  include DatasetSteps
+  include NavigationSteps
+  include PersonasSteps
 
   step 'a point of delivery exists' do
     FactoryGirl.create :location

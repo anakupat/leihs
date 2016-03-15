@@ -1,4 +1,13 @@
+require_relative 'shared/common_steps'
+require_relative 'shared/dataset_steps'
+require_relative 'shared/navigation_steps'
+require_relative 'shared/personas_steps'
+
 steps_for :templates do
+  include CommonSteps
+  include DatasetSteps
+  include NavigationSteps
+  include PersonasSteps
 
   step 'a template category exists' do
     @category = FactoryGirl.create :procurement_template_category,

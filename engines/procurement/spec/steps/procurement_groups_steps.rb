@@ -1,7 +1,11 @@
-# require_relative 'personas_steps'
+require_relative 'shared/common_steps'
+require_relative 'shared/navigation_steps'
+require_relative 'shared/personas_steps'
 
 steps_for :procurement_groups do
-  # include PersonasSteps
+  include CommonSteps
+  include NavigationSteps
+  include PersonasSteps
 
   step 'I click on the add button' do
     click_on _('Add')

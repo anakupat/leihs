@@ -1,9 +1,15 @@
-# require_relative 'personas_steps'
-require_relative 'placeholders'
-require File.join(Rails.root, 'features/support/dataset.rb')
+require_relative 'shared/common_steps'
+require_relative 'shared/dataset_steps'
+require_relative 'shared/filter_steps'
+require_relative 'shared/navigation_steps'
+require_relative 'shared/personas_steps'
 
 steps_for :periods_and_states do
-  # include PersonasSteps
+  include CommonSteps
+  include DatasetSteps
+  include FilterSteps
+  include NavigationSteps
+  include PersonasSteps
 
   step 'a budget period without any requests exists' do
     @budget_period = FactoryGirl.create(:procurement_budget_period)
