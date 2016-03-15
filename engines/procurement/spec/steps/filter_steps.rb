@@ -1,3 +1,4 @@
+# rubocop:disable Metrics/ModuleLength
 module FilterSteps
 
   step 'all groups in the filter groups are selected' do
@@ -94,7 +95,6 @@ module FilterSteps
           all(:checkbox, minimum: 4).each { |x| x.set true }
       else
           within '.btn-group' do
-            # find('button.multiselect').click unless current_scope['class'] =~ /open/
             find('button.multiselect').click # NOTE open the dropdown
             within '.dropdown-menu' do
               case string_with_spaces
@@ -138,14 +138,14 @@ module FilterSteps
     @filter ||= {}
     text, key = case string_with_spaces
                 when 'groups'
-               [_('Groups'), :group_ids]
+                  [_('Groups'), :group_ids]
                 when 'budget periods'
-               [_('Budget periods'), :budget_period_ids]
+                  [_('Budget periods'), :budget_period_ids]
                 when 'states'
-               [_('State of Request'), :states]
+                  [_('State of Request'), :states]
                 else
-               raise
-           end
+                  raise
+                end
     within '#filter_panel .form-group', text: text do
       case string_with_spaces
       when 'states'
@@ -251,8 +251,8 @@ module FilterSteps
   end
 
   step 'the state :state :boolean present' do |state, boolean|
-    expect(Procurement::Request::STATES.map { |state| _(state.to_s.humanize) }).to \
-      include _(state)
+    expect(Procurement::Request::STATES.map { |state| _(state.to_s.humanize) })
+      .to include _(state)
 
     within '#filter_panel .form-group', text: _('State of Request') do
       if boolean
@@ -263,5 +263,6 @@ module FilterSteps
     end
   end
 end
+# rubocop:enable Metrics/ModuleLength
 
 RSpec.configure { |c| c.include FilterSteps }
