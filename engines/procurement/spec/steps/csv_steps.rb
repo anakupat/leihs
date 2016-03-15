@@ -1,7 +1,8 @@
 steps_for :csv do
 
   step 'I export the shown information' do
-    # NOTE not really downloading the file, but invoking directly the model class method
+    # NOTE not really downloading the file,
+    # but invoking directly the model class method
 
     within '.sidebar-wrapper' do
       # click_on _('CSV Export')
@@ -10,7 +11,8 @@ steps_for :csv do
   end
 
   step 'the following fields are exported' do |table|
-    # NOTE not really downloading the file, but invoking directly the model class method
+    # NOTE not really downloading the file,
+    # but invoking directly the model class method
 
     client_ids = all('[data-request_id]', minimum: 1).map do |el|
       el['data-request_id'].to_i
@@ -28,11 +30,11 @@ steps_for :csv do
     table.raw.flatten.each do |value|
       expect(headers).to include case value
                                  when 'Replacement / New'
-                                     '%s / %s' % [_('Replacement'), _('New')]
+                                   format('%s / %s', _('Replacement'), _('New'))
                                  when 'Price'
-                                     '%s %s' % [_('Price'), _('incl. VAT')]
+                                   format('%s %s', _('Price'), _('incl. VAT'))
                                  when 'Total'
-                                     '%s %s' % [_('Total'), _('incl. VAT')]
+                                   format('%s %s', _('Total'), _('incl. VAT'))
                                  else
                                     _(value)
                                  end
