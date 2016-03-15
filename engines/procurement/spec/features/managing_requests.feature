@@ -96,7 +96,6 @@ Feature: section Managing Requests
       | Barbara  |
       | Roger    |
 
-  ##NW: we might need to discuss this in the next development phase. This needs explanation for the inspectors and its usually easyer, if they have the same possibilities as requesters, withuot having to change the settings.
   @managing_requests
   Scenario Outline: Creating a request through a budget period selecting a template article
     Given I am <username>
@@ -164,11 +163,7 @@ Feature: section Managing Requests
     And each template article contains
       | Article nr. / Producer nr. |
       | Supplier                   |
-
-#FS# more precise
-#      | Price                      |
       | Item price                 |
-
     When I navigate to the templates overview
     And I press on a category
     And I choose a template article
@@ -177,26 +172,16 @@ Feature: section Managing Requests
       | Article / Project          |
       | Article nr. / Producer nr. |
       | Supplier                   |
-
-#FS# more precise
-#      | Price                      |
       | Item price                 |
-
     And no option is chosen yet for the field Replacement / New
-
-#FS# reusing steps
-#    When I enter the motivation
-#    And I choose the option "new"
     And I fill in the following fields
       | key                        | value  |
       | Motivation                 | random |
     And I choose the following replacement value
       | New |
-
     And I click on save
     Then I see a success message
     And the request with all given information was created successfully in the database
-
 
   @managing_requests
   Scenario: Creating a request from a group template inside the new request page as requester
@@ -206,11 +191,7 @@ Feature: section Managing Requests
     And each template article contains
       | Article nr. / Producer nr. |
       | Supplier                   |
-
-#FS# more precise
-#      | Price                      |
       | Item price                 |
-
     When I navigate to the templates overview
     And I press on a category
     And I choose a template article
@@ -219,22 +200,13 @@ Feature: section Managing Requests
       | Article / Project          |
       | Article nr. / Producer nr. |
       | Supplier                   |
-
-#FS# more precise
-#      | Price                      |
       | Item price                 |
-
     And no option is chosen yet for the field Replacement / New
-
-#FS# reusing steps
-#    When I enter the motivation
-#    And I choose the option "new"
     And I fill in the following fields
       | key                        | value  |
       | Motivation                 | random |
     And I choose the following replacement value
       | New |
-
     And I click on save
     Then I see a success message
     And the request with all given information was created successfully in the database
@@ -412,7 +384,6 @@ Feature: section Managing Requests
       | key           | value   |
       | budget period | current |
       | user          | myself  |
-
     And the request includes an attachment
     When I navigate to the requests form of myself
     And I delete the attachment

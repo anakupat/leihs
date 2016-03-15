@@ -33,3 +33,4 @@ Feature: Exporting the data to a CSV-File
       | username |
       | Barbara  |
       | Roger    |
+      | Hans Ueli  |
