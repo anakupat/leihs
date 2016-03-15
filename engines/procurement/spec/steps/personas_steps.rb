@@ -45,13 +45,13 @@ module PersonasSteps
 
   def find_or_create_user(firstname, as_requester = false)
     user = ::User.find_by(firstname: firstname) || \
-            begin
-              new_user = FactoryGirl.create(:user, firstname: firstname)
-              FactoryGirl.create(:access_right,
-                                 user: new_user,
-                                 inventory_pool: FactoryGirl.create(:inventory_pool))
-              new_user
-            end
+      begin
+        new_user = FactoryGirl.create(:user, firstname: firstname)
+        FactoryGirl.create(:access_right,
+                           user: new_user,
+                           inventory_pool: FactoryGirl.create(:inventory_pool))
+        new_user
+    end
     if as_requester
       FactoryGirl.create :procurement_access, :requester, user: user
     end
