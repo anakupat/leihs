@@ -609,5 +609,3 @@ module CommonSteps
 
 end
 # rubocop:enable Metrics/ModuleLength
-
-RSpec.configure { |c| c.include CommonSteps }

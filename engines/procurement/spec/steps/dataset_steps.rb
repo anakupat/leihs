@@ -29,5 +29,3 @@ module DatasetSteps
   end
 
 end
-
-RSpec.configure { |c| c.include DatasetSteps }

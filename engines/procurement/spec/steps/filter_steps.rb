@@ -264,5 +264,3 @@ module FilterSteps
   end
 end
 # rubocop:enable Metrics/ModuleLength
-
-RSpec.configure { |c| c.include FilterSteps }

@@ -79,5 +79,3 @@ module PersonasSteps
     expect(page).to have_content user.short_name
   end
 end
-
-RSpec.configure { |c| c.include PersonasSteps }

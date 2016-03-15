@@ -1,3 +1,4 @@
+# rubocop:disable Metrics/ModuleLength
 module NavigationSteps
 
   step 'I am navigated to the new request form' do
@@ -174,5 +175,4 @@ module NavigationSteps
   end
 
 end
-
-RSpec.configure { |c| c.include NavigationSteps }
+# rubocop:enable Metrics/ModuleLength
