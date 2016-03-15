@@ -70,9 +70,10 @@ steps_for :inspection do
     within '.panel-success .panel-body' do
       displayed_groups.each do |group|
         within '.row', text: group.name do
-          amount = group.budget_limits
-                       .find_by(budget_period_id: Procurement::BudgetPeriod.current)
-                       .try(:amount) || 0
+          amount = \
+            group.budget_limits \
+              .find_by(budget_period_id: Procurement::BudgetPeriod.current)
+              .try(:amount) || 0
           find '.budget_limit',
                text: amount
         end
@@ -85,9 +86,10 @@ steps_for :inspection do
     within '.panel-success .panel-body' do
       displayed_groups.each do |group|
         within '.row', text: group.name do
-          amount = group.budget_limits
-                       .find_by(budget_period_id: Procurement::BudgetPeriod.current)
-                       .try(:amount).to_i
+          amount = \
+            group.budget_limits \
+              .find_by(budget_period_id: Procurement::BudgetPeriod.current)
+              .try(:amount).to_i
           used = Procurement::BudgetPeriod.current.requests
                      .where(group_id: group)
                      .map { |r| r.total_price(@current_user) }.sum.to_i
@@ -98,8 +100,8 @@ steps_for :inspection do
                        else
                          0
                        end
-          find '.progress-radial',
-               text: '%d%' % percentage
+          find('.progress-radial',
+               text: format('%d%', percentage))
         end
       end
     end
@@ -194,9 +196,12 @@ steps_for :inspection do
 
   step 'there is a budget period which has already ended' do
     current_budget_period = Procurement::BudgetPeriod.current
-    @past_budget_period = FactoryGirl.create :procurement_budget_period,
-                                             inspection_start_date: current_budget_period.inspection_start_date - 2.months,
-                                             end_date: current_budget_period.inspection_start_date - 1.month
+    @past_budget_period = \
+      FactoryGirl.create \
+        :procurement_budget_period,
+        inspection_start_date: \
+          current_budget_period.inspection_start_date - 2.months,
+        end_date: current_budget_period.inspection_start_date - 1.month
   end
 
 end
