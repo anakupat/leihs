@@ -45,13 +45,13 @@ module CommonSteps
     table.hashes.each do |value|
       n = value['quantity'].to_i
       user = case value['user']
-               when 'myself' then @current_user
-               else
+             when 'myself' then @current_user
+             else
                  find_or_create_user(value['user'], true)
              end
       h = {
-          user: user,
-          budget_period: current_budget_period
+        user: user,
+        budget_period: current_budget_period
       }
       if value['group'] == 'inspected' or not @group.nil?
         h[:group] = @group
