@@ -52,7 +52,7 @@ module PersonasSteps
                            inventory_pool: FactoryGirl.create(:inventory_pool))
         new_user
     end
-    if as_requester
+    if as_requester and Procurement::Access.requesters.find_by(user_id: user).nil?
       FactoryGirl.create :procurement_access, :requester, user: user
     end
     user

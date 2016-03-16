@@ -15,30 +15,6 @@ steps_for :inspection do
     FactoryGirl.create :location
   end
 
-  step 'following requests exist for the current budget period' do |table|
-    current_budget_period = Procurement::BudgetPeriod.current
-    table.hashes.each do |value|
-      n = value['quantity'].to_i
-      user = case value['user']
-             when 'myself' then @current_user
-             else
-                 find_or_create_user(value['user'], true)
-             end
-      h = {
-        user: user,
-        budget_period: current_budget_period
-      }
-      if value['group'] == 'inspected' or not @group.nil?
-        h[:group] = @group
-      end
-
-      n.times do
-        FactoryGirl.create :procurement_request, h
-      end
-      expect(current_budget_period.requests.where(user_id: user).count).to eq n
-    end
-  end
-
   step 'I can not move any request to the old budget period' do
     within '.request', match: :first do
       el = find('.btn-group .fa-gear')
