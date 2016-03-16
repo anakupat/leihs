@@ -2,6 +2,7 @@ require 'pry'
 require 'turnip/capybara'
 require 'rails_helper'
 require 'factory_girl'
+require 'database_cleaner'
 
 Dir.glob("engines/procurement/spec/steps/**/*.rb") { |f| load f, true }
 Dir.glob("engines/procurement/spec/factories/**/*factory.rb") { |f| load f, true }
@@ -20,21 +21,11 @@ RSpec.configure do |config|
 
   config.include Rails.application.routes.url_helpers
 
-  #debugging on CI# unless ENV['CIDER_CI_TRIAL_ID'].present?
-    require 'database_cleaner'
-    DatabaseCleaner.strategy = :truncation
-    DatabaseCleaner.clean_with(:truncation)
-
-    config.before(type: :feature) do
-      DatabaseCleaner.start
-    end
-
-    config.after(type: :feature) do
-      DatabaseCleaner.clean
-    end
-  #debugging on CI# end
+  DatabaseCleaner.strategy = :truncation
+  DatabaseCleaner.clean_with(:truncation)
 
   config.before(type: :feature) do
+    DatabaseCleaner.start
     FactoryGirl.create(:setting) unless Setting.first
     Capybara.current_driver = :firefox
     page.driver.browser.manage.window.maximize
@@ -48,6 +39,7 @@ RSpec.configure do |config|
     end
     page.driver.quit # OPTIMIZE force close browser popups
     Capybara.current_driver = Capybara.default_driver
+    DatabaseCleaner.clean
   end
 
   def take_screenshot(screenshot_dir = nil, name = nil)
