@@ -60,40 +60,7 @@ module Procurement
     end
 
     def create
-      keys = [:article_name, :model_id, :article_number, :price, :supplier_name,
-              :supplier_id, :motivation, :receiver, :location_name, :location_id,
-              :template_id, attachments_attributes: [:file]]
-      keys += [:approved_quantity,
-               :order_quantity,
-               :inspection_comment] if @group.inspectable_by?(current_user)
-
-      errors = params.require(:requests).values.map do |param|
-        to_permit_keys = if param[:id].blank? or @user == current_user
-                           keys + [:requested_quantity, :priority, :replacement]
-                         else
-                           keys
-                         end
-        permitted = param.permit(to_permit_keys)
-
-        if param[:id]
-          r = Request.find(param[:id])
-          param[:attachments_delete].each_pair do |k, v|
-            r.attachments.destroy(k) if v == '1'
-          end if param[:attachments_delete]
-          if permitted.values.all?(&:blank?)
-            r.destroy
-          else
-            r.update_attributes(permitted)
-          end
-        else
-          next if permitted[:motivation].blank?
-          r = @group.requests.create(permitted) do |x|
-            x.user = @user
-            x.budget_period = @budget_period
-          end
-        end
-        r.errors.full_messages
-      end.flatten.compact
+      errors = create_or_update_or_destroy
 
       if errors.empty?
         flash[:success] = _('Saved')
@@ -131,6 +98,39 @@ module Procurement
       else
         render status: :bad_request
       end
+    end
+
+    private
+
+    def create_or_update_or_destroy
+      keys = Request::REQUESTER_EDIT_KEYS
+      keys += Request::INSPECTOR_KEYS if @group.inspectable_by?(current_user)
+
+      params.require(:requests).values.map do |param|
+        if param[:id].blank? or @user == current_user
+          keys += Request::REQUESTER_NEW_KEYS
+        end
+        permitted = param.permit(keys)
+
+        if param[:id]
+          r = Request.find(param[:id])
+          param[:attachments_delete].each_pair do |k, v|
+            r.attachments.destroy(k) if v == '1'
+          end if param[:attachments_delete]
+          if permitted.values.all?(&:blank?)
+            r.destroy
+          else
+            r.update_attributes(permitted)
+          end
+        else
+          next if permitted[:motivation].blank?
+          r = @group.requests.create(permitted) do |x|
+            x.user = @user
+            x.budget_period = @budget_period
+          end
+        end
+        r.errors.full_messages
+      end.flatten.compact
     end
 
   end

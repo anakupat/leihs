@@ -16,9 +16,20 @@ module Procurement
     end
 
     def create
-      errors = params.require(:template_categories).values.map do |param|
-        # param = param.permit(:name, :template_attributes)
+      errors = create_or_update_or_destroy
 
+      if errors.empty?
+        flash[:success] = _('Saved')
+        head status: :ok
+      else
+        render json: errors, status: :internal_server_error
+      end
+    end
+
+    private
+
+    def create_or_update_or_destroy
+      params.require(:template_categories).values.map do |param|
         if param[:id]
           r = @group.template_categories.find(param[:id])
           if param.delete(:_destroy) == '1' or (param[:name].blank? \
@@ -30,18 +41,10 @@ module Procurement
         else
           next if param[:name].blank? \
             and param[:templates_attributes].flat_map(&:values).all?(&:blank?)
-          # param[:group_id] = params[:group_id]
           r = @group.template_categories.create(param)
         end
         r.errors.full_messages
       end.flatten.compact
-
-      if errors.empty?
-        flash[:success] = _('Saved')
-        head status: :ok
-      else
-        render json: errors, status: :internal_server_error
-      end
     end
 
   end

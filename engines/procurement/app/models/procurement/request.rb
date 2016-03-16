@@ -18,6 +18,13 @@ module Procurement
 
     monetize :price_cents, allow_nil: true
 
+    REQUESTER_NEW_KEYS = [:requested_quantity, :priority, :replacement]
+    REQUESTER_EDIT_KEYS = [:article_name, :model_id, :article_number, :price,
+                           :supplier_name, :supplier_id, :motivation, :receiver,
+                           :location_name, :location_id, :template_id,
+                           attachments_attributes: [:file]]
+    INSPECTOR_KEYS = [:approved_quantity, :order_quantity, :inspection_comment]
+
     #################################################################
 
     # NOTE not executing on unchanged existing records
