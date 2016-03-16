@@ -6,14 +6,10 @@ Feature: Exporting the data to a CSV-File
   @csv
   Scenario Outline: Export data
     Given I am <username>
-
-#FS# not possible for Hans Ueli
-#    And several requests created by myself exist
     And following requests exist for the current budget period
       | quantity | user    |
       | 2        | Barbara |
       | 3        | Roger   |
-
     When I navigate to the requests overview page
     And I export the shown information
     Then the following fields are exported
