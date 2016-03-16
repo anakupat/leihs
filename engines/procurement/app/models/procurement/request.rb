@@ -1,5 +1,8 @@
+require_dependency 'procurement/concerns/csv'
+
 module Procurement
   class Request < ActiveRecord::Base
+    include Csv
 
     belongs_to :budget_period
     belongs_to :group
@@ -89,12 +92,10 @@ module Procurement
         else
           raise
         end
+      elsif budget_period.in_inspection_phase?
+        :in_inspection
       else
-        if budget_period.in_inspection_phase?
-          :in_inspection
-        else
-          :new
-        end
+        :new
       end
     end
 
@@ -130,57 +131,6 @@ module Procurement
       end
       sql.joins(:user)
     }
-
-    #####################################################
-
-    def self.csv_export(requests, current_user)
-      require 'csv'
-
-      objects = []
-      requests.each do |request|
-        show_all = (not request.budget_period.in_requesting_phase?) \
-                      or request.group.inspectable_or_readable_by?(current_user)
-        objects << {
-          _('Budget period') => request.budget_period,
-          _('Group') => request.group,
-          _('Requester') => request.user,
-          _('Organisation unit') => request.organization.name_with_parent,
-          _('Article / Project') => request.article_name,
-          _('Article nr. / Producer nr.') => request.article_number,
-          _('Supplier') => request.supplier_name,
-          _('Requested quantity') => request.requested_quantity,
-          _('Approved quantity') => (show_all ? request.approved_quantity : nil),
-          _('Order quantity') => (show_all ? request.order_quantity : nil),
-          format('%s %s', _('Price'), _('incl. VAT')) => request.price,
-          format('%s %s', _('Total'), _('incl. VAT')) => \
-                                              request.total_price(current_user),
-          _('State') => _(request.state(current_user).to_s.humanize),
-          _('Priority') => request.priority,
-          _('Article nr. / Producer nr.') => request.article_number,
-          format('%s / %s', _('Replacement'), _('New')) => if request.replacement
-                                                             _('Replacement')
-                                                           else
-                                                              _('New')
-                                                           end,
-          _('Receiver') => request.receiver,
-          _('Point of Delivery') => request.location_name,
-          _('Motivation') => request.motivation,
-          _('Inspection comment') => (show_all ? request.inspection_comment : nil)
-        }
-      end
-
-      csv_header = objects.flat_map(&:keys).uniq
-
-      CSV.generate(col_sep: ';',
-                   quote_char: "\"",
-                   force_quotes: true,
-                   headers: :first_row) do |csv|
-        csv << csv_header
-        objects.each do |object|
-          csv << csv_header.map { |h| object[h] }
-        end
-      end
-    end
 
   end
 end
