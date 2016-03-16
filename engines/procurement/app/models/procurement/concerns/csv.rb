@@ -8,41 +8,7 @@ module Procurement
 
         objects = []
         requests.each do |request|
-          show_all = (not request.budget_period.in_requesting_phase?) \
-                      or request.group.inspectable_or_readable_by?(current_user)
-          objects << {
-            _('Budget period') => request.budget_period,
-            _('Group') => request.group,
-            _('Requester') => request.user,
-            _('Organisation unit') => request.organization.name_with_parent,
-            _('Article / Project') => request.article_name,
-            _('Article nr. / Producer nr.') => request.article_number,
-            _('Supplier') => request.supplier_name,
-            _('Requested quantity') => request.requested_quantity,
-            _('Approved quantity') => if show_all
-                                        request.approved_quantity
-                                      end,
-            _('Order quantity') => if show_all
-                                     request.order_quantity
-                                   end,
-            format('%s %s', _('Price'), _('incl. VAT')) => request.price,
-            format('%s %s', _('Total'), _('incl. VAT')) => \
-                                              request.total_price(current_user),
-            _('State') => _(request.state(current_user).to_s.humanize),
-            _('Priority') => request.priority,
-            _('Article nr. / Producer nr.') => request.article_number,
-            format('%s / %s', _('Replacement'), _('New')) => if request.replacement
-                                                                 _('Replacement')
-                                                             else
-                                                               _('New')
-                                                             end,
-            _('Receiver') => request.receiver,
-            _('Point of Delivery') => request.location_name,
-            _('Motivation') => request.motivation,
-            _('Inspection comment') => if show_all
-                                         request.inspection_comment
-                                       end
-          }
+          objects << request.csv_columns(current_user)
         end
 
         csv_header = objects.flat_map(&:keys).uniq
@@ -56,6 +22,37 @@ module Procurement
             csv << csv_header.map { |h| object[h] }
           end
         end
+      end
+
+      def csv_columns(current_user)
+        show_all = (not budget_period.in_requesting_phase?) \
+                      or group.inspectable_or_readable_by?(current_user)
+        {
+          _('Budget period') => budget_period,
+          _('Group') => group,
+          _('Requester') => user,
+          _('Organisation unit') => organization.name_with_parent,
+          _('Article / Project') => article_name,
+          _('Article nr. / Producer nr.') => article_number,
+          _('Supplier') => supplier_name,
+          _('Requested quantity') => requested_quantity,
+          _('Approved quantity') => show_all ? approved_quantity : nil,
+          _('Order quantity') => show_all ? order_quantity : nil,
+          format('%s %s', _('Price'), _('incl. VAT')) => price,
+          format('%s %s', _('Total'), _('incl. VAT')) => total_price(current_user),
+          _('State') => _(state(current_user).to_s.humanize),
+          _('Priority') => priority,
+          _('Article nr. / Producer nr.') => article_number,
+          format('%s / %s', _('Replacement'), _('New')) => if replacement
+                                                             _('Replacement')
+                                                           else
+                                                             _('New')
+                                                           end,
+          _('Receiver') => receiver,
+          _('Point of Delivery') => location_name,
+          _('Motivation') => motivation,
+          _('Inspection comment') => show_all ? inspection_comment : nil
+        }
       end
     end
 

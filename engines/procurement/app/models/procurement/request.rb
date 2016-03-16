@@ -53,11 +53,7 @@ module Procurement
     end
 
     validates_presence_of :user, :group, :organization, :article_name, :motivation
-    validates_presence_of :inspection_comment,
-                          if: proc { |r|
-                                r.approved_quantity \
-                                  and r.approved_quantity < r.requested_quantity
-                          }
+    validates_presence_of :inspection_comment, if: :not_completely_approved?
     validates :requested_quantity,
               presence: true,
               numericality: { greater_than: 0 }
@@ -139,5 +135,10 @@ module Procurement
       sql.joins(:user)
     }
 
+    private
+
+    def not_completely_approved?
+      approved_quantity and approved_quantity < requested_quantity
+    end
   end
 end
