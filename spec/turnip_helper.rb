@@ -20,7 +20,7 @@ RSpec.configure do |config|
 
   config.include Rails.application.routes.url_helpers
 
-  unless ENV['CIDER_CI_TRIAL_ID'].present?
+  #debugging on CI# unless ENV['CIDER_CI_TRIAL_ID'].present?
     require 'database_cleaner'
     DatabaseCleaner.strategy = :truncation
     DatabaseCleaner.clean_with(:truncation)
@@ -32,7 +32,7 @@ RSpec.configure do |config|
     config.after(type: :feature) do
       DatabaseCleaner.clean
     end
-  end
+  #debugging on CI# end
 
   config.before(type: :feature) do
     FactoryGirl.create(:setting) unless Setting.first

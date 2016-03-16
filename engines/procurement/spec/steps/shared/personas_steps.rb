@@ -19,9 +19,9 @@ module PersonasSteps
     @group = FactoryGirl.create(:procurement_group_inspector, user: persona).group
 #debugging on CI#
 puts "----"
-puts Procurement::Access.find_by(is_admin: false, user_id: persona).inspect
+puts persona.inspect
+puts Procurement::Access.all.inspect
     FactoryGirl.create(:procurement_access, :requester, user: persona)
-puts Procurement::Access.find_by(is_admin: false, user_id: persona).inspect
     login_as persona
     step 'I am inspector of this group'
   end
