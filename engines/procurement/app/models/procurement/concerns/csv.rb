@@ -27,10 +27,8 @@ module Procurement
       def csv_columns(current_user)
         show_all = (not budget_period.in_requesting_phase?) \
                       or group.inspectable_or_readable_by?(current_user)
-        {
-          _('Budget period') => budget_period,
-          _('Group') => group,
-          _('Requester') => user,
+        { _('Budget period') => budget_period,
+          _('Group') => group, _('Requester') => user,
           _('Organisation unit') => organization.name_with_parent,
           _('Article / Project') => article_name,
           _('Article nr. / Producer nr.') => article_number,
@@ -42,17 +40,11 @@ module Procurement
           format('%s %s', _('Total'), _('incl. VAT')) => total_price(current_user),
           _('State') => _(state(current_user).to_s.humanize),
           _('Priority') => priority,
-          _('Article nr. / Producer nr.') => article_number,
-          format('%s / %s', _('Replacement'), _('New')) => if replacement
-                                                             _('Replacement')
-                                                           else
-                                                             _('New')
-                                                           end,
+          format('%s / %s', _('Replacement'), _('New')) => \
+                                  replacement ? _('Replacement') : _('New'),
           _('Receiver') => receiver,
-          _('Point of Delivery') => location_name,
-          _('Motivation') => motivation,
-          _('Inspection comment') => show_all ? inspection_comment : nil
-        }
+          _('Point of Delivery') => location_name, _('Motivation') => motivation,
+          _('Inspection comment') => show_all ? inspection_comment : nil }
       end
     end
 

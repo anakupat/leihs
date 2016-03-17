@@ -113,15 +113,7 @@ module Procurement
         permitted = param.permit(keys)
 
         if param[:id]
-          r = Request.find(param[:id])
-          param[:attachments_delete].each_pair do |k, v|
-            r.attachments.destroy(k) if v == '1'
-          end if param[:attachments_delete]
-          if permitted.values.all?(&:blank?)
-            r.destroy
-          else
-            r.update_attributes(permitted)
-          end
+          r = update_or_destroy(param, permitted)
         else
           next if permitted[:motivation].blank?
           r = @group.requests.create(permitted) do |x|
@@ -131,6 +123,19 @@ module Procurement
         end
         r.errors.full_messages
       end.flatten.compact
+    end
+
+    def update_or_destroy(param, permitted)
+      r = Request.find(param[:id])
+      param[:attachments_delete].each_pair do |k, v|
+        r.attachments.destroy(k) if v == '1'
+      end if param[:attachments_delete]
+      if permitted.values.all?(&:blank?)
+        r.destroy
+      else
+        r.update_attributes(permitted)
+      end
+      r
     end
 
   end
