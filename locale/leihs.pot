@@ -3114,3 +3114,6 @@ msgstr ""
 
 msgid "selected"
 msgstr ""
+
+msgid "You are not authorized for this action."
+msgstr ""

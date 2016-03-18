@@ -14,8 +14,8 @@ steps_for :csv do
     # but invoking directly the model class method
 
     within '.sidebar-wrapper' do
-      # click_on _('CSV Export')
-      expect(page).to have_selector 'button', text: _('CSV Export')
+      # click_on _('CSV export')
+      expect(page).to have_selector 'button', text: _('CSV export')
     end
   end
 

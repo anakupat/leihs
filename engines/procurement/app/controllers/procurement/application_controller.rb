@@ -13,7 +13,7 @@ module Procurement
     # another controller
     before_action :authorize_if_admins_exist, except: :root
 
-    rescue_from Pundit::NotAuthorizedError, with: :system_not_ready
+    rescue_from Pundit::NotAuthorizedError, with: :handle_not_authorized
 
     def root
       authorize 'procurement/application'.to_sym, :current_budget_period_defined?
@@ -27,19 +27,22 @@ module Procurement
       authorize 'procurement/application'.to_sym, :admins_defined?
     end
 
-    def system_not_ready(exception)
+    def handle_not_authorized(exception)
       case exception.query
       when :authenticated?
-          flash.now[:error] = _('You are not logged in')
+        flash.now[:error] = _('You are not logged in')
 
       when :admins_defined?
-          flash.now[:error] = _('No admins defined yet')
+        flash.now[:error] = _('No admins defined yet')
 
       when :current_budget_period_defined?
-          flash.now[:error] = _('Current budget period not defined yet')
+        flash.now[:error] = _('Current budget period not defined yet')
 
       when :not_past?
-          flash.now[:error] = _('The budget period is closed')
+        flash.now[:error] = _('The budget period is closed')
+
+      else
+        flash.now[:error] = _('You are not authorized for this action.')
       end
 
       render action: :root

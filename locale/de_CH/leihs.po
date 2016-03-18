@@ -3211,3 +3211,6 @@ msgstr "Alle ausgewählt"
 
 msgid "selected"
 msgstr "selektiert"
+
+msgid "You are not authorized for this action."
+msgstr "Sie sind für diese Aktion nicht authorisiert."

@@ -1,6 +1,10 @@
 # rubocop:disable Metrics/ModuleLength
 module NavigationSteps
 
+  step 'I navigate to procurement' do
+    visit procurement.root_path
+  end
+
   step 'I am navigated to the new request form' do
     @user = @current_user
     step 'I am navigated to the new request form for the requester'

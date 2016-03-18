@@ -25,7 +25,7 @@ module DatasetSteps
   end
 
   step 'the current budget period exist' do
-    FactoryGirl.create(:procurement_budget_period)
+    @budget_period = FactoryGirl.create(:procurement_budget_period)
   end
 
 end

@@ -3,9 +3,9 @@ Feature: Description of roles
   @roles
   Scenario: Role Requester
     Given I am Roger
-    And a request exists
-    And a group mail exists
-    And I can manage my request
+    And the basic dataset is ready
+    Then I can manage my request
+    But I can not inspect certain fields
     And I can export the data
     And I can write an email to a group
     And I can move requests to other budget periods
@@ -22,19 +22,14 @@ Feature: Description of roles
   @roles
   Scenario: Role Inspector
     Given I am Barbara
-    And a budget period exists
-    And a group exists
-    And I am inspector of this group
-    And the group has a mail
-    And the group has a budget limit
-    And a request for my own group exists
-    And I can manage this request
+    And the basic dataset is ready
+    Then I can manage a request of group where I am an inspector
+    And I can inspect certain fields
     And I can export the data
     And I can write an email to a group
     And I can move requests of my own group to other budget periods
     And I can move requests of my own group to other groups
-    And I can inspect requests of my own group
-    And I can not create a request
+    # And I can not create a request ???
     And I can create requests for my group for another person
     And I can manage templates of my group
     And I can not add requester
@@ -46,23 +41,26 @@ Feature: Description of roles
   @roles
   Scenario: Role Administrator
     Given I am Hans Ueli
+    And the basic dataset is ready
+    When I navigate to procurement
     Then I can create a budget period
     And I can create a group
     And I can add requesters
-    And I can add Admins
-    And I can not a request created by myself exists
-    And a request created by someone else exists
+    And I can add admins
+    # And I can not a request created by myself exists ???
     And I can manage my request
     And I can read only the request of someone else
-    And I can export all data
+    And I can export the data
     And I can write an email to a group
+    # FAILING:
     And I can not move requests to other budget periods
-    And I can not  move requests to other groups
-    And I can not inspect requests of my own group
-    And I can not not create requests for another person
-    And I can not manage templates of groups
+    And I can not move requests to other groups
+    # FAILING:
+    And I can not create requests for another person
+    And I can not manage templates
 
   @roles
   Scenario: Role leihs Admin
     Given I am Gino
-    Then I can assign the first Admin of the procurement
+    When I navigate to procurement
+    Then I can assign the first admin of the procurement
