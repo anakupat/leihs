@@ -4,7 +4,8 @@ Feature: Description of roles
   Scenario: Role Requester
     Given I am Roger
     And the basic dataset is ready
-    Then I can create my request
+    And I navigate to procurement
+    Then I can create a request for myself
     And I can edit my request
     And I can delete my request
     But I can not see the field "order quantity"
@@ -26,6 +27,7 @@ Feature: Description of roles
   Scenario: Role Inspector
     Given I am Barbara
     And the basic dataset is ready
+    And I navigate to procurement
     Then I can edit a request of group where I am an inspector
     And I can delete a request of group where I am an inspector
     And I can modify the field "order quantity"
@@ -48,7 +50,7 @@ Feature: Description of roles
   Scenario: Role Administrator
     Given I am Hans Ueli
     And the basic dataset is ready
-    When I navigate to procurement
+    And I navigate to procurement
     Then I can create a budget period
     And I can create a group
     And I can add requesters
@@ -65,5 +67,5 @@ Feature: Description of roles
   @roles
   Scenario: Role leihs Admin
     Given I am Gino
-    When I navigate to procurement
+    And I navigate to procurement
     Then I can assign the first admin of the procurement

@@ -7,24 +7,45 @@ steps_for :roles do
   include NavigationSteps
   include PersonasSteps
 
-  step 'I can manage my request' do
-    step 'I navigate to procurement'
+  step 'I can create a request for myself' do
+    visit procurement.overview_requests_path
+    find("a[href*='new_request']").click
+  end
+
+  step 'I can edit my request' do
     prepare_request
     go_to_request
+    find("[name='requests[#{@request.id}][article_name]']").set Faker::Lorem.word
+    find('button', text: _('Save'), match: :first).click
+    expect(page).to have_content _('Saved')
   end
 
-  step 'I can not inspect certain fields' do
-    expect(page).not_to \
-      have_selector "input[name='requests[#{@request.id}][approved_quantity]']"
-    expect(page).not_to \
-      have_selector "input[name='requests[#{@request.id}][inspection_comment]']"
+  step 'I can delete my request' do
+    prepare_request
+    go_to_request
+    find(".row[data-request_id='#{@request.id}'] button .fa-gear").click
+    accept_alert do
+      click_link _('Delete')
+    end
+    expect(page).to have_content _('Deleted')
   end
 
-  step 'I can inspect certain fields' do
-    expect(page).to \
-      have_selector "input[name='requests[#{@request.id}][approved_quantity]']"
-    expect(page).to \
-      have_selector "input[name='requests[#{@request.id}][inspection_comment]']"
+  step 'I can not see the field "order quantity"' do
+    prepare_request
+    go_to_request
+    expect(page).not_to have_selector "input[name*='order_quantity']"
+  end
+
+  step 'I can not see the field "approved quantity"' do
+    prepare_request
+    go_to_request
+    expect(page).not_to have_selector "input[name*='approved_quantity']"
+  end
+
+  step 'I can not see the field "inspection comment"' do
+    prepare_request
+    go_to_request
+    expect(page).not_to have_selector "input[name*='inspection_comment']"
   end
 
   step 'I can export the data' do
