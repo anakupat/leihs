@@ -22,6 +22,14 @@ module PersonasSteps
     step 'I am inspector of this group'
   end
 
+  # inspector
+  step 'I am Anna' do
+    persona = create_persona('Anna')
+    @group = FactoryGirl.create(:procurement_group_inspector, user: persona).group
+    login_as persona
+    step 'I am inspector of this group'
+  end
+
   # leihs admin
   step 'I am Gino' do
     persona = create_persona('Gino')

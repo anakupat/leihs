@@ -25,14 +25,14 @@ Feature: Description of roles
 
   @roles
   Scenario: Role Inspector
-    Given I am Barbara
+    Given I am Anna
     And the basic dataset is ready
     And I navigate to procurement
     Then I can edit a request of group where I am an inspector
     And I can delete a request of group where I am an inspector
-    And I can modify the field "order quantity"
-    And I can modify the field "approved quantity"
-    And I can modify the field "inspection comment"
+    And I can modify the field "order quantity" of other person's request
+    And I can modify the field "approved quantity" of other person's request
+    And I can modify the field "inspection comment" of other person's request
     And I can export the data
     And I can write an email to a group
     And I can move requests of my own group to other budget periods

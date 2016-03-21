@@ -48,6 +48,49 @@ steps_for :roles do
     expect(page).not_to have_selector "input[name*='inspection_comment']"
   end
 
+  step 'I can modify the field "order quantity" of other person\'s request' do
+    requester = FactoryGirl.create(:user)
+    FactoryGirl.create(:procurement_access,
+                       user: requester,
+                       organization: \
+                         FactoryGirl.create(:procurement_organization))
+    prepare_request requester: requester
+    @group.inspectors << @current_user
+    go_to_request user: requester
+    find("[name='requests[#{@request.id}][order_quantity]']").set 5
+    find('button', text: _('Save'), match: :first).click
+    expect(page).to have_content _('Saved')
+  end
+
+  step 'I can modify the field "approved quantity" of other person\'s request' do
+    requester = FactoryGirl.create(:user)
+    FactoryGirl.create(:procurement_access,
+                       user: requester,
+                       organization: \
+                         FactoryGirl.create(:procurement_organization))
+    prepare_request requester: requester
+    @group.inspectors << @current_user
+    go_to_request user: requester
+    find("[name='requests[#{@request.id}][approved_quantity]']").set 5
+    find('button', text: _('Save'), match: :first).click
+    expect(page).to have_content _('Saved')
+  end
+
+  step 'I can modify the field "inspection comment" of other person\'s request' do
+    requester = FactoryGirl.create(:user)
+    FactoryGirl.create(:procurement_access,
+                       user: requester,
+                       organization: \
+                         FactoryGirl.create(:procurement_organization))
+    prepare_request requester: requester
+    @group.inspectors << @current_user
+    go_to_request user: requester
+    find("[name='requests[#{@request.id}][inspection_comment]']")
+      .set Faker::Lorem.word
+    find('button', text: _('Save'), match: :first).click
+    expect(page).to have_content _('Saved')
+  end
+
   step 'I can export the data' do
     FactoryGirl.create(:procurement_request, user: @current_user)
     step 'I navigate to procurement'
@@ -177,6 +220,18 @@ steps_for :roles do
     expect(page).to have_content _('You are not authorized for this action.')
   end
 
+  step 'I can not create a request for myself' do
+    @budget_period = FactoryGirl.create(:procurement_budget_period)
+    @group = FactoryGirl.create(:procurement_group)
+    visit procurement.overview_requests_path
+    expect(page).not_to have_selector("a[href*='new_request']")
+
+    visit procurement.choose_group_budget_period_users_path \
+      group_id: @group.id,
+      budget_period_id: @budget_period.id
+    expect(page).to have_content _('You are not authorized for this action.')
+  end
+
   step 'I can not see budget limits' do
     prepare_request
     FactoryGirl.create(:procurement_budget_limit,
@@ -186,7 +241,7 @@ steps_for :roles do
     expect(page).not_to have_selector '.budget_limit'
   end
 
-  step 'I can manage a request of group where I am an inspector' do
+  step 'I can edit a request of group where I am an inspector' do
     requester = FactoryGirl.create(:user)
     FactoryGirl.create(:procurement_access,
                        user: requester,
@@ -198,6 +253,22 @@ steps_for :roles do
     find("[name='requests[#{@request.id}][article_name]']").set Faker::Lorem.word
     find('button', text: _('Save'), match: :first).click
     expect(page).to have_content _('Saved')
+  end
+
+  step 'I can delete a request of group where I am an inspector' do
+    requester = FactoryGirl.create(:user)
+    FactoryGirl.create(:procurement_access,
+                       user: requester,
+                       organization: \
+                         FactoryGirl.create(:procurement_organization))
+    prepare_request requester: requester
+    @group.inspectors << @current_user
+    go_to_request user: requester
+    find(".row[data-request_id='#{@request.id}'] button .fa-gear").click
+    accept_alert do
+      click_link _('Delete')
+    end
+    expect(page).to have_content _('Deleted')
   end
 
   step 'I can move requests of my own group to other budget periods' do
