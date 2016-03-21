@@ -52,8 +52,11 @@ When(/^I add an option$/) do
   field_value = @option.name
   find('[data-add-contract-line]').set field_value
   find(".ui-autocomplete a[title='#{field_value}']", match: :prefer_exact, text: field_value).click
-  @option_line = OptionLine.find find(".line[data-line-type='option_line']", match: :prefer_exact, text: @option.name)['data-id']
-  @line_css = ".line[data-id='#{@option_line.id}']"
+  within '#lines' do
+    el = find(".line[data-line-type='option_line']", match: :prefer_exact, text: @option.name)
+    @option_line = OptionLine.find el['data-id']
+    @line_css = ".line[data-id='#{@option_line.id}']"
+  end
 end
 
 # Which implementation is better?
