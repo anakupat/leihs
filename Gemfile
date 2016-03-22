@@ -26,7 +26,7 @@ gem 'jsrender-rails', '~> 1.2', git: 'https://github.com/spape/jsrender-rails.gi
 gem 'liquid', '~> 3.0'
 gem 'mini_magick', '~> 3.4'
 gem 'money-rails', '~>1.4'
-gem 'mysql2', '~> 0.4', platform: :mri
+gem 'mysql2', '~> 0.3.11', platform: :mri
 gem 'net-ldap', require: 'net/ldap'
 gem 'nilify_blanks', '~> 1.1'
 gem 'paperclip', '~> 4.3'
@@ -67,7 +67,6 @@ group :development do
 end
 
 group :test do
-  gem 'capybara', '2.5.0'
   gem 'ladle'
   gem 'open4'
   gem 'rack_session_access', '~> 0.1.1'
@@ -75,11 +74,9 @@ group :test do
 end
 
 group :development, :test do
-  gem 'better_errors'
-  gem 'binding_of_caller'
   gem 'byebug' # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'cider_ci-support'
-  gem 'cucumber-rails', '1.4.2', require: false # it already includes capybara # NOTE '~> 1.4' doesn't work beacause 'gherkin'
+  gem 'cucumber-rails', '~> 1.3', require: false # it already includes capybara
   gem 'database_cleaner'
   gem 'factory_girl_rails', '~> 4.1'
   gem 'faker', '1.3.0' # NOTE '~> 1.4' doesn't work beacause "I18n::InvalidLocale" error, see note for config.i18n in config/application.rb
