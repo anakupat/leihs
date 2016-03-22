@@ -1,7 +1,5 @@
 source 'http://rubygems.org'
 
-gem 'psych', '2.0.5' # NOTE 2.0.16 doesn't work
-
 gem 'leihs_admin', path: "engines/leihs_admin"
 gem 'procurement', path: "engines/procurement"
 
@@ -69,6 +67,7 @@ group :development do
 end
 
 group :test do
+  gem 'capybara', '2.5.0'
   gem 'ladle'
   gem 'open4'
   gem 'rack_session_access', '~> 0.1.1'
