@@ -8,8 +8,8 @@ Gem::Specification.new do |s|
   s.name        = 'procurement'
   s.version     = Procurement::VERSION
   s.authors     = ['Franco Sellitto']
-  s.email       = ['franco.sellitto@zhdk.ch']
-  s.homepage    = 'https://github.com/zhdk/leihs'
+  s.email       = []
+  s.homepage    = 'https://github.com/leihs/leihs'
   s.summary     = 'leihs procurement'
   s.description = 'leihs procurement'
   s.license     = 'MIT'
