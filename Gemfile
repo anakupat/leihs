@@ -5,7 +5,7 @@ gem 'psych', '2.0.5' # NOTE 2.0.16 doesn't work
 gem 'leihs_admin', path: "engines/leihs_admin"
 gem 'procurement', path: "engines/procurement"
 
-gem 'rails', '4.2.5'
+gem 'rails', '4.2.6'
 
 gem 'activerecord-jdbcmysql-adapter', platform: :jruby
 gem 'acts-as-dag', '~> 4.0' # alternative: 'dagnabit'
