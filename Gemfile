@@ -69,7 +69,6 @@ group :development do
 end
 
 group :test do
-  gem 'capybara-rails'
   gem 'ladle'
   gem 'open4'
   gem 'rack_session_access', '~> 0.1.1'
