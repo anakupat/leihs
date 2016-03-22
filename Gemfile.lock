@@ -589,17 +589,17 @@ DEPENDENCIES
   psych (= 2.0.5)
   rack_session_access (~> 0.1.1)
   rails (= 4.2.6)
-  rails-assets-accounting.js (~> 0.4)
-  rails-assets-fullcalendar (~> 1.5)
-  rails-assets-jquery (~> 1.5)
-  rails-assets-jquery-autosize (~> 1.18)
-  rails-assets-jquery-ui (~> 1.1)
-  rails-assets-jquery-ujs (~> 1.0)
-  rails-assets-jquery.inview (~> 1.0)
-  rails-assets-moment (~> 2.10)
-  rails-assets-timecop (~> 0.1)
-  rails-assets-underscore (~> 1.8)
-  rails-assets-uri.js (~> 1.16)
+  rails-assets-accounting.js (~> 0.4)!
+  rails-assets-fullcalendar (~> 1.5)!
+  rails-assets-jquery (~> 1.5)!
+  rails-assets-jquery-autosize (~> 1.18)!
+  rails-assets-jquery-ui (~> 1.1)!
+  rails-assets-jquery-ujs (~> 1.0)!
+  rails-assets-jquery.inview (~> 1.0)!
+  rails-assets-moment (~> 2.10)!
+  rails-assets-timecop (~> 0.1)!
+  rails-assets-underscore (~> 1.8)!
+  rails-assets-uri.js (~> 1.16)!
   rails_autolink (~> 1.0)
   rake
   redcarpet
