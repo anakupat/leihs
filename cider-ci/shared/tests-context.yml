@@ -79,7 +79,7 @@ task-defaults:
         export DISPLAY=":$XVNC_PORT" \
         # && rm -rf coverage \
         && ruby -v \
-        && bundle exec cucumber -p default -f json -o log/cucumber_report.json $CIDER_CI_TASK_FILE
+        && bundle exec cucumber -p default $CIDER_CI_TASK_FILE
       start-when:
       - script: start-vnc
       - script: create-database

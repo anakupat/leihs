@@ -20,7 +20,7 @@ end
 
 def task_for_feature_file file_path, _timeout = 200
   name= file_path.match(/features\/(.*)\.feature/).captures.first
-  exec = %{DISPLAY=\":$XVNC_PORT\" bundle exec cucumber -p default -f json -o log/cucumber_report.json #{STRICT_MODE ? "--strict " : nil}"#{file_path}"}
+  exec = %{DISPLAY=\":$XVNC_PORT\" bundle exec cucumber -p default #{STRICT_MODE ? "--strict " : nil}"#{file_path}"}
   task_hash(name, exec)
 end
 
@@ -79,7 +79,7 @@ def create_scenario_tasks(filepath, feature_files_paths, test_with, tags = nil)
         path = ([k] + lines).join(':')
         case test_with
         when :cucumber
-          exec = "DISPLAY=\":$XVNC_PORT\" bundle exec cucumber -p default %s -f json -o log/cucumber_report.json #{STRICT_MODE ? "--strict " : nil}%s DEFAULT_BROWSER=%s" % [require, path, DEFAULT_BROWSER]
+          exec = "DISPLAY=\":$XVNC_PORT\" bundle exec cucumber -p default %s #{STRICT_MODE ? "--strict " : nil}%s DEFAULT_BROWSER=%s" % [require, path, DEFAULT_BROWSER]
         when :rspec
           exec = "DISPLAY=\":$XVNC_PORT\" bundle exec rspec #{path}"
         else
