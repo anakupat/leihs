@@ -241,8 +241,12 @@ steps_for :procurement_groups do
   private
 
   def add_to_inspectors_field(name)
-    find('.row', text: _('Inspectors')).find('input').set name
-    find('.token-input-dropdown', text: name).click
+    within '.row', text: _('Inspectors') do
+      find('input').set name
+    end
+    within '.token-input-dropdown' do
+      find('li', text: name).click
+    end
   end
 
   def set_budget_limit(name, limit)

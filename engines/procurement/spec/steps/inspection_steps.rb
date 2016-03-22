@@ -17,12 +17,7 @@ steps_for :inspection do
 
   step 'I can not move any request to the old budget period' do
     within '.request', match: :first do
-      el = find('.btn-group .fa-gear')
-      btn = el.find(:xpath, './/parent::button//parent::div')
-      btn.click unless btn['class'] =~ /open/
-      within btn do
-        expect(page).to have_no_selector('a', text: @past_budget_period.to_s)
-      end
+      link_on_dropdown(@past_budget_period.to_s, false)
     end
   end
 

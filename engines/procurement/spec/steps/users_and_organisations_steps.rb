@@ -123,7 +123,9 @@ steps_for :users_and_organisations do
             || FactoryGirl.create(:user)
     find('.token-input-list .token-input-input-token input#token-input-')
       .set @user.name
-    find('.token-input-dropdown li', text: @user.name).click
+    within '.token-input-dropdown' do
+      find('li', text: @user.name).click
+    end
   end
 
   step 'I can add the first admin' do

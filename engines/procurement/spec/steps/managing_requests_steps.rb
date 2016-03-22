@@ -73,12 +73,7 @@ steps_for :managing_requests do
         .where('end_date > ?', request.budget_period.end_date).first
 
     within ".request[data-request_id='#{request.id}']" do
-      el = find('.btn-group .fa-gear')
-      btn = el.find(:xpath, './/parent::button//parent::div')
-      btn.click unless btn['class'] =~ /open/
-      within btn do
-        click_on next_budget_period.name
-      end
+      link_on_dropdown(next_budget_period.name).click
     end
 
     expect(page).to have_content _('Request moved')
@@ -91,12 +86,7 @@ steps_for :managing_requests do
     other_group = Procurement::Group.where.not(id: request.group_id).first
 
     within ".request[data-request_id='#{request.id}']" do
-      el = find('.btn-group .fa-gear')
-      btn = el.find(:xpath, './/parent::button//parent::div')
-      btn.click unless btn['class'] =~ /open/
-      within btn do
-        click_on other_group.name
-      end
+      link_on_dropdown(other_group.name).click
     end
 
     expect(page).to have_content _('Request moved')
@@ -208,12 +198,7 @@ steps_for :managing_requests do
 
   step 'I delete the request' do
     within ".request[data-request_id='#{@request.id}']" do
-      el = find('.btn-group .fa-gear')
-      btn = el.find(:xpath, './/parent::button//parent::div')
-      btn.click unless btn['class'] =~ /open/
-      within btn do
-        click_on _('Delete')
-      end
+      link_on_dropdown(_('Delete')).click
     end
   end
 

@@ -95,12 +95,7 @@ steps_for :periods_and_states do
       visit_request(@request)
     end
     if has_selector? '.btn-group .fa-gear'
-      el = find('.btn-group .fa-gear')
-      btn = el.find(:xpath, './/parent::button//parent::div')
-      btn.click unless btn['class'] =~ /open/
-      within btn do
-        expect(page).to have_no_selector('a', text: _('Delete'))
-      end
+      link_on_dropdown(_('Delete'), false)
     else
       expect(page).to have_no_selector "form [type='submit']"
       expect(@request.editable?(@current_user)).to be false

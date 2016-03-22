@@ -253,12 +253,7 @@ module CommonSteps
   step 'I move a request to the future budget period' do
     within '.request', match: :first do
       @request = Procurement::Request.find current_scope['data-request_id']
-      el = find('.btn-group .fa-gear')
-      btn = el.find(:xpath, './/parent::button//parent::div')
-      btn.click unless btn['class'] =~ /open/
-      within btn do
-        find('a', text: @future_budget_period.to_s).click
-      end
+      link_on_dropdown(@future_budget_period.to_s).click
     end
 
     @changes = {
@@ -279,12 +274,7 @@ module CommonSteps
                        groups.first
                      end
 
-      el = find('.btn-group .fa-gear')
-      btn = el.find(:xpath, './/parent::button//parent::div')
-      btn.click unless btn['class'] =~ /open/
-      within btn do
-        find('a', text: @other_group.to_s).click
-      end
+      link_on_dropdown(@other_group.to_s).click
     end
 
     @changes = {
@@ -590,6 +580,20 @@ module CommonSteps
     .exec_query('SELECT CURDATE()').rows.flatten.first
     if mysql_now != Time.zone.today
       raise 'MySQL current datetime has not been changed'
+    end
+  end
+
+  def link_on_dropdown(link_string, present = true)
+    el = find('.btn-group .fa-gear')
+    btn = el.find(:xpath, './/parent::button')
+    wrapper = btn.find(:xpath, './/parent::div')
+    btn.click unless wrapper['class'] =~ /open/
+    within wrapper do
+      if present
+        find('a', text: link_string)
+      else
+        expect(page).to have_no_selector('a', text: link_string)
+      end
     end
   end
 
