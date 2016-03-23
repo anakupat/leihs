@@ -164,8 +164,7 @@ Then /^I see all the values of the item in an overview with model name and the m
 end
 
 Then /^the changed values are highlighted$/ do
-  find('#field-selection .field', match: :first)
-  all('#field-selection .field').each do |selected_field|
+  all('#field-selection .field', minimum: 1).each do |selected_field|
     c = all("#item-section .field[data-id='#{selected_field['data-id']}'].success").count + all("#item-section .field[data-id='#{selected_field['data-id']}'].error").count
     expect(c).to eq 1
   end
