@@ -31,7 +31,7 @@
             %i.fa.fa-shopping-cart
             = group
             - unless budget_period.past?
-              - if budget_period.in_requesting_phase? and procurement_requester?
+              - if procurement_requester? and (budget_period.in_requesting_phase? or group.inspectable_by? current_user)
                 %a{href: group_budget_period_user_requests_path(group, budget_period, current_user, request_id: 'new_request'), title: _('Add article for this group'), data: {toggle: 'tooltip'}}
                   %i.fa.fa-plus-circle
               - if group.inspectable_by? current_user
