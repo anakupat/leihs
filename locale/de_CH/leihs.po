@@ -3214,3 +3214,16 @@ msgstr "selektiert"
 
 msgid "You are not authorized for this action."
 msgstr "Sie sind für diese Aktion nicht authorisiert."
+
+msgid "No budget period defined yet"
+msgstr "Es ist noch keine Budgetperiode vorhanden"
+
+msgid "No groups defined yet"
+msgstr "Es ist noch keine Gruppe vorhanden"
+
+msgid "No admins defined yet"
+msgstr "Es wurde noch kein Administrator erfasst"
+
+msgid "No requesters defined yet"
+msgstr "Es wurde noch kein/e AntragstellerIn erfasst"
+
