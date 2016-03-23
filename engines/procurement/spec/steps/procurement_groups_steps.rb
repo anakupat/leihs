@@ -244,9 +244,8 @@ steps_for :procurement_groups do
     within '.row', text: _('Inspectors') do
       find('input').set name
     end
-    within '.token-input-dropdown' do
-      find('li', text: name).click
-    end
+    # OPTIMIZE: click should be on a <li>
+    find('.token-input-dropdown', text: name).click
   end
 
   def set_budget_limit(name, limit)

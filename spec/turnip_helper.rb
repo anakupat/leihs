@@ -7,12 +7,10 @@ require 'database_cleaner'
 Dir.glob("engines/procurement/spec/steps/**/*.rb") { |f| load f, true }
 Dir.glob("engines/procurement/spec/factories/**/*factory.rb") { |f| load f, true }
 
-Capybara.register_driver :firefox do |app|
-  Capybara::Selenium::Driver.new app, browser: :firefox
-end
-
-Capybara.register_driver :phantomjs do |app|
-  Capybara::Selenium::Driver.new app, browser: :phantomjs
+[:firefox, :chrome, :phantomjs].each do |browser|
+  Capybara.register_driver browser do |app|
+    Capybara::Selenium::Driver.new app, browser: browser
+  end
 end
 
 RSpec.configure do |config|

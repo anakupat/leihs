@@ -7,11 +7,12 @@ When 'I scroll to the bottom of the page' do
 end
 
 When 'I fetch all pages of the list' do
-  find('#inventory > .line', match: :first)
-  within '#inventory' do
-    all('.page[data-page]').each do |data_page|
-      data_page.click
-      data_page.find('.line div', match: :first)
+  if has_selector? '#inventory > .line'
+    within '#inventory' do
+      all('.page[data-page]').each do |data_page|
+        data_page.click
+        data_page.find('.line div', match: :first)
+      end
     end
   end
 end

@@ -26,7 +26,7 @@ gem 'jsrender-rails', '~> 1.2', git: 'https://github.com/spape/jsrender-rails.gi
 gem 'liquid', '~> 3.0'
 gem 'mini_magick', '~> 3.4'
 gem 'money-rails', '~>1.4'
-gem 'mysql2', '~> 0.3.11', platform: :mri
+gem 'mysql2', '~> 0.4', platform: :mri
 gem 'net-ldap', require: 'net/ldap'
 gem 'nilify_blanks', '~> 1.1'
 gem 'paperclip', '~> 4.3'
@@ -67,7 +67,6 @@ group :development do
 end
 
 group :test do
-  gem 'cucumber-rails', '1.4.2', require: false # it already includes capybara # NOTE '~> 1.4' doesn't work beacause 'gherkin'
   gem 'ladle'
   gem 'open4'
   gem 'rack_session_access', '~> 0.1.1'
@@ -77,6 +76,7 @@ end
 group :development, :test do
   gem 'byebug' # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'cider_ci-support'
+  gem 'cucumber-rails', '1.4.2', require: false # it already includes capybara # NOTE '~> 1.4' doesn't work beacause 'gherkin'
   gem 'database_cleaner'
   gem 'factory_girl_rails', '~> 4.1'
   gem 'faker', '1.3.0' # NOTE '~> 1.4' doesn't work beacause "I18n::InvalidLocale" error, see note for config.i18n in config/application.rb
@@ -85,12 +85,12 @@ group :development, :test do
   gem 'haml-lint'
   gem 'launchy', '~> 2.1'
   gem 'meta_request'
-  gem 'phantomjs', '~> 1.9.8' # headless webdriver (UI & JS tests)
+  gem 'phantomjs', '~> 2.1' # headless webdriver (UI & JS tests)
   gem 'pry'
   gem 'pry-rails'
   gem 'redcarpet' # This isn't being pulled in by yard, but it's required
   gem 'rspec-rails', '~> 3.0', require: false
-  gem 'selenium-webdriver'
+  gem 'selenium-webdriver', '~> 2.53'
   gem 'spring' # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'timecop', '~> 0.7'
   gem 'yard'
