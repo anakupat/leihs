@@ -118,11 +118,10 @@ When /^I type the beginning of (.*?) name to the add\/assign input field$/ do |t
 end
 
 Then /^I see a list of suggested (.*?) names$/ do |type|
-  # NOTE trick closing possible dropdowns
-  find('body').click
-
-  find('[data-add-contract-line]').click
-  find('.ui-autocomplete a', match: :first)
+  #needed??# find('[data-add-contract-line]').click
+  within '.ui-autocomplete' do
+    find('a', match: :first)
+  end
 end
 
 Then(/^I see that model in the list of suggested model names as "(.*?)"$/) do |arg1|
