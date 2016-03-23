@@ -69,6 +69,7 @@ end
 def type_into_autocomplete(selector, value)
   raise 'please provide a value' if value.size.zero?
   step 'I release the focus from this field'
+  find(selector).click
   find(selector).set value
   find('.ui-autocomplete')
 end
