@@ -44,7 +44,9 @@ Then /^I set all their initial values$/ do
         end
       when 'date'
         dp = field_el.find("[data-type='datepicker']")
-        dp.click
+        ori_value = dp.value
+        dp.set ''
+        dp.set ori_value
         within '.ui-datepicker-calendar' do
           find('.ui-state-highlight, .ui-state-active', visible: true, match: :first).click
         end
