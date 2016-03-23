@@ -92,15 +92,29 @@ steps_for :roles do
   end
 
   step 'I can export the data' do
-    FactoryGirl.create(:procurement_request, user: @current_user)
+    FactoryGirl.create(:procurement_request)
     step 'I navigate to procurement'
     find('button', text: _('CSV export')).click
     find('body').click
   end
 
-  step 'I can write an email to a group' do
+  step 'I can write an email to a group from the view of my request' do
     prepare_request
     go_to_request
+    find("a[href*='mailto:#{@group.email}']")
+  end
+
+  step 'I can write an email to a group from the view of other\'s request' do
+    requester = FactoryGirl.create(:user)
+    FactoryGirl.create(:procurement_access,
+                       user: requester,
+                       organization: \
+                         FactoryGirl.create(:procurement_organization))
+    prepare_request requester: requester
+    unless Procurement::Access.admins.find_by(user_id: @current_user.id)
+      @group.inspectors << @current_user
+    end
+    go_to_request user: requester
     find("a[href*='mailto:#{@group.email}']")
   end
 
@@ -114,15 +128,6 @@ steps_for :roles do
     expect(page).to have_content _('Request moved')
   end
 
-  step 'I can not move requests to other budget periods' do
-    new_budget_period = FactoryGirl.create(:procurement_budget_period)
-    prepare_request
-    go_to_request
-    find(".row[data-request_id='#{@request.id}'] button .fa-gear").click
-    expect(page).not_to \
-      have_selector("a[href*='move?to_budget_period_id=#{new_budget_period.id}']")
-  end
-
   step 'I can move requests to other groups' do
     new_group = FactoryGirl.create(:procurement_group)
     prepare_request
@@ -130,15 +135,6 @@ steps_for :roles do
     find(".row[data-request_id='#{@request.id}'] button .fa-gear").click
     find("a[href*='move?to_group_id=#{new_group.id}']").click
     expect(page).to have_content _('Request moved')
-  end
-
-  step 'I can not move requests to other groups' do
-    new_group = FactoryGirl.create(:procurement_group)
-    prepare_request
-    go_to_request
-    find(".row[data-request_id='#{@request.id}'] button .fa-gear").click
-    expect(page).not_to \
-      have_content("a[href*='move?to_group_id=#{new_group.id}']")
   end
 
   step 'I can not inspect requests' do
@@ -364,7 +360,8 @@ steps_for :roles do
   def prepare_request(requester: @current_user)
     @budget_period = FactoryGirl.create(:procurement_budget_period)
     @group = FactoryGirl.create(:procurement_group)
-    unless Procurement::Access.requesters.find_by(user_id: @current_user.id)
+    if requester == @current_user and not \
+        Procurement::Access.requesters.find_by(user_id: @current_user.id)
       FactoryGirl.create :procurement_access, :requester, user: @current_user
     end
     @request = FactoryGirl.create(:procurement_request,

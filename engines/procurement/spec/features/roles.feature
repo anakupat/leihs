@@ -12,7 +12,7 @@ Feature: Description of roles
     And I can not see the field "approved quantity"
     And I can not see the field "inspection comment"
     And I can export the data
-    And I can write an email to a group
+    And I can write an email to a group from the view of my request
     And I can move requests to other budget periods
     And I can move requests to other groups
     And I can not add requester
@@ -34,7 +34,7 @@ Feature: Description of roles
     And I can modify the field "approved quantity" of other person's request
     And I can modify the field "inspection comment" of other person's request
     And I can export the data
-    And I can write an email to a group
+    And I can write an email to a group from the view of other's request
     And I can move requests of my own group to other budget periods
     And I can move requests of my own group to other groups
     And I can not create a request for myself
@@ -57,9 +57,7 @@ Feature: Description of roles
     And I can add admins
     And I can read only the request of someone else
     And I can export the data
-    And I can write an email to a group
-    And I can not move requests to other budget periods
-    And I can not move requests to other groups
+    And I can write an email to a group from the view of other's request
     And I can not create a request for myself
     And I can not create requests for another person
     And I can not manage templates
