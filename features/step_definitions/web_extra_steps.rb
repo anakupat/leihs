@@ -10,8 +10,8 @@ When 'I fetch all pages of the list' do
   if has_selector? '#inventory > .line'
     within '#inventory' do
       all('.page[data-page]').each do |data_page|
-        data_page.click
-        data_page.find('.line div', match: :first)
+        page.driver.browser.action.move_to(data_page.native).perform
+        expect(data_page).to have_selector '.line div'
       end
     end
   end
