@@ -71,7 +71,7 @@ Then /^the (.*?) is added to the hand over$/ do |type|
     when 'option'
       find(".line[data-line-type='option_line'] .col1of10", match: :prefer_exact, text: @inventory_code)
       option = Option.find_by_inventory_code(@inventory_code)
-      find('#flash .notice', text: _('Added %s') % option.name)
+      find('#flash', text: option.name)
       @option_line = contract.reload.option_lines.where(option_id: option).order(:created_at).last
       expect(contract.reload.options).to include option
     when 'model'
