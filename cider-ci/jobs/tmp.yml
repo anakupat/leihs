@@ -7,9 +7,13 @@ jobs:
     description: |
       Run TMP scenarios
 
+    run-on:
+    - type: branch
+      include-match: ^.*$
+
     context:
       task-defaults:
-        max-auto-trials: 3
+        max-auto-trials: 1
 
       _cider-ci_include:
         - cider-ci/shared/tests-context.yml
