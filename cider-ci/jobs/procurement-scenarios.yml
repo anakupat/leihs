@@ -7,10 +7,6 @@ jobs:
     description: |
       Run procurement engine scenarios under MRI
 
-    run-on:
-    - type: branch
-      include-match: ^.*$
-
     context:
       task-defaults:
         max-auto-trials: 2
