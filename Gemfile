@@ -46,7 +46,7 @@ source 'https://rails-assets.org' do
   gem 'rails-assets-fullcalendar', '~> 1.5'
   gem 'rails-assets-jquery', '~> 1.5'
   gem 'rails-assets-jquery-autosize', '~> 1.18'
-  gem 'rails-assets-jquery.inview', '~> 1.0'
+  gem 'rails-assets-jquery.inview', '1.0.0'
   gem 'rails-assets-jquery-ui', '~> 1.1'
   gem 'rails-assets-jquery-ujs', '~> 1.0'
   gem 'rails-assets-moment', '~> 2.10'
