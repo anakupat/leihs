@@ -115,26 +115,3 @@ ENGINES.each do |engine|
     create_scenario_tasks(filepath, engine_feature_files_paths, :cucumber)
   end
 end
-
-##########################################################################
-# RUBOCOP PROCUREMENT FEATURES ------- TEMPORARY
-# ########################################################################
-
-def task_for_rubocop_step_file(file_path, _timeout = 200)
-  name = file_path.match(/\.*\/steps\/(.*)/).captures.first
-  exec = "bundle exec rubocop -c engines/procurement/.rubocop.yml --except Metrics/ModuleLength #{file_path}"
-  task_hash(name, exec)
-end
-
-def create_rubocop_step_tasks(filepath, feature_files)
-  File.open(filepath,'w') do |f|
-    string = {'tasks' => feature_files.map do |f|
-      task_for_rubocop_step_file(f)
-    end}
-    f.write(string.to_yaml)
-  end
-end
-
-procurement_step_files = Dir.glob('engines/procurement/spec/steps/**/*')
-filepath = 'cider-ci/tasks/procurement_steps_code_checks.yml'
-create_rubocop_step_tasks(filepath, procurement_step_files)
