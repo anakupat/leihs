@@ -45,7 +45,9 @@ Then /^I set all their initial values$/ do
       when 'date'
         dp = field_el.find("[data-type='datepicker']")
         dp.click
-        find('.ui-datepicker-calendar').find('.ui-state-highlight, .ui-state-active', visible: true, match: :first).click
+        within '.ui-datepicker-calendar' do
+          find('.ui-state-highlight, .ui-state-active', visible: true, match: :first).click
+        end
         @data[field.id] = dp.value
       when 'autocomplete'
         target_name = find(".field[data-id='#{field.id}'] [data-type='autocomplete']")['data-autocomplete_value_target']

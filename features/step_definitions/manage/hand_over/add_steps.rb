@@ -118,6 +118,9 @@ When /^I type the beginning of (.*?) name to the add\/assign input field$/ do |t
 end
 
 Then /^I see a list of suggested (.*?) names$/ do |type|
+  # NOTE trick closing possible dropdowns
+  find('body').click
+
   find('[data-add-contract-line]').click
   find('.ui-autocomplete a', match: :first)
 end
