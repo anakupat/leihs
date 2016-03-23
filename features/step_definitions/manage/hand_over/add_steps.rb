@@ -136,7 +136,7 @@ end
 
 When /^I select the (.*?) from the list$/ do |type|
   # trick closing possible tooltips
-  page.driver.browser.action.move_to(find('body').native).perform
+  page.driver.browser.action.move_to(find('nav#topbar').native).perform
 
   within '.ui-autocomplete' do
     find('a', match: :prefer_exact, text: @target_name).click
