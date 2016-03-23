@@ -1,0 +1,28 @@
+---
+tasks:
+- name: features/automatischer_email_versand.feature:7
+  scripts:
+    test:
+      body: DISPLAY=":$XVNC_PORT" bundle exec cucumber -p default  --strict features/examples/inventar.feature:152
+        DEFAULT_BROWSER=firefox
+- name: features/automatischer_email_versand.feature:12
+  scripts:
+    test:
+      body: DISPLAY=":$XVNC_PORT" bundle exec cucumber -p default  --strict features/examples/inventarhelfer.feature:37
+        DEFAULT_BROWSER=firefox
+- name: features/availability_inventory_pool_story.feature:9
+  scripts:
+    test:
+      body: DISPLAY=":$XVNC_PORT" bundle exec cucumber -p default  --strict features/examples/probleme.feature:64
+        DEFAULT_BROWSER=firefox
+- name: features/availability_inventory_pool_story.feature:21
+  scripts:
+    test:
+      body: DISPLAY=":$XVNC_PORT" bundle exec cucumber -p default  --strict features/manage/hand_over/delete.feature:24
+        DEFAULT_BROWSER=firefox
+- name: features/availability_inventory_pool_story.feature:64
+  scripts:
+    test:
+      body: DISPLAY=":$XVNC_PORT" bundle exec cucumber -p default  --strict features/manage/hand_over/delete.feature:24
+        DEFAULT_BROWSER=firefox
+

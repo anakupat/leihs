@@ -1,0 +1,16 @@
+jobs:
+
+  tmp:
+
+    name: TMP
+
+    description: |
+      Run TMP scenarios
+
+    context:
+      task-defaults:
+        max-auto-trials: 3
+
+      _cider-ci_include:
+        - cider-ci/shared/tests-context.yml
+        - cider-ci/tasks/tmp.yml

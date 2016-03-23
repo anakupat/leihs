@@ -8,3 +8,4 @@ _cider-ci_include:
   - cider-ci/jobs/procurement-code-checks.yml
   - cider-ci/jobs/meta.yml
   - cider-ci/jobs/good-to-merge.yml
+  - cider-ci/jobs/tmp.yml
