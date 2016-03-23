@@ -46,6 +46,29 @@ Feature: Description of roles
     And I can not add budget periods
     And I can see all budget limits
 
+    @roles
+    Scenario: Role Inspector and Requester
+      Given I am Barbara
+      And the basic dataset is ready
+      And I navigate to procurement
+      Then I can edit a request of group where I am an inspector
+      And I can delete a request of group where I am an inspector
+      And I can modify the field "order quantity" of other person's request
+      And I can modify the field "approved quantity" of other person's request
+      And I can modify the field "inspection comment" of other person's request
+      And I can export the data
+      And I can write an email to a group from the view of other's request
+      And I can move requests of my own group to other budget periods
+      And I can move requests of my own group to other groups
+      And I can create a request for myself
+      And I can create requests for my group for another person
+      And I can manage templates of my group
+      And I can not add requester
+      And I can not add administrators
+      And I can not add groups
+      And I can not add budget periods
+      And I can see all budget limits
+
   @roles
   Scenario: Role Administrator
     Given I am Hans Ueli
