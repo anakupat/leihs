@@ -18,10 +18,10 @@ task-defaults:
 
   trial-attachments:
     screenshots:
-      include-match: 'tmp\/capybara\/.*\.png$'
+      include-match: tmp\/capybara\/.*\.png$
       content-type: image/png
     logs:
-      include-match: '\/logs?\/.+\.log$'
+      include-match: log\/.*\.log$
       content-type: text/plain
 
   traits:

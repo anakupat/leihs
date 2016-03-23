@@ -11,6 +11,7 @@ When 'I fetch all pages of the list' do
     within '#inventory' do
       all('.page[data-page]').each do |data_page|
         page.driver.browser.action.move_to(data_page.native).perform
+        expect(data_page).to have_selector '.line'
         expect(data_page).to have_selector '.line div'
       end
     end

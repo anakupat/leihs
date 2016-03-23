@@ -118,7 +118,7 @@ When /^I type the beginning of (.*?) name to the add\/assign input field$/ do |t
 end
 
 Then /^I see a list of suggested (.*?) names$/ do |type|
-  #needed??# find('[data-add-contract-line]').click
+  find('[data-add-contract-line]').click
   within '.ui-autocomplete' do
     find('a', match: :first)
   end
@@ -135,7 +135,12 @@ end
 
 
 When /^I select the (.*?) from the list$/ do |type|
-  find('.ui-autocomplete a', match: :prefer_exact, text: @target_name).click
+  # trick closing possible tooltips
+  page.driver.browser.action.move_to(find('nav#topbar').native).perform
+
+  within '.ui-autocomplete' do
+    find('a', match: :prefer_exact, text: @target_name).click
+  end
 end
 
 Then /^each model of the template is added to the hand over for the provided date range$/ do
