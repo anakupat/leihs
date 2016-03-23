@@ -3117,3 +3117,15 @@ msgstr ""
 
 msgid "You are not authorized for this action."
 msgstr ""
+
+msgid "Current budget period not defined yet"
+msgstr ""
+
+msgid "No groups defined yet"
+msgstr ""
+
+msgid "No admins defined yet"
+msgstr ""
+
+msgid "No requesters defined yet"
+msgstr ""
