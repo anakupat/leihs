@@ -122,6 +122,7 @@ Feature: Inspection (state-behaviour described in seperate feature-file)
     And I fill in the following fields
       | key               | value |
       | Approved quantity | 0     |
+  #NW: in hands on tests, the empty inspection comment field of a piartially approved request was not marked red and the browser position was not on the right place
     Then the field "inspection comment" is marked red
     And I can not save the request
     When I fill in the following fields
