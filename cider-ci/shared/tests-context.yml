@@ -5,6 +5,11 @@ script-defaults:
 task-defaults:
   eager-trials: 1
 
+  trial-attachments:
+    screenshots:
+      include-match: tmp\/capybara\/.*\.png$
+      content-type: image/png
+
   environment-variables:
     RBENV_VERSION: 2.1
     RAILS_ENV: test
