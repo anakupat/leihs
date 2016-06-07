@@ -49,10 +49,12 @@ end
 
 EXCLUDE_TAGS = %w(@old-ui @upcoming @generating_personas @manual @problematic)
 
-def create_scenario_tasks(filepath, feature_files_paths, test_with, tags: nil)
+def create_scenario_tasks(filepath, feature_files_paths, test_with, tags: nil, exclude_dir: nil)
   File.open(filepath,'w') do |f|
     h1 = {}
-    `egrep -R -n -B 1 -H "^\s*(Scenario|Szenario)" #{feature_files_paths.join(' ')}`
+
+    exclude_dir_option = "--exclude-dir #{exclude_dir}" if exclude_dir
+    `egrep -R -n -B 1 -H #{exclude_dir_option} "^\s*(Scenario|Szenario)" #{feature_files_paths.join(' ')}`
       .split("--\n")
       .map{|x| x.split("\n")}
       .each do |t, s|
@@ -98,12 +100,21 @@ end
 
 manage_feature_files_paths = ['features/*']
 
-filepath = 'cider-ci/tasks/core_scenarios.yml'
-create_scenario_tasks(filepath, manage_feature_files_paths, :cucumber)
+filepath = 'cider-ci/tasks/manage_scenarios.yml'
+create_scenario_tasks(filepath, manage_feature_files_paths, :cucumber, exclude_dir: 'borrow')
 
 # keep failing CI scenarios in a separate yml files (and job)
-filepath = 'cider-ci/tasks/core_problematic_scenarios.yml'
-create_scenario_tasks(filepath, manage_feature_files_paths, :cucumber, tags: ['@problematic'])
+filepath = 'cider-ci/tasks/manage_problematic_scenarios.yml'
+create_scenario_tasks(filepath, manage_feature_files_paths, :cucumber, tags: ['@problematic'], exclude_dir: 'borrow')
+
+borrow_feature_files_paths = ['features/borrow/*']
+
+filepath = 'cider-ci/tasks/borrow_scenarios.yml'
+create_scenario_tasks(filepath, borrow_feature_files_paths, :cucumber)
+
+# keep failing CI scenarios in a separate yml files (and job)
+filepath = 'cider-ci/tasks/borrow_problematic_scenarios.yml'
+create_scenario_tasks(filepath, borrow_feature_files_paths, :cucumber, tags: ['@problematic'])
 
 ENGINES.each do |engine|
   filepath = "cider-ci/tasks/#{engine}_scenarios.yml"
