@@ -98,6 +98,8 @@ def create_scenario_tasks(filepath, feature_files_paths, test_with, tags: nil, e
   end
 end
 
+############################## MANAGE ###################################
+
 manage_feature_files_paths = ['features/*']
 
 filepath = 'cider-ci/tasks/manage_scenarios.yml'
@@ -107,6 +109,8 @@ create_scenario_tasks(filepath, manage_feature_files_paths, :cucumber, exclude_d
 filepath = 'cider-ci/tasks/manage_problematic_scenarios.yml'
 create_scenario_tasks(filepath, manage_feature_files_paths, :cucumber, tags: ['@problematic'], exclude_dir: 'borrow')
 
+############################## BORROW ###################################
+
 borrow_feature_files_paths = ['features/borrow/*']
 
 filepath = 'cider-ci/tasks/borrow_scenarios.yml'
@@ -115,6 +119,8 @@ create_scenario_tasks(filepath, borrow_feature_files_paths, :cucumber)
 # keep failing CI scenarios in a separate yml files (and job)
 filepath = 'cider-ci/tasks/borrow_problematic_scenarios.yml'
 create_scenario_tasks(filepath, borrow_feature_files_paths, :cucumber, tags: ['@problematic'])
+
+############################## ENGINES ##################################
 
 ENGINES.each do |engine|
   filepath = "cider-ci/tasks/#{engine}_scenarios.yml"
