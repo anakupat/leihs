@@ -1,6 +1,7 @@
 ---
 tasks:
-- name: features/borrow/modellliste.feature:33
+- name: features/examples/inventar_csv.feature:4
   scripts:
     test:
-      body: DISPLAY=":$XVNC_PORT" bundle exec cucumber -p default  --strict features/borrow/modellliste.feature:33 DEFAULT_BROWSER=firefox
+      body: DISPLAY=":$XVNC_PORT" bundle exec cucumber -p default  --strict features/examples/inventar_csv.feature:4
+        DEFAULT_BROWSER=firefox
