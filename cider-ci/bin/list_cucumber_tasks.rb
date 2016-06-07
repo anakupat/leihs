@@ -52,7 +52,7 @@ EXCLUDE_TAGS = %w(@old-ui @upcoming @generating_personas @manual @problematic)
 def create_scenario_tasks(filepath, feature_files_paths, test_with, tags = nil)
   File.open(filepath,'w') do |f|
     h1 = {}
-    `egrep -R -n -B 1 -H "^\s*(Scenario|Szenario)" #{feature_files_paths}`
+    `egrep -R -n -B 1 -H "^\s*(Scenario|Szenario)" #{feature_files_paths.join(' ')}`
       .split("--\n")
       .map{|x| x.split("\n")}
       .each do |t, s|
@@ -96,22 +96,22 @@ def create_scenario_tasks(filepath, feature_files_paths, test_with, tags = nil)
   end
 end
 
+leihs_feature_files_paths = ['features/*']
+
 filepath = 'cider-ci/tasks/core_scenarios.yml'
-leihs_feature_files_paths = 'features/*'
 create_scenario_tasks(filepath, leihs_feature_files_paths, :cucumber)
 
 # keep failing CI scenarios in a separate yml files (and job)
 filepath = 'cider-ci/tasks/core_problematic_scenarios.yml'
-leihs_feature_files_paths = 'features/*'
 create_scenario_tasks(filepath, leihs_feature_files_paths, :cucumber, ['@problematic'])
 
 ENGINES.each do |engine|
   filepath = "cider-ci/tasks/#{engine}_scenarios.yml"
   if engine == 'procurement'
-    engine_feature_files_paths = "engines/#{engine}/spec/features/*.feature"
+    engine_feature_files_paths = ["engines/#{engine}/spec/features/*.feature"]
     create_scenario_tasks(filepath, engine_feature_files_paths, :rspec)
   else
-    engine_feature_files_paths = "engines/#{engine}/**/*.feature"
+    engine_feature_files_paths = ["engines/#{engine}/**/*.feature"]
     create_scenario_tasks(filepath, engine_feature_files_paths, :cucumber)
   end
 end
