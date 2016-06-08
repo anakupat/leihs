@@ -23,7 +23,7 @@ jobs:
       job: procurement-scenarios
       states: [passed]
     - type: job
-      job: code-checks
+      job: borrow-manage-code-checks
       states: [passed]
     - type: job
       job: admin-code-checks
