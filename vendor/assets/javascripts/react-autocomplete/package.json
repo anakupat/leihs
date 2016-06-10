@@ -1,0 +1,123 @@
+{
+  "_args": [
+    [
+      {
+        "name": "react-autocomplete",
+        "raw": "react-autocomplete",
+        "rawSpec": "",
+        "scope": null,
+        "spec": "latest",
+        "type": "tag"
+      },
+      "/Users/ma/CODE/Madek/webapp"
+    ]
+  ],
+  "_from": "react-autocomplete@latest",
+  "_id": "react-autocomplete@1.0.0-rc6",
+  "_inCache": true,
+  "_installable": true,
+  "_location": "/react-autocomplete",
+  "_nodeVersion": "4.3.1",
+  "_npmOperationalInternal": {
+    "host": "packages-16-east.internal.npmjs.com",
+    "tmp": "tmp/react-autocomplete-1.0.0-rc6.tgz_1465265390279_0.01755287079140544"
+  },
+  "_npmUser": {
+    "email": "sprjr@me.com",
+    "name": "sprjrx"
+  },
+  "_npmVersion": "2.14.12",
+  "_phantomChildren": {},
+  "_requested": {
+    "name": "react-autocomplete",
+    "raw": "react-autocomplete",
+    "rawSpec": "",
+    "scope": null,
+    "spec": "latest",
+    "type": "tag"
+  },
+  "_requiredBy": [
+    "#USER"
+  ],
+  "_resolved": "https://registry.npmjs.org/react-autocomplete/-/react-autocomplete-1.0.0-rc6.tgz",
+  "_shasum": "539b7c47f01f0b3387342e4684a03e7420071f29",
+  "_shrinkwrap": null,
+  "_spec": "react-autocomplete",
+  "_where": "/Users/ma/CODE/Madek/webapp",
+  "authors": [
+    "Ryan Florence <rpflorence@gmail.com>"
+  ],
+  "bugs": {
+    "url": "https://github.com/rackt/react-autocomplete/issues"
+  },
+  "dependencies": {
+    "dom-scroll-into-view": "1.0.1"
+  },
+  "description": "Accessible, extensible, Autocomplete for React.js",
+  "devDependencies": {
+    "babel-cli": "^6.5.1",
+    "babel-preset-es2015": "^6.5.0",
+    "babel-preset-react": "^6.5.0",
+    "babel-preset-stage-0": "^6.5.0",
+    "babel-register": "^6.6.5",
+    "chai": "^3.5.0",
+    "chai-enzyme": "^0.4.0",
+    "enzyme": "^2.0.0",
+    "isparta": "^4.0.0",
+    "jsdom": "^8.1.0",
+    "mocha": "~2.4.5",
+    "mocha-jsdom": "^1.1.0",
+    "rackt-cli": "^0.4.0",
+    "react": "^0.14.7",
+    "react-addons-test-utils": "^0.14.7",
+    "react-dom": "^0.14.7"
+  },
+  "directories": {
+    "example": "examples"
+  },
+  "dist": {
+    "shasum": "539b7c47f01f0b3387342e4684a03e7420071f29",
+    "tarball": "https://registry.npmjs.org/react-autocomplete/-/react-autocomplete-1.0.0-rc6.tgz"
+  },
+  "gitHead": "db0f67e422611c937e8b26079e2bf33d8068e109",
+  "homepage": "https://github.com/rackt/react-autocomplete",
+  "keywords": [],
+  "license": "MIT",
+  "main": "./build/lib/index.js",
+  "maintainers": [
+    {
+      "email": "mzabriskie@gmail.com",
+      "name": "mzabriskie"
+    },
+    {
+      "email": "rpflorence@gmail.com",
+      "name": "ryanflorence"
+    },
+    {
+      "email": "sprjr@me.com",
+      "name": "sprjrx"
+    }
+  ],
+  "name": "react-autocomplete",
+  "optionalDependencies": {},
+  "peerDependencies": {
+    "react": "^0.14.7 || ^15.0.0-0"
+  },
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rackt/react-autocomplete.git"
+  },
+  "scripts": {
+    "coverage": "BABEL_ENV=test node_modules/.bin/babel-node node_modules/isparta/bin/isparta cover --report lcov node_modules/mocha/bin/_mocha -- --reporter dot --require './lib/__tests__/.setup.js' './lib/__tests__/Autocomplete-test.js'",
+    "start": "rackt server",
+    "test": "BABEL_ENV=test mocha --require './lib/__tests__/.setup.js' --compilers js:babel-register './lib/__tests__/Autocomplete-test.js'"
+  },
+  "tags": [
+    "react",
+    "autocomplete",
+    "combobox",
+    "a11y"
+  ],
+  "version": "1.0.0-rc6"
+}
