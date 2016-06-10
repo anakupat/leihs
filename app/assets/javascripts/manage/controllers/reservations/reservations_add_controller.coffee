@@ -6,22 +6,64 @@ class window.App.ReservationsAddController extends Spine.Controller
     "[data-add-contract-line]": "input"
 
   events:
-    "focus [data-add-contract-line]": "setupAutocomplete"
+    "focus [data-add-contract-line]": "triggerAutocomplete"
     "click [type='submit']": "showExplorativeSearch"
     "submit": "submit"
 
   constructor: ->
-    super 
+    super
     @preventSubmit = false
     do @setupDatepickers
     @input.preChange()
+    do @setupAutocomplete
+
+  setupAutocomplete: =>
+    @input.autocomplete
+      appendTo: @el
+      source: (request, response)=>
+        response []
+        @search request, response
+      # attach events:
+      search: (event, ui)=> console.log "Searching for:", event?.target?.value
+      focus: => return false
+      select: @select
+
+    @input.data("uiAutocomplete")._renderItem = (ul, item) =>
+      $(App.Render "manage/views/reservations/add/autocomplete_element", item).data("value", item).appendTo(ul)
+
+  triggerAutocomplete: (data)->
+    @input.autocomplete("search")
+
+  search: (request, response)=>
+    return false unless @input.val().length
+    @models = @options = @templates = @availabilities = @options = null
+    done = =>
+      if @models? and @templates? and @availabilities? and (if @optionsEnabled then @options? else true)
+        data = []
+        @pushModelsTo data
+        @pushOptionsTo data if @optionsEnabled
+        @pushTemplatesTo data
+        response data if @input.is(":focus")
+    @searchModels done
+    @searchTemplates done
+    @searchOptions(done) if @optionsEnabled
+
+  select: (e, ui)=>
+    e.preventDefault()
+    record = ui.item.record
+    @add record, @getStartDate(), @getEndDate()
+    @preventSubmit = true
+    setTimeout (=>
+      @preventSubmit = false
+      @input.val("").change()
+    ), 100
 
   setupDatepickers: =>
     for date in [@addStartDate, @addEndDate]
       $(date).datepicker()
     @addStartDate.datepicker "option", "minDate", moment().startOf("day").toDate()
     @addEndDate.datepicker "option", "minDate", getTime: => moment(@addStartDate.val(), i18n.date.L).startOf("day").toDate()
-    @addStartDate.datepicker "option", "onSelect", (newStartDate)=> 
+    @addStartDate.datepicker "option", "onSelect", (newStartDate)=>
       newStartDate = moment(newStartDate, i18n.date.L).startOf("day")
       endDate = moment(@addEndDate.val(), i18n.date.L).startOf("day")
       if newStartDate.toDate() > endDate.toDate()
@@ -66,7 +108,7 @@ class window.App.ReservationsAddController extends Spine.Controller
         used: true
         as_responsible_only: true
         per_page: 5
-    .done (data)=> 
+    .done (data)=>
       @models = (App.Model.find(datum.id) for datum in data)
       @fetchAvailabilities => do callback
 
@@ -75,7 +117,7 @@ class window.App.ReservationsAddController extends Spine.Controller
       data: $.param
         search_term: @input.val()
         per_page: 5
-    .done (data)=> 
+    .done (data)=>
       @options = (App.Option.find(datum.id) for datum in data)
       do callback
 
@@ -96,47 +138,10 @@ class window.App.ReservationsAddController extends Spine.Controller
           user_id: @user.id
       .done (data)=>
         @availabilities = (App.Availability.find(datum.id) for datum in data)
-        do callback 
+        do callback
     else
       @availabilities = []
       do callback
-
-  setupAutocomplete: (data)->
-    @input.autocomplete
-      appendTo: @el
-      source: (request, response)=> 
-        response []
-        @search request, response
-      search: => console.log "Search"
-      focus: => return false
-      select: @select
-    .data("uiAutocomplete")._renderItem = (ul, item) => 
-      $(App.Render "manage/views/reservations/add/autocomplete_element", item).data("value", item).appendTo(ul)
-    @input.autocomplete("search")
-
-  search: (request, response)=>
-    return false unless @input.val().length
-    @models = @options = @templates = @availabilities = @options = null
-    done = =>
-      if @models? and @templates? and @availabilities? and (if @optionsEnabled then @options? else true)
-        data = []
-        @pushModelsTo data
-        @pushOptionsTo data if @optionsEnabled
-        @pushTemplatesTo data
-        response data if @input.is(":focus")
-    @searchModels done
-    @searchTemplates done
-    @searchOptions(done) if @optionsEnabled
-
-  select: (e, ui)=>
-    e.preventDefault()
-    record = ui.item.record
-    @add record, @getStartDate(), @getEndDate()
-    @preventSubmit = true
-    setTimeout (=> 
-      @preventSubmit = false
-      @input.val("").change()
-    ), 100
 
   submit: (e)=>
     e.preventDefault() if e?
@@ -208,7 +213,7 @@ class window.App.ReservationsAddController extends Spine.Controller
         quantity: 1
         option_id: option.id
       ,
-        done: -> 
+        done: ->
           App.LineSelectionController.add @id
           App.Flash
             type: "notice"
