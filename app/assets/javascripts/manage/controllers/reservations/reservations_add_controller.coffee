@@ -1,12 +1,14 @@
 class window.App.ReservationsAddController extends Spine.Controller
 
+  # TODO: check all usage of @input, should talk to react component
+  # DONE: rewrite search, should use the value given as argument (not from DOM input!)
+
   elements:
     "#add-start-date": "addStartDate"
     "#add-end-date": "addEndDate"
-    "[data-add-contract-line]": "input"
+    # "[data-add-contract-line]": "input"
 
   events:
-    "focus [data-add-contract-line]": "triggerAutocomplete"
     "click [type='submit']": "showExplorativeSearch"
     "submit": "submit"
 
@@ -14,39 +16,24 @@ class window.App.ReservationsAddController extends Spine.Controller
     super
     @preventSubmit = false
     do @setupDatepickers
-    @input.preChange()
-    do @setupAutocomplete
 
-  setupAutocomplete: =>
-    @input.autocomplete
-      appendTo: @el
-      source: (request, response)=>
-        response []
-        @search request, response
-      # attach events:
-      search: (event, ui)=> console.log "Searching for:", event?.target?.value
-      focus: => return false
-      select: @select
+  setupAutocomplete: (searchInput) =>
+    @searchInput = searchInput
 
-    @input.data("uiAutocomplete")._renderItem = (ul, item) =>
-      $(App.Render "manage/views/reservations/add/autocomplete_element", item).data("value", item).appendTo(ul)
-
-  triggerAutocomplete: (data)->
-    @input.autocomplete("search")
-
-  search: (request, response)=>
-    return false unless @input.val().length
+  search: (value, response)=>
+    console.log 'ReservationsAddController Search', value
+    return false unless value.length
     @models = @options = @templates = @availabilities = @options = null
-    done = =>
+    handleResponses = =>
       if @models? and @templates? and @availabilities? and (if @optionsEnabled then @options? else true)
         data = []
         @pushModelsTo data
         @pushOptionsTo data if @optionsEnabled
         @pushTemplatesTo data
-        response data if @input.is(":focus")
-    @searchModels done
-    @searchTemplates done
-    @searchOptions(done) if @optionsEnabled
+        response data # TODO: if @input.is(":focus")
+    @searchModels(value, handleResponses)
+    @searchTemplates(value, handleResponses)
+    @searchOptions(value, handleResponses) if @optionsEnabled
 
   select: (e, ui)=>
     e.preventDefault()
@@ -101,10 +88,10 @@ class window.App.ReservationsAddController extends Spine.Controller
         type: _jed "Option"
         record: option
 
-  searchModels: (callback)=>
+  searchModels: (value, callback)=>
     App.Model.ajaxFetch
       data: $.param
-        search_term: @input.val()
+        search_term: value
         used: true
         as_responsible_only: true
         per_page: 5
@@ -112,19 +99,19 @@ class window.App.ReservationsAddController extends Spine.Controller
       @models = (App.Model.find(datum.id) for datum in data)
       @fetchAvailabilities => do callback
 
-  searchOptions: (callback)=>
+  searchOptions: (value, callback)=>
     App.Option.ajaxFetch
       data: $.param
-        search_term: @input.val()
+        search_term: value
         per_page: 5
     .done (data)=>
       @options = (App.Option.find(datum.id) for datum in data)
       do callback
 
-  searchTemplates: (callback)=>
+  searchTemplates: (value, callback)=>
     App.Template.ajaxFetch
       data: $.param
-        search_term: @input.val()
+        search_term: value
         per_page: 5
     .done (data)=>
       @templates = (App.Template.find(datum.id) for datum in data)

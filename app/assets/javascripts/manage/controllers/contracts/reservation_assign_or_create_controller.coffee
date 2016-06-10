@@ -1,7 +1,6 @@
 class window.App.ReservationAssignOrCreateController extends Spine.Controller
 
   elements:
-    "#assign-or-add-input": "input"
     "#add-start-date": "addStartDate"
     "#add-end-date": "addEndDate"
 
@@ -10,12 +9,34 @@ class window.App.ReservationAssignOrCreateController extends Spine.Controller
 
   constructor: ->
     super
-    new App.ReservationsAddController
+
+    new App.SwapModelController {el: @el}
+
+    reservationsAddController = new App.ReservationsAddController
       el: @el
       user: @user
       status: @status
       contract: @contract
       optionsEnabled: true
+
+    # create and mount the input field:
+    props =
+      onChange: (value)->
+        console.log 'Search!', value
+        # TODO: _.debounce(searchFn, 300)
+        reservationsAddController.search value, (data)->
+          console.log 'result', data
+      onSelect: (item)-> console.log 'Select!', item
+      isLoading: false
+      placeholder: _jed("Inventory code, model name, search term")
+
+    searchInput = ReactDOM.render(
+      React.createElement(HandoverAutocomplete, props),
+      @el.find("#assign-or-add-input")[0])
+
+    window.searchInput = searchInput
+
+    reservationsAddController.setupAutocomplete(searchInput)
 
   getStartDate: => moment(@addStartDate.val(), i18n.date.L)
 
@@ -24,7 +45,7 @@ class window.App.ReservationAssignOrCreateController extends Spine.Controller
   submit: (e)=>
     e.preventDefault()
     e.stopImmediatePropagation()
-    inventoryCode = @input.val()
+    inventoryCode = @input.val() # TODO
     return false unless inventoryCode.length
     App.Reservation.assignOrCreate
       start_date: @getStartDate().format("YYYY-MM-DD")
@@ -36,7 +57,7 @@ class window.App.ReservationAssignOrCreateController extends Spine.Controller
       App.Flash
         type: "error"
         message: e.responseText
-    @input.val("")
+    @input.val("") # TODO
 
   assignedOrCreated: (inventoryCode, data)=>
     done = =>
