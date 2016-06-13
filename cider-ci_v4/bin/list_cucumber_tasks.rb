@@ -84,7 +84,7 @@ def create_scenario_tasks(filepath, feature_files_paths, test_with, tags: nil, e
         when :cucumber
           exec = "#{xvfb} bundle exec cucumber -p default %s #{STRICT_MODE ? "--strict " : nil}%s DEFAULT_BROWSER=%s" % [require, path, DEFAULT_BROWSER]
         when :rspec
-          exec = "DISPLAY=\":$XVNC_PORT\" bundle exec rspec #{path}"
+          exec = "#{xvfb} bundle exec rspec #{path}"
         else
           raise 'Undefined testing framework'
         end
