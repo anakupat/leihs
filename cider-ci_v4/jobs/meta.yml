@@ -1,0 +1,53 @@
+jobs:
+
+  meta:
+
+    name: Meta
+    description: |
+      Various superordinate quality assurance tasks
+
+    run_when:
+      any branch name:
+        type: branch
+        include_match: '^.*$'
+      borrow and manage code checks job has passed:
+        type: job
+        job: borrow_manage_code_checks
+        states: [passed]
+      borrow scenarios job has passed:
+        type: job
+        job: borrow_scenarios
+        states: [passed]
+      manage scenarios job has passed:
+        type: job
+        job: manage_scenarios
+        states: [passed]
+      admin code checks job has passed:
+        type: job
+        job: admin_code_checks
+        states: [passed]
+      admin scenarios job has passed:
+        type: job
+        job: admin_scenarios
+        states: [passed]
+      procurement code checks job has passed:
+        type: job
+        job: procurement_code_checks
+        states: [passed]
+      procurement scenarios job has passed:
+        type: job
+        job: procurement_scenarios
+        states: [passed]
+
+    context:
+      task-defaults:
+        max_trials: 1
+        traits:
+          Ruby: true
+
+      tasks:
+        git_branch_current:
+          name: "git tree contains latest commit from origin/master"
+          scripts:
+            main:
+              body: cider-ci/bin/check_if_branch_current
