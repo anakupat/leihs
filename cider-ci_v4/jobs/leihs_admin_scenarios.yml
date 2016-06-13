@@ -15,11 +15,12 @@ jobs:
         include_match: '^.+$'
 
     context:
-      include: cider-ci_v4/shared/main_context.yml
 
       task_defaults:
         include:
           - cider-ci_v4/task_components/database.yml
           - cider-ci_v4/task_components/precompile_assets.yml
 
-      include: cider-ci_v4/tasks/leihs_admin_scenarios.yml
+      include:
+        - cider-ci_v4/shared/main_context.yml
+        - cider-ci_v4/tasks/leihs_admin_scenarios.yml
