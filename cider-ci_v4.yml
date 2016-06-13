@@ -4,4 +4,5 @@ include:
   - cider-ci_v4/jobs/leihs_admin_scenarios.yml
   - cider-ci_v4/jobs/leihs_admin_code_checks.yml
 
+  - cider-ci_v4/jobs/procurement_scenarios.yml
   - cider-ci_v4/jobs/procurement_code_checks.yml
