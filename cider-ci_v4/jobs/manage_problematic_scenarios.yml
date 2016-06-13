@@ -13,9 +13,11 @@ jobs:
       branch name matches master or manage:
         type: branch
         include_match: '^(.*master.*|[a-z]*/manage_.*)$'
-      manage scenarios job has passed:
+
+    depends_on:
+      manage_scenarios:
         type: job
-        job: manage_scenarios
+        job_key: manage_scenarios
         states: [passed]
 
     context:

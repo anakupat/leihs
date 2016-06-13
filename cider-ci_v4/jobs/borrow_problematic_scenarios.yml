@@ -13,9 +13,11 @@ jobs:
       branch name matches master or borrow:
         type: branch
         include_match: '^(.*master.*|[a-z]*/borrow_.*)$'
-      borrow scenarios job has passed:
+
+    depends_on:
+      borrow_scenarios:
         type: job
-        job: borrow_scenarios
+        job_key: borrow_scenarios
         states: [passed]
 
     context:

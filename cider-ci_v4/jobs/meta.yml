@@ -10,33 +10,35 @@ jobs:
       any branch name:
         type: branch
         include_match: '^.*$'
-      borrow and manage code checks job has passed:
+
+    depends_on:
+      borrow_manage_code_checks:
         type: job
-        job: borrow_manage_code_checks
+        job_key: borrow_manage_code_checks
         states: [passed]
-      borrow scenarios job has passed:
+      borrow_scenarios:
         type: job
-        job: borrow_scenarios
+        job_key: borrow_scenarios
         states: [passed]
-      manage scenarios job has passed:
+      manage_scenarios:
         type: job
-        job: manage_scenarios
+        job_key: manage_scenarios
         states: [passed]
-      admin code checks job has passed:
+      admin_code_checks:
         type: job
-        job: admin_code_checks
+        job_key: admin_code_checks
         states: [passed]
-      admin scenarios job has passed:
+      admin_scenarios:
         type: job
-        job: admin_scenarios
+        job_key: admin_scenarios
         states: [passed]
-      procurement code checks job has passed:
+      procurement_code_checks:
         type: job
-        job: procurement_code_checks
+        job_key: procurement_code_checks
         states: [passed]
-      procurement scenarios job has passed:
+      procurement_scenarios:
         type: job
-        job: procurement_scenarios
+        job_key: procurement_scenarios
         states: [passed]
 
     context:
