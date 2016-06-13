@@ -1,6 +1,8 @@
 include:
   - cider-ci_v4/jobs/borrow_manage_code_checks.yml
 
+  - cider-ci_v4/jobs/borrow_scenarios.yml
+
   - cider-ci_v4/jobs/leihs_admin_scenarios.yml
   - cider-ci_v4/jobs/leihs_admin_code_checks.yml
 
