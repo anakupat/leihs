@@ -1,0 +1,3 @@
+include:
+  - cider-ci_v4/jobs/borrow-manage-code-checks.yml
+  - cider-ci_v4/jobs/admin-scenarios.yml

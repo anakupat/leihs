@@ -1,0 +1,36 @@
+jobs:
+
+  admin-scenarios:
+
+    name: 'Admin: Scenarios'
+
+    description: |
+      Run Admin engine scenarios under MRI
+
+    priority: -1
+
+    run_when:
+      any for now:
+        type: branch
+        include_match: '^.+$'
+
+    context:
+      include: cider-ci_v4/shared/main_context.yml
+
+      task_defaults:
+        include:
+          - cider-ci_v4/task_components/database.yml
+          - cider-ci_v4/task_components/precompile_assets.yml
+
+      tasks:
+        task1:
+          scripts:
+            test:
+              body: |
+                set -eux
+                export PATH=~/.rubies/$RUBY/bin:$PATH
+                mkdir -p log
+                xvfb-run -a -e log/xvfb.log \
+                    bundle exec cucumber -p default -r engines/**/features \
+                    --strict engines/leihs_admin/features/buildings.feature:33 \
+                    DEFAULT_BROWSER=firefox
