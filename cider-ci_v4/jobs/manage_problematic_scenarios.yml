@@ -1,11 +1,11 @@
 jobs:
 
-  borrow_problematic_scenarios:
+  manage_problematic_scenarios:
 
-    name: 'Borrow: Problematic Scenarios'
+    name: 'Manage: Problematic Scenarios'
 
     description: |
-      Run Borrow problematic scenarios under MRI
+      Run Manage problematic scenarios under MRI
 
     priority: -1
 
@@ -13,9 +13,9 @@ jobs:
       any for now:
         type: branch
         include_match: '^.+$'
-      borrow scenarios job has passed:
+      manage scenarios job has passed:
         type: job
-        job: borrow_scenarios
+        job: manage_scenarios
         states: [passed]
 
     context:
@@ -28,4 +28,4 @@ jobs:
 
       include:
         - cider-ci_v4/shared/main_context.yml
-        - cider-ci_v4/tasks/borrow_problematic_scenarios.yml
+        - cider-ci_v4/tasks/manage_problematic_scenarios.yml
