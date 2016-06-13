@@ -24,4 +24,4 @@ jobs:
           name: 'Count if number of STDERR lines greater than 0'
           scripts:
             test:
-              body: cider-ci/bin/check_rails_warnings.rb
+              body: cider-ci_v4/bin/check_rails_warnings.rb
