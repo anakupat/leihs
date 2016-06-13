@@ -1,6 +1,6 @@
 scripts:
-  precompile-assets:
-    body: cider-ci_v4/bin/precompile-assets-with-caching.sh
+  precompile_assets:
+    body: cider-ci_v4/bin/precompile_assets_with_caching.sh
     start_when:
       bundled:
         script_key: bundle-rspec-ruby
@@ -8,4 +8,4 @@ scripts:
   test:
     start_when:
       the assets are precompiled:
-        script_key: precompile-assets
+        script_key: precompile_assets
