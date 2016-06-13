@@ -6,9 +6,9 @@ jobs:
     description: 'Run static checks and metrics: complexity, duplication, code format'
 
     run_when:
-      just any for now:
+      branch name matches master or procurement:
         type: branch
-        include_match: '^.+$'
+        include_match: '^(.*master.*|[a-z]*/procurement_.*)$'
 
     context:
       include: cider-ci_v4/shared/main_context.yml
