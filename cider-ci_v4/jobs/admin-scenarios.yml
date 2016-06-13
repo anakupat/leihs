@@ -30,7 +30,7 @@ jobs:
                 set -eux
                 export PATH=~/.rubies/$RUBY/bin:$PATH
                 mkdir -p log
-                xvfb-run -a -e log/xvfb.log \
-                    bundle exec cucumber -p default -r engines/**/features \
+                xvfb-run -a -e log/xvfb.log --server-args="-screen 0 1024x768x24" \
+                  bundle exec cucumber -p default -r engines/**/features \
                     --strict engines/leihs_admin/features/buildings.feature:33 \
                     DEFAULT_BROWSER=firefox
