@@ -10,7 +10,7 @@ jobs:
     run_when:
       branch name matches master:
         type: branch
-        include_match: '^.*master.*$'
+        include_match: '^.*rails_warnings.*$'
 
     context:
 

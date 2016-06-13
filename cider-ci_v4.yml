@@ -12,3 +12,5 @@ include:
   - cider-ci_v4/jobs/procurement_code_checks.yml
 
   - cider-ci_v4/jobs/meta.yml
+
+  - cider-ci_v4/jobs/rails_warnings_check.yml
