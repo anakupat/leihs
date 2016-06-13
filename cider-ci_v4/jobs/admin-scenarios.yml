@@ -22,15 +22,4 @@ jobs:
           - cider-ci_v4/task_components/database.yml
           - cider-ci_v4/task_components/precompile_assets.yml
 
-      tasks:
-        task1:
-          scripts:
-            test:
-              body: |
-                set -eux
-                export PATH=~/.rubies/$RUBY/bin:$PATH
-                mkdir -p log
-                xvfb-run -a -e log/xvfb.log --server-args="-screen 0 1024x768x24" \
-                  bundle exec cucumber -p default -r engines/**/features \
-                    --strict engines/leihs_admin/features/buildings.feature:33 \
-                    DEFAULT_BROWSER=firefox
+      include: cider-ci_v4/tasks/leihs_admin_scenarios.yml

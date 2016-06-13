@@ -1,0 +1,10 @@
+---
+tasks:
+- name: engines/leihs_admin/features/buildings.feature:8
+  scripts:
+    test:
+      body: |-
+        set -eux
+        export PATH=~/.rubies/$RUBY/bin:$PATH
+        mkdir -p log
+        xvfb-run -a -e log/xvfb.log --server-args='-screen 0 1024x768x24' bundle exec cucumber -p default -r engines/**/features --strict engines/leihs_admin/features/buildings.feature:8 DEFAULT_BROWSER=firefox
