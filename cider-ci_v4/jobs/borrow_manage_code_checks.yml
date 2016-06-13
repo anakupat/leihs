@@ -1,5 +1,5 @@
 jobs:
-  borrow-manage-code-checks:
+  borrow_manage_code_checks:
 
     name: 'Borrow/Manage: Code Checks'
 

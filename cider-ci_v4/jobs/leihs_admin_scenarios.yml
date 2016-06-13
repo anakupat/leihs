@@ -1,6 +1,6 @@
 jobs:
 
-  admin-scenarios:
+  leihs_admin_scenarios:
 
     name: 'Admin: Scenarios'
 
