@@ -3,6 +3,8 @@ include:
 
   - cider-ci_v4/jobs/borrow_scenarios.yml
 
+  - cider-ci_v4/jobs/manage_scenarios.yml
+
   - cider-ci_v4/jobs/leihs_admin_scenarios.yml
   - cider-ci_v4/jobs/leihs_admin_code_checks.yml
 
