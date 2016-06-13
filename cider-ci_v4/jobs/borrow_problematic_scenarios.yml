@@ -10,9 +10,9 @@ jobs:
     priority: -1
 
     run_when:
-      any for now:
+      branch name matches master or borrow:
         type: branch
-        include_match: '^.+$'
+        include_match: '^(.*master.*|[a-z]*/borrow_.*)$'
       borrow scenarios job has passed:
         type: job
         job: borrow_scenarios
