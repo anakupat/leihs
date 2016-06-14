@@ -10,9 +10,12 @@ jobs:
     run_when:
       branch name matches master:
         type: branch
-        include_match: '^.*master.*$'
+        include_match: '^.*rails_warnings.*$'
 
     context:
+
+      include:
+        - cider-ci_v4/shared/main_context.yml
 
       task_defaults:
         include:
