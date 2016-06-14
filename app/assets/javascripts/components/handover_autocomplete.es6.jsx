@@ -7,18 +7,15 @@
 
   // TMP: styling from library example
   const styles = {
-    item: {
+    item: { // item/line default styles
       padding: '2px 6px',
       cursor: 'default'
     },
-    highlightedItem: {
+    highlightedItem: { // when item is selected in list (e.g. hovered)
       color: 'white',
       background: 'hsl(200, 50%, 50%)',
       padding: '2px 6px',
       cursor: 'default'
-    },
-    menu: {
-      border: 'solid 1px #ccc'
     }
   }
 
@@ -64,6 +61,21 @@
       // TODO: barcode-scanner-target??? (if needed, put in inputProps)
       // TODO: id='assign-or-add-input'???
 
+      var inputProps = {
+        type: 'text',
+        className: 'row',
+        placeholder: props.placeholder
+      }
+
+      var wrapperProps = {
+        style: {}
+      }
+
+      var renderMenu = function (items, value, style) {
+        if (items.length === 0) { return <div/> }
+        return <div style={{...style, ...this.menuStyle}} children={items}/>
+      }
+
       return (
         <div>
 
@@ -71,6 +83,9 @@
           ref='autocomplete'
           value={this.state.value}
           items={props.searchResults}
+          wrapperProps={wrapperProps}
+          inputProps={inputProps}
+          renderMenu={renderMenu}
           getItemValue={(item) => item.name}
           onSelect={(value, item) => {
             // reset the input field
@@ -83,7 +98,7 @@
             return (
               <div
                 style={isHighlighted ? styles.highlightedItem : styles.item}
-                key={item.type + item.record.cid}
+                key={item.type + item.name + item.record.cid}
                 id={item.abbr}>{item.name}</div>
             )}}
           />
