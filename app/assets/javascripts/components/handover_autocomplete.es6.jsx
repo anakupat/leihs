@@ -32,7 +32,10 @@
         React.PropTypes.objectOf({
           label: React.PropTypes.string.isRequired,
           availability: React.PropTypes.string.isRequired,
-          record: React.PropTypes.object.isRequired
+          type: React.PropTypes.string.isRequired,
+          record: React.PropTypes.objectOf({
+            cid: React.PropTypes.string.isRequired
+          }).isRequired
         })
       )
     },
@@ -70,7 +73,7 @@
           ref='autocomplete'
           value={this.state.value}
           items={props.searchResults}
-          getItemValue={(item) => item}
+          getItemValue={(item) => item.name}
           onSelect={(value, item) => {
             // reset the input field
             this.setState({ value: '' })
@@ -78,13 +81,15 @@
             props.onSelect(item)
           }}
           onChange={this._handleChange}
-          renderItem={(item, isHighlighted) => (
-            <div
+          renderItem={(item, isHighlighted) => {
+            console.log('renderItem', item)
+
+            return (<div
               style={isHighlighted ? styles.highlightedItem : styles.item}
-              key={item.abbr}
+              key={item.type + item.record.cid}
               id={item.abbr}
             >{item.name}</div>
-          )}
+          )}}
           />
 
         </div>

@@ -10,6 +10,8 @@ class window.App.ReservationAssignOrCreateController extends Spine.Controller
   constructor: ->
     super
 
+    that = @
+
     new App.SwapModelController {el: @el}
 
     reservationsAddController = new App.ReservationsAddController
@@ -24,23 +26,25 @@ class window.App.ReservationAssignOrCreateController extends Spine.Controller
       onChange: (value)->
         # TODO: _.debounce(searchFn, 300)
         reservationsAddController.search value, (data)->
-          @autocompleteController.setSearchResults(data)
-          @autocompleteController._render()
+          console.log 'searchResults', data, (try _.get(data[0].record))
+          that.autocompleteController.setSearchResults(data)
+          that.autocompleteController._render()
+          # that.autocompleteController.setProps(searchResults: data)
           # console.log @autocompleteController.props
       onSelect: (item)-> console.log 'Select!', item
       isLoading: false
       placeholder: _jed("Inventory code, model name, search term")
 
-    autocompleteController =
+    @autocompleteController =
       new App.HandOverAutocompleteController \
         props,
         @el.find("#assign-or-add-input")[0]
 
-    autocompleteController._render()
+    @autocompleteController._render()
 
-    window.autocompleteController = autocompleteController
+    window.autocompleteController = @autocompleteController
 
-    reservationsAddController.setupAutocomplete(autocompleteController)
+    reservationsAddController.setupAutocomplete(@autocompleteController)
 
   getStartDate: => moment(@addStartDate.val(), i18n.date.L)
 

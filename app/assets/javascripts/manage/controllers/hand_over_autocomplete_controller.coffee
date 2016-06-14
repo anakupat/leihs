@@ -8,3 +8,7 @@ class window.App.HandOverAutocompleteController
       @container
 
   setSearchResults: (results) -> @props['searchResults'] = results
+
+  # setProps: (newProps) ->
+  #   @props = _.extend(@props, newProps)
+  #   @_render()
