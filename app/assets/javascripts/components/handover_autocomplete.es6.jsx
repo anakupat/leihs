@@ -31,11 +31,9 @@
       searchResults: React.PropTypes.arrayOf(
         React.PropTypes.objectOf({
           label: React.PropTypes.string.isRequired,
-          availability: React.PropTypes.string.isRequired,
+          availability: React.PropTypes.string,
           type: React.PropTypes.string.isRequired,
-          record: React.PropTypes.objectOf({
-            cid: React.PropTypes.string.isRequired
-          }).isRequired
+          record: React.PropTypes.object.isRequired
         })
       )
     },
