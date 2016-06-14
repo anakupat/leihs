@@ -17,8 +17,8 @@ class window.App.ReservationsAddController extends Spine.Controller
     @preventSubmit = false
     do @setupDatepickers
 
-  setupAutocomplete: (searchInput) =>
-    @searchInput = searchInput
+  setupAutocomplete: (autocompleteController) =>
+    @autocompleteController = autocompleteController
 
   search: (value, response)=>
     console.log 'ReservationsAddController Search', value

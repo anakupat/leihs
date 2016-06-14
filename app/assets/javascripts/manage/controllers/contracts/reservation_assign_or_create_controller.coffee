@@ -22,21 +22,25 @@ class window.App.ReservationAssignOrCreateController extends Spine.Controller
     # create and mount the input field:
     props =
       onChange: (value)->
-        console.log 'Search!', value
         # TODO: _.debounce(searchFn, 300)
         reservationsAddController.search value, (data)->
-          console.log 'result', data
+          @autocompleteController.setSearchResults(data)
+          @autocompleteController._render()
+          # console.log @autocompleteController.props
       onSelect: (item)-> console.log 'Select!', item
       isLoading: false
       placeholder: _jed("Inventory code, model name, search term")
 
-    searchInput = ReactDOM.render(
-      React.createElement(HandoverAutocomplete, props),
-      @el.find("#assign-or-add-input")[0])
+    autocompleteController =
+      new App.HandOverAutocompleteController \
+        props,
+        @el.find("#assign-or-add-input")[0]
 
-    window.searchInput = searchInput
+    autocompleteController._render()
 
-    reservationsAddController.setupAutocomplete(searchInput)
+    window.autocompleteController = autocompleteController
+
+    reservationsAddController.setupAutocomplete(autocompleteController)
 
   getStartDate: => moment(@addStartDate.val(), i18n.date.L)
 
