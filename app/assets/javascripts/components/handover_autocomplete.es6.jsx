@@ -82,14 +82,12 @@
           }}
           onChange={this._handleChange}
           renderItem={(item, isHighlighted) => {
-            console.log('renderItem', item)
-
-            return (<div
-              style={isHighlighted ? styles.highlightedItem : styles.item}
-              key={item.type + item.record.cid}
-              id={item.abbr}
-            >{item.name}</div>
-          )}}
+            return (
+              <div
+                style={isHighlighted ? styles.highlightedItem : styles.item}
+                key={item.type + item.record.cid}
+                id={item.abbr}>{item.name}</div>
+            )}}
           />
 
         </div>

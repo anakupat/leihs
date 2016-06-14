@@ -7,6 +7,10 @@ class window.App.HandOverAutocompleteController
       React.createElement(HandoverAutocomplete, @props),
       @container
 
+  renderWith: (results) ->
+    @setSearchResults(results)
+    @_render()
+
   setSearchResults: (results) -> @props['searchResults'] = results
 
   # setProps: (newProps) ->

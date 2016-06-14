@@ -21,7 +21,6 @@ class window.App.ReservationsAddController extends Spine.Controller
     @autocompleteController = autocompleteController
 
   search: (value, response)=>
-    console.log 'ReservationsAddController Search', value
     return false unless value.length
     @models = @options = @templates = @availabilities = @options = null
     handleResponses = =>
@@ -35,15 +34,9 @@ class window.App.ReservationsAddController extends Spine.Controller
     @searchTemplates(value, handleResponses)
     @searchOptions(value, handleResponses) if @optionsEnabled
 
-  select: (e, ui)=>
-    e.preventDefault()
-    record = ui.item.record
-    @add record, @getStartDate(), @getEndDate()
-    @preventSubmit = true
-    setTimeout (=>
-      @preventSubmit = false
-      @input.val("").change()
-    ), 100
+  select: (item) =>
+    @add item.record, @getStartDate(), @getEndDate()
+    @autocompleteController.renderWith []
 
   setupDatepickers: =>
     for date in [@addStartDate, @addEndDate]

@@ -23,15 +23,11 @@ class window.App.ReservationAssignOrCreateController extends Spine.Controller
 
     # create and mount the input field:
     props =
-      onChange: (value)->
+      onChange: (value) ->
         # TODO: _.debounce(searchFn, 300)
         reservationsAddController.search value, (data)->
-          console.log 'searchResults', data, (try _.get(data[0].record))
-          that.autocompleteController.setSearchResults(data)
-          that.autocompleteController._render()
-          # that.autocompleteController.setProps(searchResults: data)
-          # console.log @autocompleteController.props
-      onSelect: (item)-> console.log 'Select!', item
+          that.autocompleteController.renderWith(data)
+      onSelect: reservationsAddController.select
       isLoading: false
       placeholder: _jed("Inventory code, model name, search term")
 
