@@ -74,17 +74,17 @@
       var renderMenu = function (items, value, style) {
         if (items.length === 0) { return <div/> }
         return (
-          <div style={{...style, ...this.menuStyle}} children={items}/>
+          <div style={{...style, ...this.menuStyle}}>{items}</div>
         )
         // return (
           // <div style={{...style, ...this.menuStyle}}>
-            // <ul class='dropdown-menu'>
-              // <li class='disabled'><b>{_jed('Models')}</b></li>
+            // <ul className='dropdown-menu'>
+              // <li className='disabled'><b>{_jed('Models')}</b></li>
               // <li>
-                // <ul class='dropdown-menu scroll-menu scroll-menu-2x'>
+                // <ul className='dropdown-menu scroll-menu scroll-menu-2x'>
                 // </ul>
-              // <li class='disabled'><b>{_jed('Options')}</b></li>
-              // <li class='disabled'><b>{_jed('Templates')}</b></li>
+              // <li className='disabled'><b>{_jed('Options')}</b></li>
+              // <li className='disabled'><b>{_jed('Templates')}</b></li>
             // </ul>
           // </div>
         // )
@@ -112,24 +112,26 @@
               return (
                 <li
                   key={item.type + item.name + item.record.cid}
+                  item={item}
                   id={item.abbr}
                   style={isHighlighted ? styles.highlightedItem : styles.item}
-                  tabindex="-1" id="ui-id-2" class="separated-bottom exclude-last-child ui-menu-item">
-                  <a class="row light-red" title={item.name}>
-                    <div class="row">
-                      <div class="col3of4" title={item.name}>
-                        <strong class="wrap">{item.name}</strong>
+                  tabIndex='-1'
+                  className='separated-bottom exclude-last-child ui-menu-item'>
+                  <a className='row light-red' title={item.name}>
+                    <div className='row'>
+                      <div className='col3of4' title={item.name}>
+                        <strong className='wrap'>{item.name}</strong>
                       </div>
-                      <div class="col1of4 text-align-right">
-                        <div class="row">{item.availability}</div>
-                        <div class="row">
-                          <span class="grey-text">{item.type}</span>
+                      <div className='col1of4 text-align-right'>
+                        <div className='row'>{item.availability}</div>
+                        <div className='row'>
+                          <span className='grey-text'>{item.type}</span>
                         </div>
                       </div>
                     </div>
                   </a>
                 </li>
-              )}}
+              ) }}
             />
 
         </div>
