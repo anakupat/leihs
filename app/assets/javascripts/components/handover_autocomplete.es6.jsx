@@ -84,7 +84,7 @@
                     return (
                       <div>
                         <li className='disabled'><b>{_jed('Models')}</b></li>
-                        {models}
+                        <ul className='dropdown-menu scroll-menu scroll-menu-2x'>{models}</ul>
                       </div>
                     )
                   }
@@ -94,7 +94,7 @@
                     return (
                       <div>
                         <li className='disabled'><b>{_jed('Options')}</b></li>
-                        {options}
+                        <ul className='dropdown-menu scroll-menu scroll-menu-2x'>{options}</ul>
                       </div>
                     )
                   }
@@ -104,7 +104,7 @@
                     return (
                       <div>
                         <li className='disabled'><b>{_jed('Templates')}</b></li>
-                        {templates}
+                        <ul className='dropdown-menu scroll-menu scroll-menu-2x'>{templates}</ul>
                       </div>
                     )
                   }
