@@ -76,6 +76,8 @@
         options = _.filter(items, (i) => i.props.item.type == _jed('Option'))
         templates = _.filter(items, (i) => i.props.item.type == _jed('Template'))
 
+        if (value === '') { return <div/> }
+
         return (
           <div className='' style={{...style, ...this.menuStyle}}>
             <ul className='dropdown-menu'>
