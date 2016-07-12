@@ -23,12 +23,13 @@ class window.App.ReservationAssignOrCreateController extends Spine.Controller
       modelsPerPage: 20
       optionsPerPage: 50
 
+    onChangeCallback = (value) ->
+      reservationsAddController.search value, (data)->
+        that.autocompleteController.renderWith(data)
+
     # create and mount the input field:
     props =
-      onChange: (value) ->
-        # TODO: _.debounce(searchFn, 300)
-        reservationsAddController.search value, (data)->
-          that.autocompleteController.renderWith(data)
+      onChange: _.debounce(onChangeCallback, 300)
       onSelect: reservationsAddController.select
       isLoading: false
       placeholder: _jed("Inventory code, model name, search term")
