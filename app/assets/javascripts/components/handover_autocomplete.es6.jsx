@@ -79,14 +79,14 @@
         if (value === '') { return <div/> }
 
         return (
-          <div className='' style={{...style, ...this.menuStyle}}>
+          <div style={{...style, ...this.menuStyle}}>
             <ul className='dropdown-menu'>
               {(() => {
                   if (models.length !== 0) {
                     return (
                       <div>
                         <li className='disabled'><b>{_jed('Models')}</b></li>
-                        <ul className='dropdown-menu scroll-menu scroll-menu-2x'>{models}</ul>
+                        <ul className='react-autocomplete dropdown-menu scroll-menu scroll-menu-2x'>{models}</ul>
                       </div>
                     )
                   }
@@ -96,7 +96,7 @@
                     return (
                       <div>
                         <li className='disabled'><b>{_jed('Options')}</b></li>
-                        <ul className='dropdown-menu scroll-menu scroll-menu-2x'>{options}</ul>
+                        <ul className='react-autocomplete dropdown-menu scroll-menu scroll-menu-2x'>{options}</ul>
                       </div>
                     )
                   }
@@ -106,7 +106,7 @@
                     return (
                       <div>
                         <li className='disabled'><b>{_jed('Templates')}</b></li>
-                        <ul className='dropdown-menu scroll-menu scroll-menu-2x'>{templates}</ul>
+                        <ul className='react-autocomplete dropdown-menu scroll-menu scroll-menu-2x'>{templates}</ul>
                       </div>
                     )
                   }
@@ -140,10 +140,8 @@
                   key={item.type + item.name + item.record.cid}
                   item={item}
                   id={item.abbr}
-                  style={isHighlighted ? styles.highlightedItem : styles.item}
-                  tabIndex='-1'
-                  className='separated-bottom exclude-last-child ui-menu-item'>
-                  <a className='row light-red' title={item.name}>
+                  className='separated-bottom exclude-last-child'>
+                  <a className={'row' + (!item.available ? " light-red" : "")} title={item.name}>
                     <div className='row'>
                       <div className='col3of4' title={item.name}>
                         <strong className='wrap'>{item.name}</strong>
