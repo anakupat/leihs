@@ -20,6 +20,8 @@ class window.App.ReservationAssignOrCreateController extends Spine.Controller
       status: @status
       contract: @contract
       optionsEnabled: true
+      modelsPerPage: 20
+      optionsPerPage: 50
 
     # create and mount the input field:
     props =

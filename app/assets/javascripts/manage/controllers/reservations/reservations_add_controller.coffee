@@ -87,7 +87,7 @@ class window.App.ReservationsAddController extends Spine.Controller
         search_term: value
         used: true
         as_responsible_only: true
-        per_page: 5
+        per_page: @modelsPerPage or 5
     .done (data)=>
       @models = (App.Model.find(datum.id) for datum in data)
       @fetchAvailabilities => do callback
@@ -96,7 +96,7 @@ class window.App.ReservationsAddController extends Spine.Controller
     App.Option.ajaxFetch
       data: $.param
         search_term: value
-        per_page: 5
+        per_page: @optionsPerPage or 5
     .done (data)=>
       @options = (App.Option.find(datum.id) for datum in data)
       do callback
@@ -105,7 +105,7 @@ class window.App.ReservationsAddController extends Spine.Controller
     App.Template.ajaxFetch
       data: $.param
         search_term: value
-        per_page: 5
+        per_page: @templatesPerPage or 5
     .done (data)=>
       @templates = (App.Template.find(datum.id) for datum in data)
       do callback
