@@ -73,35 +73,64 @@
 
       var renderMenu = function (items, value, style) {
         if (items.length === 0) { return <div/> }
-        return <div style={{...style, ...this.menuStyle}} children={items}/>
+        return (
+          <div style={{...style, ...this.menuStyle}} children={items}/>
+        )
+        // return (
+          // <div style={{...style, ...this.menuStyle}}>
+            // <ul class='dropdown-menu'>
+              // <li class='disabled'><b>{_jed('Models')}</b></li>
+              // <li>
+                // <ul class='dropdown-menu scroll-menu scroll-menu-2x'>
+                // </ul>
+              // <li class='disabled'><b>{_jed('Options')}</b></li>
+              // <li class='disabled'><b>{_jed('Templates')}</b></li>
+            // </ul>
+          // </div>
+        // )
       }
 
       return (
         <div>
 
-        <Autocomplete
-          ref='autocomplete'
-          value={this.state.value}
-          items={props.searchResults}
-          wrapperProps={wrapperProps}
-          inputProps={inputProps}
-          renderMenu={renderMenu}
-          getItemValue={(item) => item.name}
-          onSelect={(value, item) => {
-            // reset the input field
-            this.setState({ value: '' })
-            // callback
-            props.onSelect(item)
-          }}
-          onChange={this._handleChange}
-          renderItem={(item, isHighlighted) => {
-            return (
-              <div
-                style={isHighlighted ? styles.highlightedItem : styles.item}
-                key={item.type + item.name + item.record.cid}
-                id={item.abbr}>{item.name}</div>
-            )}}
-          />
+          <Autocomplete
+            ref='autocomplete'
+            value={this.state.value}
+            items={props.searchResults}
+            wrapperProps={wrapperProps}
+            inputProps={inputProps}
+            renderMenu={renderMenu}
+            getItemValue={(item) => item.name}
+            onSelect={(value, item) => {
+              // reset the input field
+              this.setState({ value: '' })
+              // callback
+              props.onSelect(item)
+            }}
+            onChange={this._handleChange}
+            renderItem={(item, isHighlighted) => {
+              return (
+                <li
+                  key={item.type + item.name + item.record.cid}
+                  id={item.abbr}
+                  style={isHighlighted ? styles.highlightedItem : styles.item}
+                  tabindex="-1" id="ui-id-2" class="separated-bottom exclude-last-child ui-menu-item">
+                  <a class="row light-red" title={item.name}>
+                    <div class="row">
+                      <div class="col3of4" title={item.name}>
+                        <strong class="wrap">{item.name}</strong>
+                      </div>
+                      <div class="col1of4 text-align-right">
+                        <div class="row">{item.availability}</div>
+                        <div class="row">
+                          <span class="grey-text">{item.type}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                </li>
+              )}}
+            />
 
         </div>
       )
