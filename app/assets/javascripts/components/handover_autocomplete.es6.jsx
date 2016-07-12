@@ -26,8 +26,8 @@
       onSelect: React.PropTypes.func.isRequired,
       isLoading: React.PropTypes.bool.isRequired,
       searchResults: React.PropTypes.arrayOf(
-        React.PropTypes.objectOf({
-          label: React.PropTypes.string.isRequired,
+        React.PropTypes.shape({
+          name: React.PropTypes.string.isRequired,
           availability: React.PropTypes.string,
           type: React.PropTypes.string.isRequired,
           record: React.PropTypes.object.isRequired
@@ -72,25 +72,46 @@
       }
 
       var renderMenu = function (items, value, style) {
-        // group items by item.props.item.type
-        // render each group separately
+        models = _.filter(items, (i) => i.props.item.type == _jed('Model'))
+        options = _.filter(items, (i) => i.props.item.type == _jed('Option'))
+        templates = _.filter(items, (i) => i.props.item.type == _jed('Template'))
 
-        if (items.length === 0) { return <div/> }
         return (
-          <div style={{...style, ...this.menuStyle}}>{items}</div>
+          <div className='' style={{...style, ...this.menuStyle}}>
+            <ul className='dropdown-menu'>
+              {(() => {
+                  if (models.length !== 0) {
+                    return (
+                      <div>
+                        <li className='disabled'><b>{_jed('Models')}</b></li>
+                        {models}
+                      </div>
+                    )
+                  }
+              })()}
+              {(() => {
+                  if (options.length !== 0) {
+                    return (
+                      <div>
+                        <li className='disabled'><b>{_jed('Options')}</b></li>
+                        {options}
+                      </div>
+                    )
+                  }
+              })()}
+              {(() => {
+                  if (templates.length !== 0) {
+                    return (
+                      <div>
+                        <li className='disabled'><b>{_jed('Templates')}</b></li>
+                        {templates}
+                      </div>
+                    )
+                  }
+              })()}
+            </ul>
+          </div>
         )
-        // return (
-          // <div style={{...style, ...this.menuStyle}}>
-            // <ul className='dropdown-menu'>
-              // <li className='disabled'><b>{_jed('Models')}</b></li>
-              // <li>
-                // <ul className='dropdown-menu scroll-menu scroll-menu-2x'>
-                // </ul>
-              // <li className='disabled'><b>{_jed('Options')}</b></li>
-              // <li className='disabled'><b>{_jed('Templates')}</b></li>
-            // </ul>
-          // </div>
-        // )
       }
 
       return (
@@ -141,15 +162,4 @@
       )
     }
   })
-
-  /*
-    <input
-    type='text'
-    className='row'
-    name='input'
-    placeholder={props.placeholder}
-    autoComplete='off'
-    onChange={props.onSearch}
-    data-barcode-scanner-target/>
-  */
 })()
