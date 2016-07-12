@@ -72,6 +72,9 @@
       }
 
       var renderMenu = function (items, value, style) {
+        // group items by item.props.item.type
+        // render each group separately
+
         if (items.length === 0) { return <div/> }
         return (
           <div style={{...style, ...this.menuStyle}}>{items}</div>
