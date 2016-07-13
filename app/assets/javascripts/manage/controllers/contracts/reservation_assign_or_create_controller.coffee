@@ -21,7 +21,7 @@ class window.App.ReservationAssignOrCreateController extends Spine.Controller
       contract: @contract
       optionsEnabled: true
       modelsPerPage: 20
-      optionsPerPage: 50
+      optionsPerPage: 100
 
     onChangeCallback = (value) ->
       reservationsAddController.search value, (data)->
