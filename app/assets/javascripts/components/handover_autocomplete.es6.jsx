@@ -72,9 +72,21 @@
       }
 
       var renderMenu = function (items, value, style) {
-        models = _.filter(items, (i) => i.props.item.type == _jed('Model'))
-        options = _.filter(items, (i) => i.props.item.type == _jed('Option'))
-        templates = _.filter(items, (i) => i.props.item.type == _jed('Template'))
+        models =
+          _.sortBy(
+            _.filter(items, (i) => i.props.item.type == _jed('Model')),
+            (i) => i.props.item.name
+          )
+        options =
+          _.sortBy(
+            _.filter(items, (i) => i.props.item.type == _jed('Option')),
+            (i) => i.props.item.name
+          )
+        templates =
+          _.sortBy(
+            _.filter(items, (i) => i.props.item.type == _jed('Template')),
+            (i) => i.props.item.name
+          )
 
         if (value === '') { return <div/> }
 
